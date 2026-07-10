@@ -1,0 +1,37 @@
+---
+title: "AI 에이전트 시작하기"
+slug: "getting-started-with-ai-agents"
+description: "AI 에이전트의 기본 구조와 첫 워크플로우를 설계하는 방법을 정리합니다."
+category: "입문"
+tags:
+  - "ai-agent"
+  - "입문"
+  - "워크플로우"
+publishedAt: "2026-07-10"
+updatedAt: "2026-07-10"
+author: "agenwiki"
+cover: "/og/getting-started-with-ai-agents.png"
+draft: false
+---
+
+## AI 에이전트란 무엇인가
+
+AI 에이전트는 모델 호출만 반복하는 도구가 아니라 목표, 작업 계획, 도구 사용, 결과 검증을 하나의 흐름으로 묶는 실행 단위입니다. 관련 개념은 [에이전트](/glossary/ai-agent-placeholder) 용어에서도 짧게 확인할 수 있습니다.
+
+## 첫 워크플로우 설계
+
+처음에는 범위를 좁혀야 합니다. 입력, 처리 단계, 검증 기준, 실패 시 재시도 조건을 먼저 적고 그 다음 모델과 도구를 붙입니다.
+
+```ts
+type AgentStep = {
+  goal: string;
+  tool?: string;
+  verify: string;
+};
+```
+
+## 운영 전에 확인할 점
+
+- 자동 실행 범위를 명확히 제한합니다.
+- 사람이 검토해야 하는 단계와 완전 자동화할 단계를 분리합니다.
+- 로그와 재현 가능한 입력을 남겨 품질을 추적합니다.
