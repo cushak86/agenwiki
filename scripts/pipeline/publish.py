@@ -26,7 +26,7 @@ from config import (
 
 SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
-SOURCE_BLOCK_RE = re.compile(r"(?m)^>\s*출처:\s*arXiv:\S+\s+https?://(?:www\.)?arxiv\.org/(?:abs|pdf)/\S+\s*$")
+SOURCE_BLOCK_RE = re.compile(r"(?m)^>\s*출처:.*https?://\S+")
 CONTENT_TYPES = {"guides", "glossary", "prompts", "newsletter"}
 
 
@@ -54,6 +54,13 @@ def parse_scalar(value):
     return value
 
 
+def parse_inline_array(value):
+    inner = value[1:-1].strip()
+    if not inner:
+        return []
+    return [parse_scalar(item.strip()) for item in inner.split(",")]
+
+
 def parse_frontmatter(path):
     text = path.read_text(encoding="utf-8")
     lines = text.splitlines()
@@ -77,7 +84,10 @@ def parse_frontmatter(path):
         key = key.strip()
         raw_value = raw_value.strip()
         if raw_value:
-            data[key] = parse_scalar(raw_value)
+            if raw_value.startswith("[") and raw_value.endswith("]"):
+                data[key] = parse_inline_array(raw_value)
+            else:
+                data[key] = parse_scalar(raw_value)
             index += 1
             continue
 
@@ -137,10 +147,76 @@ def validate_guide(data, expected_slug, path):
         require_string(data, "cover", path)
 
 
+def require_list(data, key, path):
+    value = data.get(key)
+    if not isinstance(value, list):
+        fail(f"{path}: {key} must be an array")
+    return value
+
+
+def validate_slug_list(data, key, path):
+    values = data.get(key)
+    if values is None:
+        return
+    if not isinstance(values, list):
+        fail(f"{path}: {key} must be an array")
+    for value in values:
+        if not isinstance(value, str) or not SLUG_RE.match(value):
+            fail(f"{path}: {key} must contain only lowercase slug strings")
+
+
+def validate_glossary(data, expected_slug, path):
+    validate_common(data, expected_slug, path)
+    for key in ["term", "shortDef", "category"]:
+        require_string(data, key, path)
+    require_date(data, "updatedAt", path)
+    aliases = require_list(data, "aliases", path)
+    for alias in aliases:
+        if not isinstance(alias, str) or not alias.strip():
+            fail(f"{path}: aliases must contain only non-empty strings")
+    validate_slug_list(data, "related", path)
+    for key in ["publishedAt", "title", "description", "author"]:
+        if key in data:
+            fail(f"{path}: glossary frontmatter must not include {key}")
+
+
+def validate_prompts(data, expected_slug, path):
+    validate_common(data, expected_slug, path)
+    for key in ["title", "description", "targetModel", "promptText"]:
+        require_string(data, key, path)
+    require_date(data, "publishedAt", path)
+    if "variables" in data:
+        require_list(data, "variables", path)
+    for key in ["term", "shortDef", "aliases", "related"]:
+        if key in data:
+            fail(f"{path}: prompts frontmatter must not include {key}")
+
+
+def validate_newsletter(data, expected_slug, path):
+    validate_common(data, expected_slug, path)
+    for key in ["title", "summary"]:
+        require_string(data, key, path)
+    issue_number = data.get("issueNumber")
+    if isinstance(issue_number, bool):
+        fail(f"{path}: issueNumber must be an integer")
+    try:
+        int(issue_number)
+    except (TypeError, ValueError):
+        fail(f"{path}: issueNumber must be an integer")
+    require_date(data, "publishedAt", path)
+
+
 def validate_frontmatter(content_type, data, expected_slug, path):
-    if content_type != "guides":
-        fail("MVP publisher currently supports --type guides only")
-    validate_guide(data, expected_slug, path)
+    if content_type == "guides":
+        validate_guide(data, expected_slug, path)
+    elif content_type == "glossary":
+        validate_glossary(data, expected_slug, path)
+    elif content_type == "prompts":
+        validate_prompts(data, expected_slug, path)
+    elif content_type == "newsletter":
+        validate_newsletter(data, expected_slug, path)
+    else:
+        fail(f"unsupported content type: {content_type}")
     if data.get("draft") is not False:
         fail(f"{path}: draft must be false before publishing")
 
@@ -218,6 +294,7 @@ def main():
     parser.add_argument("slug")
     parser.add_argument("--type", default="guides", choices=sorted(CONTENT_TYPES))
     parser.add_argument("--push", action="store_true", help="push after commit")
+    parser.add_argument("--skip-build", action="store_true", help="skip npm run build before commit")
     args = parser.parse_args()
 
     if not SLUG_RE.match(args.slug):
@@ -230,7 +307,8 @@ def main():
 
     data = parse_frontmatter(staging_path)
     validate_frontmatter(args.type, data, args.slug, staging_path)
-    validate_source_block(staging_path)
+    if args.type == "guides":
+        validate_source_block(staging_path)
 
     target_dir = REPO_ROOT / "content" / args.type
     target_path = target_dir / f"{args.slug}.mdx"
@@ -240,14 +318,17 @@ def main():
     target_dir.mkdir(parents=True, exist_ok=True)
     shutil.move(str(staging_path), str(target_path))
 
-    try:
-        build = run(["npm", "run", "build"])
-    except SystemExit:
-        if target_path.exists() and not staging_path.exists():
-            shutil.move(str(target_path), str(staging_path))
-        raise
+    if args.skip_build:
+        print("build skipped")
+    else:
+        try:
+            build = run(["npm", "run", "build"])
+        except SystemExit:
+            if target_path.exists() and not staging_path.exists():
+                shutil.move(str(target_path), str(staging_path))
+            raise
 
-    print((build.stdout or "").strip())
+        print((build.stdout or "").strip())
     notify_review(args.slug, target_path)
     commit(target_path, args.slug)
 

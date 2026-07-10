@@ -17,3 +17,5 @@ scripts/state/
 
 __pycache__/
 *.pyc
+
+scripts/pipeline/sources.json

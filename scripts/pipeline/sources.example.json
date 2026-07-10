@@ -1,0 +1,10 @@
+{
+  "_comment": "Copy to sources.json and edit. Scheduler fills scripts/queue/ only; generation/review/publish stay manual. Use low-risk sources: official APIs, CC-licensed or content-carrying feeds.",
+  "arxiv": [
+    { "category": "cs.AI", "max": 5 },
+    { "category": "cs.CL", "max": 3 }
+  ],
+  "rss": [
+    { "feed": "https://simonwillison.net/atom/everything/", "max": 3, "source_name": "Simon Willison's Weblog" }
+  ]
+}
