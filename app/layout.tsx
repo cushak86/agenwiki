@@ -12,9 +12,12 @@ export const metadata: Metadata = {
     template: `%s | ${siteConfig.name}`
   },
   description: siteConfig.description,
-  ...(process.env.NEXT_PUBLIC_GSC_VERIFICATION
-    ? { verification: { google: process.env.NEXT_PUBLIC_GSC_VERIFICATION } }
-    : {})
+  verification: {
+    // GSC 소유권 인증 토큰(공개값). Vercel 환경변수로 덮어쓸 수 있음.
+    google:
+      process.env.NEXT_PUBLIC_GSC_VERIFICATION ??
+      "JQ07wJjhBF42tXyNQitGgdkk03TyUGeHjY3RewluX9U"
+  }
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
