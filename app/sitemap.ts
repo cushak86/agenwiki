@@ -3,7 +3,7 @@ import { getAll, getAllTags } from "@/lib/content";
 import { absoluteUrl } from "@/lib/seo";
 import type { ContentType } from "@/lib/types";
 
-const staticRoutes = ["/", "/guides", "/glossary", "/prompts", "/newsletter", "/about", "/terms", "/privacy"];
+const staticRoutes = ["/", "/guides", "/glossary", "/prompts", "/newsletter", "/topics", "/about", "/terms", "/privacy"];
 const contentTypes: ContentType[] = ["guides", "glossary", "prompts", "newsletter"];
 
 export default function sitemap(): MetadataRoute.Sitemap {
