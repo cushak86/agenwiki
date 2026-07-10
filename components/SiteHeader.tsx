@@ -5,7 +5,8 @@ const navItems = [
   { href: "/glossary", label: "용어사전" },
   { href: "/prompts", label: "프롬프트" },
   { href: "/newsletter", label: "뉴스레터" },
-  { href: "/topics", label: "토픽" }
+  { href: "/topics", label: "토픽" },
+  { href: "/search", label: "검색" }
 ];
 
 export function SiteHeader() {

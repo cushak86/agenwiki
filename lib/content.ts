@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
-import type { ContentMeta, ContentRecord, ContentType, TaggedContent } from "@/lib/types";
+import type { ContentMeta, ContentRecord, ContentType, SearchItem, TaggedContent } from "@/lib/types";
 
 const contentRoot = path.join(process.cwd(), "content");
 const contentTypes: ContentType[] = ["guides", "glossary", "prompts", "newsletter"];
@@ -230,4 +230,22 @@ export function getContentDescription(meta: ContentMeta) {
   }
 
   return meta.summary;
+}
+
+/**
+ * 빌드/렌더 시점에 모든 콘텐츠(guides/glossary/prompts/newsletter)를 모아
+ * title/description/tags 기준의 경량 검색 인덱스를 만든다.
+ * fs를 사용하는 서버 전용 함수이므로 서버 컴포넌트에서만 호출하고,
+ * 결과(SearchItem[])만 클라이언트 컴포넌트로 props 전달할 것.
+ */
+export function getSearchIndex(): SearchItem[] {
+  return contentTypes.flatMap((type) =>
+    getAll(type).map((meta) => ({
+      type,
+      slug: meta.slug,
+      title: getContentTitle(meta),
+      description: getContentDescription(meta),
+      tags: meta.tags
+    }))
+  );
 }

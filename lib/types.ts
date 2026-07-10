@@ -52,3 +52,11 @@ export type TaggedContent = {
   type: ContentType;
   meta: ContentMeta;
 };
+
+export type SearchItem = {
+  type: ContentType;
+  slug: string;
+  title: string;
+  description: string;
+  tags: string[];
+};
