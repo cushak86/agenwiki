@@ -1,9 +1,8 @@
 import { notFound } from "next/navigation";
-import { MDXRemote } from "next-mdx-remote/rsc";
+import { Mdx } from "@/components/Mdx";
 import { Prose } from "@/components/Prose";
 import { SubscribeForm } from "@/components/SubscribeForm";
 import { TagChips } from "@/components/TagChips";
-import { mdxComponents } from "@/components/mdx-components";
 import { getAllSlugs, getBySlug } from "@/lib/content";
 import { metadataForContent } from "@/lib/seo";
 import type { NewsletterMeta } from "@/lib/types";
@@ -47,7 +46,7 @@ export default function NewsletterDetailPage({ params }: { params: { slug: strin
       </div>
       <div className="mt-10">
         <Prose>
-          <MDXRemote source={record.body} components={mdxComponents} />
+          <Mdx source={record.body} />
         </Prose>
       </div>
       <section id="subscribe" className="mt-12">

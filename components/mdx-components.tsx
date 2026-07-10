@@ -28,5 +28,14 @@ export const mdxComponents: MDXComponents = {
       className="my-6 overflow-x-auto rounded-lg border border-line bg-neutral-950 p-4 text-sm leading-7 text-neutral-100"
       {...props}
     />
-  )
+  ),
+  table: (props) => (
+    <div className="my-6 overflow-x-auto rounded-lg border border-line">
+      <table className="w-full border-collapse text-left text-sm leading-6 text-neutral-700" {...props} />
+    </div>
+  ),
+  thead: (props) => <thead className="bg-neutral-100 text-ink" {...props} />,
+  tr: (props) => <tr className="border-b border-line last:border-b-0" {...props} />,
+  th: (props) => <th className="px-4 py-2.5 font-semibold text-ink" {...props} />,
+  td: (props) => <td className="px-4 py-2.5 align-top text-neutral-700" {...props} />
 };

@@ -1,9 +1,8 @@
 import { notFound } from "next/navigation";
-import { MDXRemote } from "next-mdx-remote/rsc";
+import { Mdx } from "@/components/Mdx";
 import { PromptCopyButton } from "@/components/PromptCopyButton";
 import { Prose } from "@/components/Prose";
 import { TagChips } from "@/components/TagChips";
-import { mdxComponents } from "@/components/mdx-components";
 import { getAllSlugs, getBySlug } from "@/lib/content";
 import { metadataForContent } from "@/lib/seo";
 import type { PromptMeta } from "@/lib/types";
@@ -56,7 +55,7 @@ export default function PromptDetailPage({ params }: { params: { slug: string } 
       </section>
       <div className="mt-10">
         <Prose>
-          <MDXRemote source={record.body} components={mdxComponents} />
+          <Mdx source={record.body} />
         </Prose>
       </div>
     </div>

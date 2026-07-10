@@ -1,8 +1,7 @@
 import { notFound } from "next/navigation";
-import { MDXRemote } from "next-mdx-remote/rsc";
+import { Mdx } from "@/components/Mdx";
 import { Prose } from "@/components/Prose";
 import { TagChips } from "@/components/TagChips";
-import { mdxComponents } from "@/components/mdx-components";
 import { getAllSlugs, getBySlug } from "@/lib/content";
 import { definedTermJsonLd, metadataForContent } from "@/lib/seo";
 import type { GlossaryMeta } from "@/lib/types";
@@ -47,7 +46,7 @@ export default function GlossaryDetailPage({ params }: { params: { slug: string 
       </div>
       <div className="mt-10">
         <Prose>
-          <MDXRemote source={record.body} components={mdxComponents} />
+          <Mdx source={record.body} />
         </Prose>
       </div>
     </div>
