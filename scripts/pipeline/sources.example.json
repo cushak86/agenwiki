@@ -1,10 +1,12 @@
 {
-  "_comment": "Copy to sources.json and edit. Scheduler fills scripts/queue/ only; generation/review/publish stay manual. Use low-risk sources: official APIs, CC-licensed or content-carrying feeds.",
+  "_comment": "Copy to sources.json and edit. Scheduler fills scripts/queue/ only; generation/review/publish stay manual. Low-risk sources only: official APIs, first-party blogs, CC-licensed or content-carrying feeds. Facts-only transformative rewriting + attribution (see prompts/style_guide.md). Tested 2026-07-10: MIT News AI & Microsoft Research feeds carry full body (6-12K chars); OpenAI News & Google AI Blog carry summaries only (unsuitable).",
   "arxiv": [
     { "category": "cs.AI", "max": 5 },
     { "category": "cs.CL", "max": 3 }
   ],
   "rss": [
-    { "feed": "https://simonwillison.net/atom/everything/", "max": 3, "source_name": "Simon Willison's Weblog" }
+    { "feed": "https://simonwillison.net/atom/everything/", "max": 3, "source_name": "Simon Willison's Weblog" },
+    { "feed": "https://news.mit.edu/topic/mitartificial-intelligence2-rss.xml", "max": 3, "source_name": "MIT News AI" },
+    { "feed": "https://www.microsoft.com/en-us/research/feed/", "max": 3, "source_name": "Microsoft Research" }
   ]
 }
