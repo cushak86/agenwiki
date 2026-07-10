@@ -19,3 +19,8 @@ __pycache__/
 *.pyc
 
 scripts/pipeline/sources.json
+
+# AI-company 운영 파일 (제품 소스 아님)
+.claude/
+CLAUDE.md
+docs/
