@@ -3,7 +3,16 @@ import json
 import re
 import shutil
 import subprocess
+import sys
 from datetime import datetime
+
+# Windows consoles/pipes default to cp1252, which cannot encode build output
+# (e.g. Next.js "▲") or Korean slugs/messages. Force UTF-8 for all prints.
+for _stream in (sys.stdout, sys.stderr):
+    try:
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+    except (AttributeError, ValueError):
+        pass
 
 from config import (
     DISCORD_ADAPTER,
@@ -146,9 +155,9 @@ def run(command, check=True):
     command = list(command)
     if command:
         command[0] = resolve_required_executable(command[0])
-    completed = subprocess.run(command, cwd=REPO_ROOT, text=True, capture_output=True)
+    completed = subprocess.run(command, cwd=REPO_ROOT, encoding="utf-8", errors="replace", capture_output=True)
     if check and completed.returncode != 0:
-        output = (completed.stdout + completed.stderr).strip()
+        output = ((completed.stdout or "") + (completed.stderr or "")).strip()
         fail(f"command failed: {' '.join(command)}\n{output}")
     return completed
 
@@ -163,23 +172,29 @@ def notify_review(slug, target_path):
         return
     message = f"agenwiki guide published: {slug} -> {target_path}"
     try:
-        completed = subprocess.run([bash, str(DISCORD_ADAPTER), "review", message], cwd=REPO_ROOT, text=True, capture_output=True)
+        completed = subprocess.run(
+            [bash, str(DISCORD_ADAPTER), "review", message],
+            cwd=REPO_ROOT,
+            encoding="utf-8",
+            errors="replace",
+            capture_output=True,
+        )
     except OSError as exc:
         print(f"discord: notify failed open ({exc})")
         return
     if completed.returncode != 0:
         print(f"discord: notify failed open ({completed.returncode})")
-        if completed.stderr.strip():
-            print(completed.stderr.strip())
-    elif completed.stdout.strip():
-        print(completed.stdout.strip())
+        if (completed.stderr or "").strip():
+            print((completed.stderr or "").strip())
+    elif (completed.stdout or "").strip():
+        print((completed.stdout or "").strip())
 
 
 def commit(target_path, slug):
     rel_path = str(target_path.relative_to(REPO_ROOT))
     run(["git", "add", rel_path])
     status = run(["git", "status", "--porcelain", rel_path], check=False)
-    if not status.stdout.strip():
+    if not (status.stdout or "").strip():
         print("git: no content changes to commit")
         return
     run([
@@ -232,7 +247,7 @@ def main():
             shutil.move(str(target_path), str(staging_path))
         raise
 
-    print(build.stdout.strip())
+    print((build.stdout or "").strip())
     notify_review(args.slug, target_path)
     commit(target_path, args.slug)
 
