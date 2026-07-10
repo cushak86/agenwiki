@@ -144,8 +144,8 @@ def validate_source_block(path):
 
 def run(command, check=True):
     command = list(command)
-    if command and command[0] == "git":
-        command[0] = resolve_required_executable("git")
+    if command:
+        command[0] = resolve_required_executable(command[0])
     completed = subprocess.run(command, cwd=REPO_ROOT, text=True, capture_output=True)
     if check and completed.returncode != 0:
         output = (completed.stdout + completed.stderr).strip()
