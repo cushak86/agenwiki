@@ -1,0 +1,44 @@
+---
+title: "OpenAI, GPT-5.6 3종 공개: Luna·Terra·Sol"
+slug: openai-gpt-5-6-family
+description: "OpenAI가 GPT-5.6 계열 세 모델 Luna·Terra·Sol을 정식 출시했다. 가격, 공통 사양, 에이전트 벤치마크 주장과 새 API 기능을 제공된 자료 기준으로 정리한다."
+category: "AI 소식"
+tags:
+  - OpenAI
+  - GPT-5.6
+  - LLM
+  - 에이전트
+publishedAt: "2026-07-10"
+updatedAt: "2026-07-10"
+author: "agenwiki"
+draft: false
+---
+
+OpenAI가 새 주력 모델군인 GPT-5.6 계열을 정식 출시했다. 이 계열은 크기 순으로 Luna, Terra, Sol 세 가지로 나뉜다. Luna가 가장 작고 Sol이 가장 크다. 아래 내용은 Simon Willison의 정리 글에 담긴 수치만을 근거로 한다.
+
+## 가격과 공통 사양
+
+1M 토큰당 입력/출력 가격은 다음과 같다.
+
+- Luna: 입력 $1 / 출력 $6
+- Terra: 입력 $2.50 / 출력 $15
+- Sol: 입력 $5 / 출력 $30
+
+세 모델은 공통 사양을 공유한다. 지식 컷오프는 2026년 2월 16일이고, 컨텍스트 윈도우는 1M 토큰, 최대 출력은 128,000 토큰이다.
+
+## 벤치마크 주장
+
+OpenAI가 가장 강조한 부분은 장기간 실행되는 에이전트 성능이다. 55개 분야로 구성된 Agents' Last Exam에서 GPT-5.6 Sol은 53.6점으로 새로운 최고 기록을 세웠으며, 이는 Claude Fable 5보다 13.1점 높은 수치다. 중간 수준 추론 설정에서도 Sol은 Fable 5를 11.4점 앞서면서 추정 비용은 약 4분의 1 수준이라고 한다. 더 작은 Terra와 Luna는 약 16분의 1 비용으로 Fable 5를 앞선다고 제시됐다.
+
+다만 모든 지표에서 앞선 것은 아니다. SWE-Bench Pro에서는 Fable 5가 80%, GPT-5.6 Sol이 64.6%를 기록했다. 이와 관련해 OpenAI는 SWE-Bench Pro를 문제 삼는 글을 별도로 내고, 해당 벤치마크 과제 중 약 30%가 결함이 있다고 추정했다.
+
+## 새 API 기능
+
+이번 출시와 함께 몇 가지 API 기능이 추가됐다.
+
+- Programmatic Tool Calling: 도구 호출을 조율하는 JavaScript를 작성하고 실행할 수 있다.
+- Multi-agent: 병렬 작업을 위해 서브에이전트를 띄울 수 있다.
+- Prompt cache breakpoints: 명시적인 캐시 분기점을 지정할 수 있다.
+- 이미지 요청 시 `detail:original`: 리사이즈를 피할 수 있다.
+
+> 출처: Simon Willison's Weblog — https://simonwillison.net/2026/Jul/9/gpt-5-6/
