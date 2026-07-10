@@ -25,6 +25,17 @@ def fail(message):
     raise SystemExit(message)
 
 
+def resolve_required_executable(name):
+    executable = shutil.which(name)
+    if not executable:
+        fail(f"{name}: executable not found on PATH")
+    return executable
+
+
+def resolve_optional_executable(name):
+    return shutil.which(name)
+
+
 def parse_scalar(value):
     value = value.strip()
     if value in {"true", "false"}:
@@ -132,6 +143,9 @@ def validate_source_block(path):
 
 
 def run(command, check=True):
+    command = list(command)
+    if command and command[0] == "git":
+        command[0] = resolve_required_executable("git")
     completed = subprocess.run(command, cwd=REPO_ROOT, text=True, capture_output=True)
     if check and completed.returncode != 0:
         output = (completed.stdout + completed.stderr).strip()
@@ -143,8 +157,16 @@ def notify_review(slug, target_path):
     if not DISCORD_ADAPTER.exists():
         print(f"discord: adapter not found at {DISCORD_ADAPTER}; skipping")
         return
+    bash = resolve_optional_executable("bash")
+    if not bash:
+        print("discord: bash not found on PATH; skipping")
+        return
     message = f"agenwiki guide published: {slug} -> {target_path}"
-    completed = subprocess.run(["bash", str(DISCORD_ADAPTER), "review", message], cwd=REPO_ROOT, text=True, capture_output=True)
+    try:
+        completed = subprocess.run([bash, str(DISCORD_ADAPTER), "review", message], cwd=REPO_ROOT, text=True, capture_output=True)
+    except OSError as exc:
+        print(f"discord: notify failed open ({exc})")
+        return
     if completed.returncode != 0:
         print(f"discord: notify failed open ({completed.returncode})")
         if completed.stderr.strip():
