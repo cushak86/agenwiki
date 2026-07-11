@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { Mdx } from "@/components/Mdx";
 import { Prose } from "@/components/Prose";
+import { RelatedContent } from "@/components/RelatedContent";
 import { SubscribeForm } from "@/components/SubscribeForm";
 import { TagChips } from "@/components/TagChips";
 import { getAllSlugs, getBySlug } from "@/lib/content";
@@ -49,6 +50,7 @@ export default function NewsletterDetailPage({ params }: { params: { slug: strin
           <Mdx source={record.body} />
         </Prose>
       </div>
+      <RelatedContent type="newsletter" slug={meta.slug} tags={meta.tags} />
       <section id="subscribe" className="mt-12">
         <SubscribeForm />
       </section>

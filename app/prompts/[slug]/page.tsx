@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { Mdx } from "@/components/Mdx";
 import { PromptCopyButton } from "@/components/PromptCopyButton";
 import { Prose } from "@/components/Prose";
+import { RelatedContent } from "@/components/RelatedContent";
 import { TagChips } from "@/components/TagChips";
 import { getAllSlugs, getBySlug } from "@/lib/content";
 import { metadataForContent } from "@/lib/seo";
@@ -58,6 +59,7 @@ export default function PromptDetailPage({ params }: { params: { slug: string } 
           <Mdx source={record.body} />
         </Prose>
       </div>
+      <RelatedContent type="prompts" slug={meta.slug} tags={meta.tags} />
     </div>
   );
 }

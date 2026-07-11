@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { Mdx } from "@/components/Mdx";
 import { Prose } from "@/components/Prose";
+import { RelatedContent } from "@/components/RelatedContent";
+import { TableOfContents } from "@/components/TableOfContents";
 import { TagChips } from "@/components/TagChips";
 import { getAllSlugs, getBySlug } from "@/lib/content";
 import { articleJsonLd, metadataForContent } from "@/lib/seo";
@@ -45,10 +47,12 @@ export default function GuideDetailPage({ params }: { params: { slug: string } }
         </div>
       </div>
       <div className="mt-10">
+        <TableOfContents body={record.body} />
         <Prose>
           <Mdx source={record.body} />
         </Prose>
       </div>
+      <RelatedContent type="guides" slug={meta.slug} tags={meta.tags} />
     </div>
   );
 }

@@ -1,8 +1,16 @@
 import Link from "next/link";
 import type { MDXComponents } from "mdx/types";
+import { headingTextFromNode, slugify } from "@/lib/slugify";
 
 export const mdxComponents: MDXComponents = {
-  h2: (props) => <h2 className="mt-10 text-2xl font-semibold text-ink" {...props} />,
+  h2: ({ children, ...props }) => {
+    const id = slugify(headingTextFromNode(children));
+    return (
+      <h2 id={id || undefined} className="mt-10 scroll-mt-24 text-2xl font-semibold text-ink" {...props}>
+        {children}
+      </h2>
+    );
+  },
   h3: (props) => <h3 className="mt-8 text-xl font-semibold text-ink" {...props} />,
   p: (props) => <p className="my-4 leading-8 text-neutral-700" {...props} />,
   ul: (props) => <ul className="my-5 list-disc space-y-2 pl-6 leading-8 text-neutral-700" {...props} />,
