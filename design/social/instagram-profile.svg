@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <!-- agenwiki Instagram profile image (1080x1080, safe for circular crop) -->
+  <rect x="0" y="0" width="1080" height="1080" fill="#0f766e"/>
+
+  <!-- subtle inset ring (sits just inside the circular crop) -->
+  <circle cx="540" cy="540" r="468" fill="none" stroke="#fbfbf8" stroke-opacity="0.16" stroke-width="3"/>
+
+  <!-- faint decorative quote mark, echoing the card-news style -->
+  <text x="540" y="330" text-anchor="middle" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="200" fill="#fbfbf8" opacity="0.10">&#8220;</text>
+
+  <!-- stacked wordmark: agen / wiki (= agent + wiki) -->
+  <text text-anchor="middle" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-weight="700" fill="#fbfbf8">
+    <tspan x="540" y="500" font-size="220">agen</tspan>
+    <tspan x="540" y="712" font-size="220">wiki</tspan>
+  </text>
+
+  <!-- divider -->
+  <line x1="452" y1="792" x2="628" y2="792" stroke="#fbfbf8" stroke-opacity="0.55" stroke-width="2"/>
+
+  <!-- tagline -->
+  <text x="540" y="852" text-anchor="middle" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="46" font-weight="700" fill="#fbfbf8" opacity="0.95" letter-spacing="6">AI 지식 허브</text>
+</svg>
