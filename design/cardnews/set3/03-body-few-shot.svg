@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <!-- agenwiki card news set3 - card 3/6 : 기법 2. 예시로 원하는 형태를 보여줘라 (few-shot) -->
+  <rect x="0" y="0" width="1080" height="1080" fill="#fbfbf8"/>
+
+  <!-- top bar -->
+  <text x="80" y="70" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="18" font-weight="700" fill="#5f6368">agenwiki</text>
+  <text x="1000" y="70" text-anchor="end" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="18" fill="#5f6368">03 / 06</text>
+  <line x1="80" y1="100" x2="1000" y2="100" stroke="#e5e7eb" stroke-width="1"/>
+
+  <!-- heading -->
+  <rect x="80" y="228" width="6" height="102" fill="#0f766e"/>
+  <text font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="46" font-weight="700" fill="#0f766e">
+    <tspan x="104" y="260">기법 2. 예시로 원하는 형태를</tspan>
+    <tspan x="104" y="316">보여줘라 (few-shot)</tspan>
+  </text>
+
+  <!-- bad/good example -->
+  <text font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="30" fill="#5f6368">
+    <tspan x="80" y="430">&#10060; "고객 후기를 요약해줘."</tspan>
+  </text>
+  <text font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="30" fill="#0f766e" font-weight="700">
+    <tspan x="80" y="510">&#9989; 예시 입력과 예시 출력을</tspan>
+    <tspan x="110" y="564">먼저 보여주면 원하는</tspan>
+    <tspan x="110" y="618">형식으로 훨씬 정확하게</tspan>
+    <tspan x="110" y="672">나옵니다.</tspan>
+  </text>
+
+  <!-- footer -->
+  <line x1="80" y1="945" x2="1000" y2="945" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="540" y="985" text-anchor="middle" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="22" font-weight="700" fill="#171717">agenwiki<tspan font-weight="400" font-size="20" fill="#5f6368">  ·  agenwiki.vercel.app</tspan></text>
+</svg>

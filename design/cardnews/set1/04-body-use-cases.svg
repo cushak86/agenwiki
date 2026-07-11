@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <!-- agenwiki card news set1 - card 4/6 : 실제로 어디에 쓰일까 -->
+  <rect x="0" y="0" width="1080" height="1080" fill="#fbfbf8"/>
+
+  <!-- top bar -->
+  <text x="80" y="70" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="18" font-weight="700" fill="#5f6368">agenwiki</text>
+  <text x="1000" y="70" text-anchor="end" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="18" fill="#5f6368">04 / 06</text>
+  <line x1="80" y1="100" x2="1000" y2="100" stroke="#e5e7eb" stroke-width="1"/>
+
+  <!-- heading -->
+  <rect x="80" y="248" width="6" height="46" fill="#0f766e"/>
+  <text x="104" y="283" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="46" font-weight="700" fill="#0f766e">실제로 어디에 쓰일까</text>
+
+  <!-- body -->
+  <text x="80" y="380" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="33" fill="#171717">
+    <tspan x="80" y="380">코드를 고치고 테스트까지</tspan>
+    <tspan x="80" y="434">돌리는 코딩 에이전트,</tspan>
+    <tspan x="80" y="488">여러 페이지를 오가며</tspan>
+    <tspan x="80" y="542">정보를 모으는 리서치 에이전트,</tspan>
+    <tspan x="80" y="596">문의를 분류하고 답하는</tspan>
+    <tspan x="80" y="650">고객 지원 에이전트가 대표적입니다.</tspan>
+  </text>
+
+  <!-- footer -->
+  <line x1="80" y1="945" x2="1000" y2="945" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="540" y="985" text-anchor="middle" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="22" font-weight="700" fill="#171717">agenwiki<tspan font-weight="400" font-size="20" fill="#5f6368">  ·  agenwiki.vercel.app</tspan></text>
+</svg>

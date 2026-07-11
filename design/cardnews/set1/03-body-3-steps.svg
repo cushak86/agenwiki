@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <!-- agenwiki card news set1 - card 3/6 : 에이전트가 도는 루프, 딱 3단계 -->
+  <rect x="0" y="0" width="1080" height="1080" fill="#fbfbf8"/>
+
+  <!-- top bar -->
+  <text x="80" y="70" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="18" font-weight="700" fill="#5f6368">agenwiki</text>
+  <text x="1000" y="70" text-anchor="end" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="18" fill="#5f6368">03 / 06</text>
+  <line x1="80" y1="100" x2="1000" y2="100" stroke="#e5e7eb" stroke-width="1"/>
+
+  <!-- heading -->
+  <rect x="80" y="228" width="6" height="102" fill="#0f766e"/>
+  <text font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="46" font-weight="700" fill="#0f766e">
+    <tspan x="104" y="260">에이전트가 도는 루프,</tspan>
+    <tspan x="104" y="316">딱 3단계</tspan>
+  </text>
+
+  <!-- list items -->
+  <text font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="30" fill="#171717">
+    <tspan x="80" y="430">&#9312; 계획: 목표를 작은 작업으로 쪼갠다</tspan>
+
+    <tspan x="80" y="494">&#9313; 도구 호출: 검색&#183;코드 실행&#183;파일 조작 등</tspan>
+    <tspan x="110" y="540">실제 행동을 한다</tspan>
+
+    <tspan x="80" y="604">&#9314; 결과 검증: 목표에 가까워졌는지</tspan>
+    <tspan x="110" y="650">확인하고, 아니면 다시 조정한다</tspan>
+  </text>
+
+  <!-- footer -->
+  <line x1="80" y1="945" x2="1000" y2="945" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="540" y="985" text-anchor="middle" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="22" font-weight="700" fill="#171717">agenwiki<tspan font-weight="400" font-size="20" fill="#5f6368">  ·  agenwiki.vercel.app</tspan></text>
+</svg>

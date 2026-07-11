@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <!-- agenwiki card news set3 - card 6/6 : CTA -->
+  <rect x="0" y="0" width="1080" height="1080" fill="#0f766e"/>
+
+  <!-- top bar -->
+  <text x="80" y="70" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="18" font-weight="700" fill="#fbfbf8" opacity="0.8">agenwiki</text>
+  <text x="1000" y="70" text-anchor="end" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="18" fill="#fbfbf8" opacity="0.7">06 / 06</text>
+  <line x1="80" y1="100" x2="1000" y2="100" stroke="#fbfbf8" stroke-opacity="0.25" stroke-width="1"/>
+
+  <!-- heading -->
+  <text font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="42" font-weight="700" fill="#fbfbf8">
+    <tspan x="80" y="340">오늘부터 프롬프트 하나씩</tspan>
+    <tspan x="80" y="396">바꿔보고 싶다면</tspan>
+  </text>
+
+  <!-- description -->
+  <text font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="32" fill="#fbfbf8" opacity="0.92">
+    <tspan x="80" y="480">agenwiki에서 나쁜 예&#183;좋은 예</tspan>
+    <tspan x="80" y="526">전체 정리와 자주 하는</tspan>
+    <tspan x="80" y="572">실수까지 확인하세요.</tspan>
+  </text>
+
+  <!-- CTA label -->
+  <text x="540" y="632" text-anchor="middle" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="22" fill="#fbfbf8" opacity="0.85">지금 확인하기</text>
+
+  <!-- URL button -->
+  <rect x="140" y="660" width="800" height="140" rx="16" fill="#fbfbf8"/>
+  <text x="540" y="722" text-anchor="middle" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="28" font-weight="700" fill="#0f766e">&#128279; agenwiki.vercel.app</text>
+  <text x="540" y="762" text-anchor="middle" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="24" fill="#0f766e">/guides/prompt-engineering-how-to</text>
+
+  <!-- footer -->
+  <line x1="80" y1="945" x2="1000" y2="945" stroke="#fbfbf8" stroke-opacity="0.25" stroke-width="1"/>
+  <text x="540" y="985" text-anchor="middle" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="22" font-weight="700" fill="#fbfbf8">agenwiki<tspan font-weight="400" font-size="20" fill="#fbfbf8" opacity="0.75">  ·  agenwiki.vercel.app</tspan></text>
+</svg>
