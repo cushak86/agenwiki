@@ -8,6 +8,9 @@ export const siteConfig = {
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://agenwiki.vercel.app"
 };
 
+// 페이지별 cover가 없을 때 쓰는 사이트 기본 OG 이미지.
+const DEFAULT_OG_IMAGE = "/images/covers/default.svg";
+
 export function absoluteUrl(pathname: string) {
   return new URL(pathname, siteConfig.url).toString();
 }
@@ -26,7 +29,7 @@ export function buildMetadata({
   ogType?: "article" | "website";
 }): Metadata {
   const url = absoluteUrl(pathname);
-  const images = image ? [{ url: absoluteUrl(image) }] : undefined;
+  const images = [{ url: absoluteUrl(image ?? DEFAULT_OG_IMAGE) }];
 
   return {
     title,
