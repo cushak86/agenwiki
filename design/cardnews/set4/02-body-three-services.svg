@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <!-- agenwiki card news set4 - card 2/6 : 세 서비스, 한눈에 보면 -->
+  <rect x="0" y="0" width="1080" height="1080" fill="#fbfbf8"/>
+
+  <!-- top bar -->
+  <text x="80" y="70" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="18" font-weight="700" fill="#5f6368">agenwiki</text>
+  <text x="1000" y="70" text-anchor="end" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="18" fill="#5f6368">02 / 06</text>
+  <line x1="80" y1="100" x2="1000" y2="100" stroke="#e5e7eb" stroke-width="1"/>
+
+  <!-- heading -->
+  <rect x="80" y="248" width="6" height="46" fill="#0f766e"/>
+  <text x="104" y="283" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="46" font-weight="700" fill="#0f766e">세 서비스, 한눈에 보면</text>
+
+  <!-- list items -->
+  <text font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="30" fill="#171717">
+    <tspan x="80" y="380">&#9312; 챗GPT &#8212; OpenAI, 플러그인&#183;</tspan>
+    <tspan x="110" y="426">부가 기능 생태계가 강점</tspan>
+
+    <tspan x="80" y="490">&#9313; 제미나이 &#8212; Google 연동,</tspan>
+    <tspan x="110" y="536">실시간 검색에 강점</tspan>
+
+    <tspan x="80" y="600">&#9314; 클로드 &#8212; 긴 문서&#183;신중한 답변,</tspan>
+    <tspan x="110" y="646">코드 작업에 강점</tspan>
+  </text>
+
+  <!-- footer -->
+  <line x1="80" y1="945" x2="1000" y2="945" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="540" y="985" text-anchor="middle" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="22" font-weight="700" fill="#171717">agenwiki<tspan font-weight="400" font-size="20" fill="#5f6368">  ·  agenwiki.vercel.app</tspan></text>
+</svg>

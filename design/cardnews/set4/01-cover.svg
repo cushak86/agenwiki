@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <!-- agenwiki card news set4 - card 1/6 : cover -->
+  <rect x="0" y="0" width="1080" height="1080" fill="#0f766e"/>
+
+  <!-- decorative faint quote mark -->
+  <text x="80" y="290" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="180" fill="#fbfbf8" opacity="0.14">&#8220;</text>
+
+  <!-- top bar -->
+  <text x="80" y="70" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="18" font-weight="700" fill="#fbfbf8" opacity="0.8">agenwiki</text>
+  <text x="1000" y="70" text-anchor="end" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="18" fill="#fbfbf8" opacity="0.7">01 / 06</text>
+  <line x1="80" y1="100" x2="1000" y2="100" stroke="#fbfbf8" stroke-opacity="0.25" stroke-width="1"/>
+
+  <!-- small series label -->
+  <text x="80" y="380" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="24" font-weight="700" fill="#fbfbf8" opacity="0.85">챗GPT&#183;제미나이&#183;클로드, 뭐가 다를까</text>
+
+  <!-- headline -->
+  <text x="80" y="450" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="60" font-weight="700" fill="#fbfbf8">
+    <tspan x="80" y="450">매번 다른 AI 켜보면서</tspan>
+    <tspan x="80" y="530">고민한 적 있나요?</tspan>
+  </text>
+
+  <!-- subtitle -->
+  <text x="80" y="632" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="34" fill="#fbfbf8" opacity="0.92">
+    <tspan x="80" y="632">잘 쓰는 사람들은 용도별로</tspan>
+    <tspan x="80" y="680">서비스를 나눠 씁니다</tspan>
+  </text>
+
+  <!-- footer -->
+  <line x1="80" y1="945" x2="1000" y2="945" stroke="#fbfbf8" stroke-opacity="0.25" stroke-width="1"/>
+  <text x="540" y="985" text-anchor="middle" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="22" font-weight="700" fill="#fbfbf8">agenwiki<tspan font-weight="400" font-size="20" fill="#fbfbf8" opacity="0.75">  ·  agenwiki.vercel.app</tspan></text>
+</svg>

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <!-- agenwiki card news set6 - card 2/6 : 다섯 가지로 비교하면 -->
+  <rect x="0" y="0" width="1080" height="1080" fill="#fbfbf8"/>
+
+  <!-- top bar -->
+  <text x="80" y="70" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="18" font-weight="700" fill="#5f6368">agenwiki</text>
+  <text x="1000" y="70" text-anchor="end" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="18" fill="#5f6368">02 / 06</text>
+  <line x1="80" y1="100" x2="1000" y2="100" stroke="#e5e7eb" stroke-width="1"/>
+
+  <!-- heading -->
+  <rect x="80" y="248" width="6" height="46" fill="#0f766e"/>
+  <text x="104" y="283" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="46" font-weight="700" fill="#0f766e">다섯 가지로 비교하면</text>
+
+  <!-- list items -->
+  <text font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="30" fill="#171717">
+    <tspan x="80" y="390">&#9312; 비용 &#8212; 초기 인프라 vs 호출량 과금</tspan>
+    <tspan x="80" y="460">&#9313; 데이터 통제 &#8212; 내부 처리 vs 외부 전송</tspan>
+    <tspan x="80" y="530">&#9314; 운영 난이도 &#8212; 직접 관리 vs 위임</tspan>
+    <tspan x="80" y="600">&#9315; 최신성 &#8212; 직접 갱신 vs 자동 업데이트</tspan>
+    <tspan x="80" y="670">&#9316; 커스터마이징 &#8212; 가중치 수정 vs 제한적</tspan>
+  </text>
+
+  <!-- footer -->
+  <line x1="80" y1="945" x2="1000" y2="945" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="540" y="985" text-anchor="middle" font-family="'Malgun Gothic','Apple SD Gothic Neo',sans-serif" font-size="22" font-weight="700" fill="#171717">agenwiki<tspan font-weight="400" font-size="20" fill="#5f6368">  ·  agenwiki.vercel.app</tspan></text>
+</svg>
