@@ -5,7 +5,7 @@ import { RelatedContent } from "@/components/RelatedContent";
 import { SubscribeForm } from "@/components/SubscribeForm";
 import { TagChips } from "@/components/TagChips";
 import { getAllSlugs, getBySlug } from "@/lib/content";
-import { metadataForContent } from "@/lib/seo";
+import { buildBreadcrumbJsonLd, metadataForContent } from "@/lib/seo";
 import type { NewsletterMeta } from "@/lib/types";
 
 export const dynamic = "force-static";
@@ -35,8 +35,15 @@ export default function NewsletterDetailPage({ params }: { params: { slug: strin
 
   const meta = record.meta as NewsletterMeta;
 
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: "홈", pathname: "/" },
+    { name: "뉴스레터", pathname: "/newsletter" },
+    { name: meta.title, pathname: `/newsletter/${meta.slug}` }
+  ]);
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-12">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <div className="max-w-3xl">
         <p className="text-sm font-semibold text-accent">Issue #{meta.issueNumber}</p>
         <h1 className="mt-3 text-4xl font-bold leading-tight text-ink">{meta.title}</h1>

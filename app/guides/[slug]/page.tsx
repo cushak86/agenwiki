@@ -5,7 +5,7 @@ import { RelatedContent } from "@/components/RelatedContent";
 import { TableOfContents } from "@/components/TableOfContents";
 import { TagChips } from "@/components/TagChips";
 import { getAllSlugs, getBySlug } from "@/lib/content";
-import { articleJsonLd, metadataForContent } from "@/lib/seo";
+import { articleJsonLd, buildBreadcrumbJsonLd, metadataForContent } from "@/lib/seo";
 import type { GuideMeta } from "@/lib/types";
 
 export const dynamic = "force-static";
@@ -35,9 +35,16 @@ export default function GuideDetailPage({ params }: { params: { slug: string } }
 
   const meta = record.meta as GuideMeta;
 
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: "홈", pathname: "/" },
+    { name: "가이드", pathname: "/guides" },
+    { name: meta.title, pathname: `/guides/${meta.slug}` }
+  ]);
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-12">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd(meta)) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <div className="max-w-3xl">
         <p className="text-sm font-semibold text-accent">{meta.category}</p>
         <h1 className="mt-3 text-4xl font-bold leading-tight text-ink">{meta.title}</h1>

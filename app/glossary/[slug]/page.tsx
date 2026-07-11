@@ -5,7 +5,7 @@ import { Prose } from "@/components/Prose";
 import { RelatedContent } from "@/components/RelatedContent";
 import { TagChips } from "@/components/TagChips";
 import { getAllSlugs, getBySlug } from "@/lib/content";
-import { definedTermJsonLd, metadataForContent } from "@/lib/seo";
+import { buildBreadcrumbJsonLd, definedTermJsonLd, metadataForContent } from "@/lib/seo";
 import type { GlossaryMeta } from "@/lib/types";
 
 export const dynamic = "force-static";
@@ -40,9 +40,16 @@ export default function GlossaryDetailPage({ params }: { params: { slug: string 
     .filter((slug, index, self) => slug !== meta.slug && glossaryTerms.includes(slug) && self.indexOf(slug) === index)
     .map((slug) => getBySlug("glossary", slug).meta as GlossaryMeta);
 
+  const breadcrumbJsonLd = buildBreadcrumbJsonLd([
+    { name: "홈", pathname: "/" },
+    { name: "용어사전", pathname: "/glossary" },
+    { name: meta.term, pathname: `/glossary/${meta.slug}` }
+  ]);
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-12">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(definedTermJsonLd(meta)) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <div className="max-w-3xl">
         <p className="text-sm font-semibold text-accent">{meta.category}</p>
         <h1 className="mt-3 text-4xl font-bold leading-tight text-ink">{meta.term}</h1>
