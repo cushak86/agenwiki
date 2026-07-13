@@ -1,0 +1,31 @@
+---
+term: "트랜스포머"
+slug: transformer
+aliases:
+  - "Transformer"
+  - "트랜스포머 아키텍처"
+  - "Transformer Architecture"
+shortDef: "어텐션 메커니즘을 중심으로 문장 속 토큰들의 관계를 한 번에 계산하는 신경망 구조다. 오늘날 대부분의 대규모 언어 모델(LLM)의 기반이 되는 아키텍처다."
+category: "AI"
+tags:
+  - "llm-fundamentals"
+updatedAt: "2026-07-12"
+related:
+  - "attention"
+  - "llm"
+  - "token"
+  - "embedding"
+draft: false
+---
+
+## 개념
+
+트랜스포머(Transformer)는 2017년에 제안된 신경망 구조로, [어텐션](/glossary/attention) 메커니즘을 핵심으로 삼아 입력 시퀀스 안의 [토큰](/glossary/token)들이 서로 얼마나 관련되는지를 계산한다. 그 이전에 주로 쓰이던 순환 신경망(RNN)이 토큰을 앞에서 뒤로 순서대로 처리했던 것과 달리, 트랜스포머는 문장 전체의 토큰 관계를 한꺼번에 계산한다.
+
+이 "한꺼번에 계산한다"는 성질 덕분에 학습을 대규모로 병렬화할 수 있고, 멀리 떨어진 토큰 사이의 관계도 잘 포착한다. 입력은 먼저 [임베딩](/glossary/embedding) 벡터로 변환되고, 여러 층의 어텐션과 피드포워드 연산을 거치며 문맥이 반영된 표현으로 다듬어진다. 토큰의 순서 정보는 별도의 위치 인코딩(positional encoding)으로 더해 준다.
+
+## 쓰임새
+
+트랜스포머는 오늘날 [대규모 언어 모델(LLM)](/glossary/llm)의 사실상 표준 아키텍처다. ChatGPT, Claude, Gemini를 포함한 대부분의 생성형 언어 모델이 트랜스포머를 기반으로 하며, 긴 문맥을 처리하는 능력이나 [컨텍스트 윈도우](/glossary/context-window)의 크기도 이 구조 위에서 발전해 왔다.
+
+언어뿐 아니라 이미지·음성·코드 등 다른 종류의 데이터로도 확장되어, 비전 트랜스포머(ViT)나 [멀티모달](/glossary/multimodal) 모델의 뼈대로도 널리 쓰인다. 병렬 학습이 쉽고 확장성이 좋다는 점이 대규모 모델 시대를 연 결정적 요인으로 꼽힌다.
