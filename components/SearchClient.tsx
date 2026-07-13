@@ -1,7 +1,8 @@
 "use client";
 
+import { track } from "@vercel/analytics";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { ContentType, SearchItem } from "@/lib/types";
 
 const typeLabels: Record<ContentType, string> = {
@@ -36,6 +37,19 @@ export function SearchClient({ items }: { items: SearchItem[] }) {
 
     return items.filter((item) => matches(item, trimmed));
   }, [items, trimmed]);
+
+  // 결과 0건 검색어는 다음 콘텐츠·도구 투자의 근거가 된다. 타이핑이 멈춘 뒤 1회만 기록.
+  useEffect(() => {
+    if (trimmed.length < 2 || results.length > 0) {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      track("search_zero", { query: trimmed.slice(0, 50) });
+    }, 1200);
+
+    return () => window.clearTimeout(timer);
+  }, [trimmed, results.length]);
 
   return (
     <div>

@@ -1,13 +1,25 @@
 "use client";
 
+import { track } from "@vercel/analytics";
 import { useState } from "react";
 
-export function PromptCopyButton({ text }: { text: string }) {
+export function PromptCopyButton({
+  text,
+  slug,
+  event = "prompt_copy"
+}: {
+  text: string;
+  slug?: string;
+  event?: string;
+}) {
   const [copied, setCopied] = useState(false);
 
   async function copyPrompt() {
     await navigator.clipboard.writeText(text);
     setCopied(true);
+    if (slug) {
+      track(event, { slug });
+    }
     window.setTimeout(() => setCopied(false), 1600);
   }
 

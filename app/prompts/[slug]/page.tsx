@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { Mdx } from "@/components/Mdx";
 import { PromptCopyButton } from "@/components/PromptCopyButton";
+import { PromptFillForm } from "@/components/PromptFillForm";
 import { Prose } from "@/components/Prose";
 import { RelatedContent } from "@/components/RelatedContent";
 import { TagChips } from "@/components/TagChips";
@@ -10,6 +11,9 @@ import type { PromptMeta } from "@/lib/types";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
+
+// 빈칸 채우기 폼 파일럿. 복사 이벤트로 실사용 신호가 확인되면 전체 프롬프트로 확대한다.
+const FILL_FORM_PILOT_SLUGS = new Set(["long-document-summary-prompt"]);
 
 export function generateStaticParams() {
   return getAllSlugs("prompts").map((slug) => ({ slug }));
@@ -55,12 +59,13 @@ export default function PromptDetailPage({ params }: { params: { slug: string } 
       <section className="mt-8 max-w-3xl rounded-lg border border-line bg-white p-5">
         <div className="mb-4 flex items-center justify-between gap-4">
           <h2 className="text-lg font-semibold text-ink">복사 대상 프롬프트</h2>
-          <PromptCopyButton text={meta.promptText} />
+          <PromptCopyButton text={meta.promptText} slug={meta.slug} />
         </div>
         <pre className="overflow-x-auto rounded-md bg-neutral-950 p-4 text-sm leading-7 text-neutral-100">
           <code>{meta.promptText}</code>
         </pre>
       </section>
+      {FILL_FORM_PILOT_SLUGS.has(meta.slug) ? <PromptFillForm promptText={meta.promptText} slug={meta.slug} /> : null}
       <div className="mt-10">
         <Prose>
           <Mdx source={record.body} />
