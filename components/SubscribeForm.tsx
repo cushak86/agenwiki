@@ -1,5 +1,6 @@
 "use client";
 
+import { track } from "@vercel/analytics";
 import { useState, type FormEvent } from "react";
 
 // Stibee 구독 API 엔드포인트(공개 폼용). 이메일을 x-www-form-urlencoded로 POST하면
@@ -9,7 +10,15 @@ const SUBSCRIBE_ENDPOINT =
 
 type Status = "idle" | "loading" | "success" | "error";
 
-export function SubscribeForm() {
+export function SubscribeForm({
+  heading = "뉴스레터 구독",
+  description = "AI 에이전트, 도구, 프롬프트 업데이트를 정리해 보냅니다.",
+  source = "newsletter"
+}: {
+  heading?: string;
+  description?: string;
+  source?: string;
+}) {
   const [email, setEmail] = useState("");
   const [agreed, setAgreed] = useState(false);
   const [status, setStatus] = useState<Status>("idle");
@@ -40,6 +49,7 @@ export function SubscribeForm() {
         setMessage(
           "구독 신청이 접수되었습니다. 메일함으로 보내드린 확인 메일의 링크를 눌러 구독을 완료해 주세요. (메일이 없으면 스팸함도 확인해 주세요.)"
         );
+        track("subscribe_submit", { source });
         setEmail("");
         setAgreed(false);
       }
@@ -51,10 +61,8 @@ export function SubscribeForm() {
 
   return (
     <form onSubmit={handleSubmit} className="rounded-lg border border-line bg-white p-5">
-      <h2 className="text-lg font-semibold text-ink">뉴스레터 구독</h2>
-      <p className="mt-1 text-sm leading-6 text-muted">
-        AI 에이전트, 도구, 프롬프트 업데이트를 정리해 보냅니다.
-      </p>
+      <h2 className="text-lg font-semibold text-ink">{heading}</h2>
+      <p className="mt-1 text-sm leading-6 text-muted">{description}</p>
       <div className="mt-4 flex flex-col gap-3 md:flex-row">
         <input
           type="email"
