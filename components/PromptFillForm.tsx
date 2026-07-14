@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { OpenInButtons } from "@/components/OpenInButtons";
 import { PromptCopyButton } from "@/components/PromptCopyButton";
 
 // variables 프론트매터 배열은 promptText와 불일치하는 파일이 있어 신뢰하지 않는다.
@@ -71,9 +72,12 @@ export function PromptFillForm({ promptText, slug }: { promptText: string; slug:
         ))}
       </div>
 
-      <div className="mt-5 flex items-center justify-between gap-4">
+      <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
         <h3 className="text-sm font-semibold text-ink">완성된 프롬프트</h3>
-        <PromptCopyButton text={completed} slug={slug} event="prompt_fill_copy" />
+        <div className="flex flex-wrap items-center gap-2">
+          <PromptCopyButton text={completed} slug={slug} event="prompt_fill_copy" />
+          <OpenInButtons text={completed} slug={slug} />
+        </div>
       </div>
       <pre className="mt-3 max-h-72 overflow-auto rounded-md bg-neutral-950 p-4 text-sm leading-7 text-neutral-100">
         <code>{completed}</code>

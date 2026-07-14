@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { Mdx } from "@/components/Mdx";
+import { OpenInButtons } from "@/components/OpenInButtons";
 import { PromptCopyButton } from "@/components/PromptCopyButton";
 import { PromptFillForm } from "@/components/PromptFillForm";
 import { Prose } from "@/components/Prose";
@@ -57,9 +58,12 @@ export default function PromptDetailPage({ params }: { params: { slug: string } 
         </div>
       </div>
       <section className="mt-8 max-w-3xl rounded-lg border border-line bg-white p-5">
-        <div className="mb-4 flex items-center justify-between gap-4">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-lg font-semibold text-ink">복사 대상 프롬프트</h2>
-          <PromptCopyButton text={meta.promptText} slug={meta.slug} />
+          <div className="flex flex-wrap items-center gap-2">
+            <PromptCopyButton text={meta.promptText} slug={meta.slug} />
+            <OpenInButtons text={meta.promptText} slug={meta.slug} />
+          </div>
         </div>
         <pre className="overflow-x-auto rounded-md bg-neutral-950 p-4 text-sm leading-7 text-neutral-100">
           <code>{meta.promptText}</code>
