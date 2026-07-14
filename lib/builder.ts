@@ -92,8 +92,49 @@ export const FORMATS = [
   { key: "structured", label: "요약+본문+실행항목", text: "출력은 '한 줄 요약 → 본문 → 실행 항목' 구조로 작성합니다." }
 ];
 
+// few-shot 예시: 프롬프트 품질을 가장 크게 올리는 단일 레버.
+// "예시 포함" 재료를 켜면 작업 유형별 검증된 입출력 예시가 프롬프트에 삽입된다.
+export const EXAMPLES: Record<string, { input: string; output: string }> = {
+  report: {
+    input: "3분기 온라인 매출 12% 증가, 오프라인 5% 감소, 마케팅비 동결 상태의 월별 데이터",
+    output:
+      "한 줄 요약: 온라인 전환 가속으로 3분기 총매출은 전년 대비 4% 성장. 핵심: ① 온라인 +12% (신규 고객 유입이 견인) ② 오프라인 -5% (2개 지점 집중) ③ 마케팅 효율 개선. 실행 항목: 오프라인 부진 지점 원인 분석(기한: 10/15, 담당: 영업팀)."
+  },
+  email: {
+    input: "협력사에 납기 1주 연장을 요청하는 상황, 상대는 실무 담당자",
+    output:
+      "제목: [요청] ○○ 프로젝트 납기 조정 협의 (10/20 → 10/27)\n안녕하세요, ○○팀 △△입니다. 내부 품질 검수에서 보완 사항이 발견되어, 완성도를 위해 납기를 1주 조정하고자 합니다. 조정 시 검수 완료본으로 전달드릴 수 있습니다. 가능 여부를 회신 주시면 일정표를 바로 공유드리겠습니다."
+  },
+  analyze: {
+    input: "고객 설문 200건 원문",
+    output:
+      "핵심 발견: ① 불만의 62%가 배송 지연에 집중 ② 20대는 UI, 40대는 CS 응대를 주로 지적 ③ 재구매 의향은 배송 만족과 강한 상관. 의사결정 포인트: 배송 SLA 개선이 최우선 투자처. 근거: 문항 3·7 교차 분석."
+  },
+  translate: {
+    input: "\"We're excited to announce...\"로 시작하는 영문 보도자료",
+    output:
+      "(직역) \"우리는 ~을 발표하게 되어 흥분됩니다\" → (자연스러운 번역) \"○○를 새롭게 선보입니다.\" — 영어의 관습적 표현은 한국어 보도자료 관례에 맞게 옮기고, 의역 노트에 표시."
+  },
+  learn: {
+    input: "RAG가 뭔지 모르는 비개발자",
+    output:
+      "한 줄 정의: RAG는 AI가 답하기 전에 관련 자료를 먼저 찾아 읽고 답하게 하는 방법입니다. 비유: 오픈북 시험 — 암기(학습)만으로 답하는 대신 교과서(내 문서)를 펴놓고 답합니다. 단, 비유의 한계: 시험과 달리 어떤 책을 펼지도 AI가 고릅니다."
+  },
+  code: {
+    input: "null 체크 없이 중첩 객체에 접근하는 JavaScript 함수",
+    output:
+      "문제: user.profile.email 접근 시 profile이 없으면 TypeError. 위험도: 높음(런타임 크래시). 개선안: 변경 전 user.profile.email → 변경 후 user?.profile?.email ?? 기본값. 추가 권고: 이 패턴이 3곳 더 있어 일괄 수정 필요."
+  },
+  ideas: {
+    input: "사내 지식 공유가 안 되는 문제",
+    output:
+      "아이디어 1: 주간 15분 '실패 공유회' — 장점: 심리적 장벽이 낮음 / 위험: 강제성 없으면 소멸. 아이디어 2: 문서화를 온보딩 필수 절차에 결합 — 장점: 자연 축적 / 위험: 형식적 작성."
+  }
+};
+
 export const INGREDIENTS = [
   { key: "no_hallucination", label: "환각 방지", text: "제공된 내용에 없는 사실을 지어내지 않습니다. 근거가 없으면 '불명확'으로 표시합니다." },
+  { key: "few_shot", label: "예시 포함 (few-shot)", text: "" },
   { key: "evidence", label: "근거 표시", text: "핵심 주장마다 어떤 입력 내용에 근거했는지 표시합니다." },
   { key: "step_by_step", label: "단계적 추론", text: "결론을 내기 전에 사고 과정을 단계별로 먼저 보여줍니다." },
   { key: "ask_first", label: "부족하면 되묻기", text: "작업에 필요한 정보가 부족하면 추측하지 말고 먼저 질문합니다." },
@@ -115,14 +156,19 @@ export function assemblePrompt(options: {
   const instruction = task.instruction.replace("{audience}", audience).replace("{tone}", tone);
 
   const rules = [
-    ...INGREDIENTS.filter((item) => ingredients.includes(item.key)).map((item) => item.text),
+    ...INGREDIENTS.filter((item) => ingredients.includes(item.key) && item.text.length > 0).map((item) => item.text),
     ...FORMATS.filter((item) => formats.includes(item.key)).map((item) => item.text)
   ];
+
+  const example = ingredients.includes("few_shot") ? EXAMPLES[task.key] : undefined;
 
   const parts = [
     task.role,
     instruction,
     rules.length > 0 ? `규칙: ${rules.map((rule, index) => `(${index + 1}) ${rule}`).join(" ")}` : null,
+    example
+      ? `다음은 좋은 출력의 예시입니다. [예시 입력]: ${example.input} [예시 출력]: ${example.output} 이 예시의 수준과 구조를 따르되, 내용은 실제 입력에 맞게 작성합니다.`
+      : null,
     note.trim().length > 0 ? `추가 요청: ${note.trim()}` : null,
     `[${task.inputLabel}]: {${task.inputLabel}}`
   ];

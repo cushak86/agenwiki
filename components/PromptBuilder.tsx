@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { OpenInButtons } from "@/components/OpenInButtons";
 import { PromptCopyButton } from "@/components/PromptCopyButton";
 import { AUDIENCES, FORMATS, INGREDIENTS, TASKS, TONES, assemblePrompt } from "@/lib/builder";
+import { decodeRecipe, encodeRecipe, loadSavedRecipes, persistSavedRecipes, type SavedRecipe } from "@/lib/recipe";
 
 function Chip({ active, label, onClick }: { active: boolean; label: string; onClick: () => void }) {
   return (
@@ -38,6 +39,35 @@ export function PromptBuilder() {
   const [note, setNote] = useState("");
   const [input, setInput] = useState("");
   const [tracked, setTracked] = useState(false);
+  const [saved, setSaved] = useState<SavedRecipe[]>([]);
+  const [shareNotice, setShareNotice] = useState<string | null>(null);
+
+  function applyRecipe(encoded: string) {
+    const recipe = decodeRecipe(encoded);
+
+    if (!recipe) {
+      return false;
+    }
+
+    // 알 수 없는 키(구버전 링크 등)는 조용히 버린다 — 깨진 상태로 조립되는 것보다 낫다.
+    setTaskKey(TASKS.some((item) => item.key === recipe.taskKey) ? recipe.taskKey : null);
+    setAudienceKey(AUDIENCES.some((item) => item.key === recipe.audienceKey) ? recipe.audienceKey : null);
+    setToneKey(TONES.some((item) => item.key === recipe.toneKey) ? recipe.toneKey : null);
+    setFormatKeys(recipe.formatKeys.filter((key) => FORMATS.some((item) => item.key === key)));
+    setIngredientKeys(recipe.ingredientKeys.filter((key) => INGREDIENTS.some((item) => item.key === key)));
+    setNote(recipe.note);
+    return true;
+  }
+
+  // 공유 링크(?r=)로 진입하면 레시피를 복원한다. localStorage 보관함도 마운트 후에만 읽는다.
+  useEffect(() => {
+    const encoded = new URLSearchParams(window.location.search).get("r");
+    if (encoded && applyRecipe(encoded)) {
+      track("recipe_open", {});
+    }
+    setSaved(loadSavedRecipes());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const task = TASKS.find((item) => item.key === taskKey) ?? null;
   const audience = AUDIENCES.find((item) => item.key === audienceKey) ?? null;
@@ -73,6 +103,38 @@ export function PromptBuilder() {
 
   function toggle(list: string[], key: string, set: (next: string[]) => void) {
     set(list.includes(key) ? list.filter((item) => item !== key) : [...list, key]);
+  }
+
+  function currentEncoded() {
+    return encodeRecipe({ taskKey, audienceKey, toneKey, formatKeys, ingredientKeys, note });
+  }
+
+  async function copyShareLink() {
+    const url = `${window.location.origin}/prompts/builder?r=${currentEncoded()}`;
+    await navigator.clipboard.writeText(url);
+    track("recipe_share", { task: taskKey ?? "" });
+    setShareNotice("공유 링크를 복사했습니다. 붙여넣으면 이 레시피가 채워진 채 열립니다.");
+    window.setTimeout(() => setShareNotice(null), 4000);
+  }
+
+  function saveRecipe() {
+    const taskLabel = task?.label ?? "레시피";
+    const name = window.prompt("레시피 이름을 지어주세요", `${taskLabel} 레시피`);
+
+    if (!name) {
+      return;
+    }
+
+    const next = [...saved.filter((item) => item.name !== name), { name, encoded: currentEncoded(), savedAt: Date.now() }];
+    setSaved(next);
+    persistSavedRecipes(next);
+    track("recipe_save", { task: taskKey ?? "" });
+  }
+
+  function removeRecipe(name: string) {
+    const next = saved.filter((item) => item.name !== name);
+    setSaved(next);
+    persistSavedRecipes(next);
   }
 
   return (
@@ -174,7 +236,60 @@ export function PromptBuilder() {
         ) : (
           <p className="mt-3 text-sm leading-6 text-muted">1단계(작업)와 2단계(독자·톤)를 선택하면 여기에 프롬프트가 조립됩니다.</p>
         )}
+        {ready ? (
+          <div className="mt-4 border-t border-line pt-4">
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                type="button"
+                onClick={copyShareLink}
+                className="rounded-md border border-line bg-white px-3 py-2 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent"
+              >
+                🔗 레시피 링크 복사
+              </button>
+              <button
+                type="button"
+                onClick={saveRecipe}
+                className="rounded-md border border-line bg-white px-3 py-2 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent"
+              >
+                💾 내 레시피에 저장
+              </button>
+            </div>
+            {shareNotice ? <p className="mt-2 text-xs leading-5 text-accent">{shareNotice}</p> : null}
+            <p className="mt-2 text-xs leading-5 text-muted">
+              링크에는 선택한 조합만 담기고 4단계에 붙여넣은 내용은 담기지 않습니다. 저장은 이 브라우저에만 보관됩니다.
+            </p>
+          </div>
+        ) : null}
       </section>
+
+      {saved.length > 0 ? (
+        <section className="rounded-lg border border-line bg-white p-5">
+          <h2 className="text-base font-semibold text-ink">내 레시피</h2>
+          <ul className="mt-3 space-y-2">
+            {saved.map((item) => (
+              <li key={item.name} className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-line px-3 py-2">
+                <span className="text-sm font-medium text-ink">{item.name}</span>
+                <span className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => applyRecipe(item.encoded)}
+                    className="text-sm font-semibold text-accent hover:underline"
+                  >
+                    불러오기
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => removeRecipe(item.name)}
+                    className="text-sm text-muted hover:text-ink"
+                  >
+                    삭제
+                  </button>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
     </div>
   );
 }

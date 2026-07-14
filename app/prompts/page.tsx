@@ -42,6 +42,16 @@ export default function PromptsPage() {
             <p className="mt-2 text-sm leading-6 text-muted">{chain.description}</p>
           </Link>
         ))}
+        <Link
+          href="/tools/claude-md"
+          className="rounded-lg border border-accent bg-white p-6 shadow-sm transition hover:shadow-md"
+        >
+          <p className="text-sm font-semibold text-accent">🤖 도구</p>
+          <h2 className="mt-2 text-xl font-bold text-ink">CLAUDE.md 생성기</h2>
+          <p className="mt-2 text-sm leading-6 text-muted">
+            AI 코딩 도구용 설정 파일(CLAUDE.md·AGENTS.md·.cursorrules)을 클릭으로 만듭니다.
+          </p>
+        </Link>
       </div>
 
       <h2 className="mt-12 text-xl font-bold text-ink">프롬프트 라이브러리</h2>
