@@ -152,14 +152,7 @@ function parseFile(type: ContentType, filePath: string): ContentRecord {
   const fallbackSlug = path.basename(filePath, ".mdx");
   const meta = validateMeta(type, data, fallbackSlug, filePath);
 
-  if (meta.draft) {
-    return { meta, body: parsed.content };
-  }
-
-  return {
-    meta,
-    body: parsed.content
-  };
+  return { meta, body: parsed.content };
 }
 
 function sortDate(meta: ContentMeta) {
@@ -177,11 +170,20 @@ export function getAll(type: ContentType): ContentMeta[] {
     return [];
   }
 
+  // 날짜 게이트: 미래 publishedAt 글은 빌드 시점에 목록·sitemap·RSS·라우트(getAllSlugs 경유) 전부에서 제외된다.
+  // 정적 사이트라 게이트는 재빌드 시점에 평가된다 — 예약 발행은 미래 날짜가 아니라 draft:true로 관리하고,
+  // 매일 재빌드(예약 발행 크론)가 결선되면 미래 날짜 글도 해당 날짜의 빌드부터 자동 공개된다.
+  const today = new Date().toISOString().slice(0, 10);
+
   return fs
     .readdirSync(dir)
     .filter((fileName) => fileName.endsWith(".mdx"))
     .map((fileName) => parseFile(type, path.join(dir, fileName)).meta)
     .filter((meta) => !meta.draft)
+    .filter((meta) => {
+      const published = "publishedAt" in meta ? meta.publishedAt : "";
+      return published === "" || published <= today;
+    })
     .sort((a, b) => sortDate(b).localeCompare(sortDate(a)));
 }
 
