@@ -47,6 +47,13 @@ export default function ClaudeMdGeneratorPage() {
             <li>명령어 섹션이 의외로 중요합니다. 테스트·빌드 명령을 적어두면 AI가 스스로 검증하고 제출합니다.</li>
             <li>프로젝트가 바뀌면 파일도 갱신하세요. 낡은 규칙은 없는 것보다 나쁩니다.</li>
           </ul>
+          <p className="mt-4 leading-8 text-muted">
+            섹션별로 무엇을 어떻게 적어야 하는지 실전 예시가 필요하면{" "}
+            <a href="/guides/how-to-write-claude-md" className="font-semibold text-accent hover:underline">
+              CLAUDE.md 작성법 가이드
+            </a>
+            를 함께 보세요.
+          </p>
         </section>
       </div>
     </div>
