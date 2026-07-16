@@ -1,10 +1,33 @@
 # agenwiki Content Pipeline
 
-This is a semi-manual content pipeline (fetch → generate → review → publish). It does not call an LLM API; the orchestrator worker is the LLM seam.
+This is a semi-manual content pipeline (fetch → generate → format validation → publish). It does not call an LLM API; the orchestrator worker is the LLM seam. There is no review step — see "Reality vs. design intent" below.
 
 **Sources**: arXiv API (`fetch_arxiv.py`) and content-carrying / CC-licensed RSS-Atom feeds (`fetch_rss.py`). Feed-provided content only — no HTML full-text scraping.
 
 **Content types** (`--type`): `guides`, `glossary`, `prompts`, `newsletter`. Prompts per type: `a_model_guide.md`, `a_model_blog.md`, `glossary_term.md`, `prompt_entry.md`, `newsletter_issue.md`.
+
+## ⚠️ Reality vs. design intent
+
+Sections below describe the pipeline **as designed**. Where design and reality differ,
+reality is stated here. Do not cite this file as evidence of what the pipeline does.
+
+**What actually runs**: fetch → LLM draft → `publish.py` format validation → publish.
+
+`publish.py` validates the frontmatter schema, requires `draft: false`, refuses to
+overwrite an existing slug, and runs `npm run build`. For `--type guides` only, it also
+checks that a line matching `^> 출처:.*https?://` exists.
+
+**What does NOT run**: nothing verifies factual accuracy. Nothing checks that source URLs
+resolve, that quotes match the original, or that the source block matches the content.
+The `guides`-only source check is a string-presence test, not source verification —
+any URL passes. `glossary`, `prompts`, and `newsletter` get no source check at all.
+**No human fact-check gate is enforced anywhere in this repo.** `draft: false` is a flag
+a script sets, not evidence that a person read the draft.
+
+As of 2026-07-16, 12 of 59 published pieces carry a source block
+(guides 12/28, glossary 0/19, prompts 0/8, newsletter 0/4). 16 guides in `content/guides/`
+have no source block and therefore could not have passed `validate_source_block` —
+they bypassed `publish.py` or predate the check.
 
 ## Manual Operation
 
@@ -24,22 +47,28 @@ This is a semi-manual content pipeline (fetch → generate → review → publis
 
    Give one queue JSON file and `scripts/prompts/a_model_guide.md` to the orchestrator worker. The worker writes `scripts/staging/<slug>.mdx` with `draft: true`. Do not add LLM API code to this repo.
 
-3. Manual seam #2: review the staged draft.
+3. Format validation (automated — NOT a review).
 
-   A human checks the staged MDX for hallucination, copyright risk, title/slug quality, and source attribution. Set `draft: false` only after approval; otherwise Next will exclude the guide route. Discord notification is one-way only and does not approve content.
+   `publish.py` checks frontmatter schema, slug/date validity, `draft: false`, slug
+   collision, and (guides only) source-block presence. It does not read the content.
 
-4. Publish after review:
+   **Design intent, not implemented**: a human fact-check seam at this point — checking
+   hallucination, copyright risk, and source attribution — was the original design. No code
+   enforces it and it is not part of current operation. Treat it as a proposal.
+
+4. Publish after format validation:
 
    ```powershell
    python scripts/pipeline/publish.py <slug>
    ```
 
-   The publisher validates frontmatter and the arXiv source block, requires `draft: false`, moves the file to `content/guides/`, runs `npm run build`, sends a best-effort Discord publish message through the shared adapter, commits with `suhun.lee59@gmail.com`, and prints `git push`. It only pushes when `--push` is explicitly passed. `npm run build` is a syntax/route sanity check; it does not validate factual accuracy or copyright safety.
+   The publisher validates frontmatter, requires `draft: false`, moves the file to `content/guides/`, runs `npm run build`, sends a best-effort Discord publish message through the shared adapter, commits with `suhun.lee59@gmail.com`, and prints `git push`. It only pushes when `--push` is explicitly passed. For `--type guides` only, it also checks that a source-block line exists — a string-presence test, not source verification (any URL passes; it is not arXiv-specific despite the error message). `npm run build` is a syntax/route sanity check; it does not validate factual accuracy or copyright safety.
 
 ## Scheduling the fetch step (optional)
 
 `scheduled_fetch.py` runs the configured sources to fill the queue. It automates
-**ingestion only** — generation, review, and publish stay manual seams.
+**ingestion only** — generation and publish stay manual seams. (There is no review seam;
+a person invokes them, but nothing requires that person to have read the draft.)
 
 ```powershell
 copy scripts\pipeline\sources.example.json scripts\pipeline\sources.json   # then edit
@@ -58,7 +87,9 @@ cron equivalent: `0 9 * * * python /path/to/scripts/pipeline/scheduled_fetch.py`
 
 ## Caveats
 
-- Fully unattended publishing is intentionally unsupported; the scheduler fills the queue but does not generate or publish.
+- `publish.py` must be invoked by a person, but nothing requires that person to have read
+  the draft. The pipeline is not unattended, but it is not reviewed either — do not
+  describe it as human-reviewed.
 - Sources are arXiv + feed-provided content only. No HTML full-text scraping (copyright/dependency reasons). Prefer low-risk sources: official APIs, press releases, CC-licensed or content-carrying feeds.
 - On a fresh Windows Python install, TLS may fail if Python cannot find a CA bundle. Set `SSL_CERT_FILE` to a CA bundle (e.g. Git for Windows `ca-bundle.crt`, or a `certifi` bundle) before fetching; `scheduled_fetch.py` auto-detects the Git bundle.
 - `publish.py` supports `--type guides|glossary|prompts|newsletter`. Frontmatter arrays may be inline (`["a","b"]`) or multiline. Use `--skip-build` to batch-publish, then run `npm run build` once.
