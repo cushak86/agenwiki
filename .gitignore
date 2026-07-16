@@ -24,3 +24,9 @@ scripts/pipeline/sources.json
 .claude/
 CLAUDE.md
 docs/
+
+# OG 커버 생성용 폰트 캐시 (10MB — 생성 시점에만 필요, 스크립트가 자동 내려받음)
+scripts/design/.fonts/
+
+# tsc --noEmit 부산물
+tsconfig.tsbuildinfo

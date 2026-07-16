@@ -9,7 +9,19 @@ export const siteConfig = {
 };
 
 // 페이지별 cover가 없을 때 쓰는 사이트 기본 OG 이미지.
-const DEFAULT_OG_IMAGE = "/images/covers/default.svg";
+// SVG 금지 — X·페이스북·슬랙·카카오톡은 SVG를 카드로 렌더링하지 않는다(JPG/PNG/WEBP/GIF만).
+// PNG 생성: scripts/design/make_og_png.py
+const DEFAULT_OG_IMAGE = "/images/covers/default.png";
+
+// OG 카드 규격. 명시하면 플랫폼이 원본을 받기 전에 레이아웃을 잡을 수 있다.
+const OG_IMAGE_SIZE = { width: 1200, height: 630 };
+
+// cover가 SVG면 카드가 빈칸으로 나가므로 PNG 짝으로 교체한다.
+// (구 콘텐츠의 frontmatter가 .svg를 가리키는 동안의 안전망)
+function rasterizedCover(image?: string) {
+  if (!image) return undefined;
+  return image.endsWith(".svg") ? image.replace(/\.svg$/, ".png") : image;
+}
 
 export function absoluteUrl(pathname: string) {
   return new URL(pathname, siteConfig.url).toString();
@@ -29,7 +41,7 @@ export function buildMetadata({
   ogType?: "article" | "website";
 }): Metadata {
   const url = absoluteUrl(pathname);
-  const images = [{ url: absoluteUrl(image ?? DEFAULT_OG_IMAGE) }];
+  const images = [{ url: absoluteUrl(rasterizedCover(image) ?? DEFAULT_OG_IMAGE), ...OG_IMAGE_SIZE }];
 
   return {
     title,
