@@ -12,9 +12,15 @@ export const metadata = buildMetadata({
 
 // 제작 방식 서술의 근거(문구를 고칠 때 반드시 확인할 것):
 //   - 형식 검사만 돈다 → publish.py가 프론트매터 스키마·draft:false·슬러그 중복·npm run build 를 검사한다.
-//     출처 블록 검사는 publish.py:310의 `if args.type == "guides"`로 guides에만 걸린다(그마저 URL 존재 여부만 본다).
+//     출처 블록 검사는 category 기준이다: guides 이면서 "AI 연구"/"AI 소식" 일 때만 필수
+//     (규칙 정의는 lib/content.ts 의 SOURCE_REQUIRED_CATEGORIES). publish.py 뿐 아니라
+//     lib/content.ts 의 parseFile 에서도 걸려서 빌드가 막는다 — 그마저 URL 존재 여부만 본다.
 //   - 사람이 건별로 읽는 단계는 없다 → 이 저장소 어디에도 사실 확인 게이트가 없다.
 // 이 페이지에서 "검수했다"고 말하지 않는 이유가 이것이다. 파이프라인이 바뀌기 전에는 문구를 넓히지 마라.
+//
+// 아래 "링크한 주소가 지금도 살아 있는지는 자동으로 확인하지 않습니다"(출처 정책)를 지울 생각이라면 멈춰라.
+// check_source_links.py 가 생겼지만 빌드·발행 어디에도 걸려 있지 않다(수동·주기 실행). 실행을 강제하는
+// 것이 없으므로 "자동으로 확인한다"는 여전히 거짓이다. 그 스크립트를 CI/발행에 붙이기 전에는 고치지 마라.
 export default function AboutPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-12">

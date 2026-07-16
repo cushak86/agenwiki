@@ -29,6 +29,16 @@ DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 SOURCE_BLOCK_RE = re.compile(r"(?m)^>\s*출처:.*https?://\S+")
 CONTENT_TYPES = {"guides", "glossary", "prompts", "newsletter"}
 
+# 출처 블록 필수 규칙 — lib/content.ts 의 SOURCE_REQUIRED_TYPE/SOURCE_REQUIRED_CATEGORIES 와
+# 반드시 같은 값을 유지한다. 근거(왜 type 기준이 아니라 category 기준인지, 왜 guides 로
+# 한정하는지)는 lib/content.ts 주석에 있다 — 여기서 중복 서술하지 않는다.
+#
+# 진짜 게이트는 lib/content.ts 다. 그쪽은 빌드 중 content/ 의 모든 .mdx 에 대해 돌아서 우회할 수
+# 없지만, 이 스크립트는 일반 커밋으로 우회된다(실제로 출처 없는 guides 16건이 그렇게 들어왔다).
+# 여기 검사는 발행 시점에 더 일찍·더 친절하게 알려주는 용도이고, 규칙이 갈라지면 안 된다.
+SOURCE_REQUIRED_TYPE = "guides"
+SOURCE_REQUIRED_CATEGORIES = {"AI 연구", "AI 소식"}
+
 
 def fail(message):
     raise SystemExit(message)
@@ -221,10 +231,38 @@ def validate_frontmatter(content_type, data, expected_slug, path):
         fail(f"{path}: draft must be false before publishing")
 
 
-def validate_source_block(path):
+def requires_source_block(content_type, data):
+    if content_type != SOURCE_REQUIRED_TYPE:
+        return False
+    return data.get("category") in SOURCE_REQUIRED_CATEGORIES
+
+
+def validate_source_block(content_type, data, path):
+    """근거로 삼은 원문이 있는 글(연구/소식 카테고리)에 출처 블록이 달렸는지 검사한다.
+
+    존재 여부만 본다 — URL 이 실제로 200 인지, 본문과 관련이 있는지, arXiv ID 가 유효한지는
+    검사하지 않는다. 실 200 확인은 check_source_links.py 가 따로 한다.
+    """
+    if not requires_source_block(content_type, data):
+        return
+
     text = path.read_text(encoding="utf-8")
-    if not SOURCE_BLOCK_RE.search(text):
-        fail(f"{path}: missing source block with arXiv ID and arXiv URL")
+    if SOURCE_BLOCK_RE.search(text):
+        return
+
+    category = data.get("category")
+    allowed = '" / "'.join(sorted(SOURCE_REQUIRED_CATEGORIES))
+    fail(
+        f'{path}: category "{category}" 는 출처 블록이 필수인데 본문에서 찾지 못했습니다.\n'
+        f'  왜: "{allowed}" 카테고리는 근거로 삼은 원문이 있는 글입니다.\n'
+        "      /about 출처 정책에 그렇게 공개돼 있어 코드가 어긋나면 안 됩니다.\n"
+        "  고치는 법 — 둘 중 하나:\n"
+        "    1) 원문이 있다면 본문 끝에 출처 블록을 추가하세요:\n"
+        '         > 출처: Kim et al., "논문 제목" (arXiv:2501.12345) https://arxiv.org/abs/2501.12345\n'
+        '       형식: 줄 맨 앞이 ">", "출처:" 뒤 같은 줄에 http(s) URL 이 하나 이상.\n'
+        "    2) 특정 원문에 기대지 않는 글이면 category 를 바꾸세요: 입문 / 비교 / 실전\n"
+        "  같은 규칙이 빌드에도 걸려 있습니다(lib/content.ts) — 여기를 통과해도 거기서 막힙니다."
+    )
 
 
 def run(command, check=True):
@@ -307,8 +345,7 @@ def main():
 
     data = parse_frontmatter(staging_path)
     validate_frontmatter(args.type, data, args.slug, staging_path)
-    if args.type == "guides":
-        validate_source_block(staging_path)
+    validate_source_block(args.type, data, staging_path)
 
     target_dir = REPO_ROOT / "content" / args.type
     target_path = target_dir / f"{args.slug}.mdx"
