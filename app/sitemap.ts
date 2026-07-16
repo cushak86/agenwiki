@@ -15,6 +15,7 @@ const staticRoutes = [
   "/newsletter",
   "/topics",
   "/about",
+  "/lab/index-log",
   "/terms",
   "/privacy"
 ];
