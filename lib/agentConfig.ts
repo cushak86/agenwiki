@@ -65,6 +65,76 @@ export type AgentConfigState = {
   extraNote: string;
 };
 
+// 설정의 공유 링크 인코딩. 서버·DB 없이 URL 자체가 저장소다 — lib/recipe.ts 와 같은 방식.
+// 포맷: [projectName, projectDesc, projectType, stackKeys[], stackExtra,
+//        [install, dev, test, build], styleKeys[], forbiddenKeys[], commitKey, extraNote] → JSON → base64url
+
+const CONFIG_FIELD_COUNT = 10;
+
+export function encodeAgentConfig(state: AgentConfigState): string {
+  const payload = JSON.stringify([
+    state.projectName,
+    state.projectDesc,
+    state.projectType,
+    state.stackKeys,
+    state.stackExtra,
+    [state.commands.install, state.commands.dev, state.commands.test, state.commands.build],
+    state.styleKeys,
+    state.forbiddenKeys,
+    state.commitKey,
+    state.extraNote
+  ]);
+  const bytes = new TextEncoder().encode(payload);
+  let binary = "";
+  bytes.forEach((byte) => {
+    binary += String.fromCharCode(byte);
+  });
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+export function decodeAgentConfig(encoded: string): AgentConfigState | null {
+  try {
+    const base64 = encoded.replace(/-/g, "+").replace(/_/g, "/");
+    const bytes = Uint8Array.from(atob(base64), (char) => char.charCodeAt(0));
+    const parsed = JSON.parse(new TextDecoder().decode(bytes));
+
+    if (!Array.isArray(parsed) || parsed.length !== CONFIG_FIELD_COUNT) {
+      return null;
+    }
+
+    const [projectName, projectDesc, projectType, stackKeys, stackExtra, commands, styleKeys, forbiddenKeys, commitKey, extraNote] =
+      parsed;
+
+    if (!Array.isArray(stackKeys) || !Array.isArray(styleKeys) || !Array.isArray(forbiddenKeys) || !Array.isArray(commands)) {
+      return null;
+    }
+
+    const str = (value: unknown) => (typeof value === "string" ? value : "");
+    const strOrNull = (value: unknown) => (typeof value === "string" ? value : null);
+    const strList = (list: unknown[]) => list.filter((key): key is string => typeof key === "string");
+
+    return {
+      projectName: str(projectName),
+      projectDesc: str(projectDesc),
+      projectType: strOrNull(projectType),
+      stackKeys: strList(stackKeys),
+      stackExtra: str(stackExtra),
+      commands: {
+        install: str(commands[0]),
+        dev: str(commands[1]),
+        test: str(commands[2]),
+        build: str(commands[3])
+      },
+      styleKeys: strList(styleKeys),
+      forbiddenKeys: strList(forbiddenKeys),
+      commitKey: strOrNull(commitKey),
+      extraNote: str(extraNote)
+    };
+  } catch {
+    return null;
+  }
+}
+
 export function assembleAgentConfig(state: AgentConfigState, format: (typeof OUTPUT_FORMATS)[number]["key"]): string {
   const type = PROJECT_TYPES.find((item) => item.key === state.projectType);
   const stacks = [

@@ -1,7 +1,7 @@
 "use client";
 
 import { track } from "@vercel/analytics";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   COMMIT_STYLES,
   FORBIDDEN_RULES,
@@ -10,6 +10,8 @@ import {
   STACKS,
   STYLE_RULES,
   assembleAgentConfig,
+  decodeAgentConfig,
+  encodeAgentConfig,
   type AgentConfigState
 } from "@/lib/agentConfig";
 
@@ -45,9 +47,40 @@ export function AgentConfigBuilder() {
   });
   const [format, setFormat] = useState<(typeof OUTPUT_FORMATS)[number]["key"]>("claude");
   const [copied, setCopied] = useState(false);
+  const [shareNotice, setShareNotice] = useState<string | null>(null);
 
   const output = useMemo(() => assembleAgentConfig(state, format), [state, format]);
   const filename = OUTPUT_FORMATS.find((item) => item.key === format)?.filename ?? "CLAUDE.md";
+
+  // 공유 링크(?c=)로 진입하면 설정을 복원한다.
+  useEffect(() => {
+    const encoded = new URLSearchParams(window.location.search).get("c");
+    if (!encoded) {
+      return;
+    }
+    const decoded = decodeAgentConfig(encoded);
+    if (!decoded) {
+      return;
+    }
+    // 알 수 없는 키(구버전 링크 등)는 조용히 버린다 — 깨진 상태로 조립되는 것보다 낫다.
+    setState({
+      ...decoded,
+      projectType: PROJECT_TYPES.some((item) => item.key === decoded.projectType) ? decoded.projectType : null,
+      stackKeys: decoded.stackKeys.filter((key) => STACKS.some((item) => item.key === key)),
+      styleKeys: decoded.styleKeys.filter((key) => STYLE_RULES.some((item) => item.key === key)),
+      forbiddenKeys: decoded.forbiddenKeys.filter((key) => FORBIDDEN_RULES.some((item) => item.key === key)),
+      commitKey: COMMIT_STYLES.some((item) => item.key === decoded.commitKey) ? decoded.commitKey : null
+    });
+    track("agentconfig_open", {});
+  }, []);
+
+  async function copyShareLink() {
+    const url = `${window.location.origin}/tools/claude-md?c=${encodeAgentConfig(state)}`;
+    await navigator.clipboard.writeText(url);
+    track("agentconfig_share", { format });
+    setShareNotice("공유 링크를 복사했습니다. 붙여넣으면 이 설정이 채워진 채 열립니다.");
+    window.setTimeout(() => setShareNotice(null), 4000);
+  }
 
   function toggleList(field: "stackKeys" | "styleKeys" | "forbiddenKeys", key: string) {
     setState((prev) => {
@@ -228,7 +261,15 @@ export function AgentConfigBuilder() {
           >
             ⬇ {filename} 다운로드
           </button>
+          <button
+            type="button"
+            onClick={copyShareLink}
+            className="rounded-md border border-line bg-white px-3 py-2 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent"
+          >
+            🔗 공유 링크 복사
+          </button>
         </div>
+        {shareNotice ? <p className="mt-2 text-xs leading-5 text-accent">{shareNotice}</p> : null}
         <p className="mt-3 text-xs leading-5 text-muted">
           내려받은 파일을 프로젝트 최상위 폴더에 두면 Claude Code·Codex·Cursor 같은 AI 코딩 도구가 자동으로 읽습니다.
         </p>
