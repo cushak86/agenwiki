@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { AiDisclosure } from "@/components/AiDisclosure";
 import { Mdx } from "@/components/Mdx";
 import { Prose } from "@/components/Prose";
 import { RelatedContent } from "@/components/RelatedContent";
@@ -57,6 +58,7 @@ export default function NewsletterDetailPage({ params }: { params: { slug: strin
           <Mdx source={record.body} />
         </Prose>
       </div>
+      <AiDisclosure />
       <RelatedContent type="newsletter" slug={meta.slug} tags={meta.tags} />
       <section id="subscribe" className="mt-12">
         <SubscribeForm />

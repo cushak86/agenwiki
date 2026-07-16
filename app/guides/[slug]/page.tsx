@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { AiDisclosure } from "@/components/AiDisclosure";
 import { Mdx } from "@/components/Mdx";
 import { Prose } from "@/components/Prose";
 import { RelatedContent } from "@/components/RelatedContent";
@@ -59,6 +60,7 @@ export default function GuideDetailPage({ params }: { params: { slug: string } }
           <Mdx source={record.body} />
         </Prose>
       </div>
+      <AiDisclosure />
       <RelatedContent type="guides" slug={meta.slug} tags={meta.tags} />
     </div>
   );

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AiDisclosure } from "@/components/AiDisclosure";
 import { Mdx } from "@/components/Mdx";
 import { Prose } from "@/components/Prose";
 import { RelatedContent } from "@/components/RelatedContent";
@@ -80,6 +81,7 @@ export default function GlossaryDetailPage({ params }: { params: { slug: string 
           </ul>
         </section>
       ) : null}
+      <AiDisclosure />
       <RelatedContent type="glossary" slug={meta.slug} tags={meta.tags} />
     </div>
   );

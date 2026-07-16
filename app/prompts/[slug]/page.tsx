@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { AiDisclosure } from "@/components/AiDisclosure";
 import { Mdx } from "@/components/Mdx";
 import { OpenInButtons } from "@/components/OpenInButtons";
 import { PromptCopyButton } from "@/components/PromptCopyButton";
@@ -75,6 +76,7 @@ export default function PromptDetailPage({ params }: { params: { slug: string } 
           <Mdx source={record.body} />
         </Prose>
       </div>
+      <AiDisclosure />
       <RelatedContent type="prompts" slug={meta.slug} tags={meta.tags} />
     </div>
   );
