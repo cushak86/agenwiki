@@ -49,7 +49,7 @@ export default function PromptsPage() {
           <p className="text-sm font-semibold text-accent">🤖 도구</p>
           <h2 className="mt-2 text-xl font-bold text-ink">CLAUDE.md 생성기</h2>
           <p className="mt-2 text-sm leading-6 text-muted">
-            AI 코딩 도구용 설정 파일(CLAUDE.md·AGENTS.md·.cursorrules)을 클릭으로 만듭니다.
+            AI 코딩 도구용 설정 파일(CLAUDE.md·AGENTS.md·.cursor/rules)을 클릭으로 만듭니다.
           </p>
         </Link>
       </div>

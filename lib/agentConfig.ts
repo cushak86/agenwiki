@@ -1,4 +1,4 @@
-// CLAUDE.md / AGENTS.md / .cursorrules 생성기의 재료 데이터와 조립 로직.
+// CLAUDE.md / AGENTS.md / .cursor/rules(.mdc) 생성기의 재료 데이터와 조립 로직.
 // AI 코딩 도구(Claude Code·Codex·Cursor)가 읽는 프로젝트 설정 파일을 클릭으로 만든다.
 
 export const PROJECT_TYPES = [
@@ -46,10 +46,28 @@ export const COMMIT_STYLES = [
   { key: "ticket", label: "티켓 번호 포함", text: "커밋 메시지 앞에 이슈·티켓 번호를 붙인다. 예: [PROJ-123] 로그인 오류 수정" }
 ];
 
+// placement: 파일을 "어디에" 두는지. 셋이 서로 다르다 — Cursor만 최상위가 아니라 폴더 안이다.
+// 여기를 뭉뚱그려 "최상위에 두면 다 읽습니다"라고 안내하면 Cursor 사용자에게 거짓이 된다.
 export const OUTPUT_FORMATS = [
-  { key: "claude", label: "CLAUDE.md", filename: "CLAUDE.md" },
-  { key: "agents", label: "AGENTS.md", filename: "AGENTS.md" },
-  { key: "cursorrules", label: ".cursorrules", filename: ".cursorrules" }
+  {
+    key: "claude",
+    label: "CLAUDE.md",
+    filename: "CLAUDE.md",
+    placement: "프로젝트 최상위 폴더에 CLAUDE.md로 저장하세요. Claude Code가 세션 시작 때 읽습니다."
+  },
+  {
+    key: "agents",
+    label: "AGENTS.md",
+    filename: "AGENTS.md",
+    placement: "프로젝트 최상위 폴더에 AGENTS.md로 저장하세요. Codex 등 여러 도구가 읽는 공통 규격이고, Cursor 공식 문서도 대안으로 안내합니다."
+  },
+  {
+    key: "cursor",
+    label: ".cursor/rules",
+    filename: "project.mdc",
+    placement:
+      "프로젝트에 .cursor/rules/ 폴더를 만들고 그 안에 project.mdc로 저장하세요 — 최상위에 두는 게 아닙니다. Cursor 공식 문서가 안내하는 현행 방식입니다."
+  }
 ] as const;
 
 export type AgentConfigState = {
@@ -135,6 +153,15 @@ export function decodeAgentConfig(encoded: string): AgentConfigState | null {
   }
 }
 
+/**
+ * YAML 머리말에 넣을 값. 사용자가 친 프로젝트명이 그대로 들어가므로 콜론·따옴표·줄바꿈이
+ * 오면 .mdc 파일 자체가 깨진다 — 항상 큰따옴표로 감싸고 안쪽을 이스케이프한다.
+ */
+function yamlValue(raw: string): string {
+  const flat = raw.replace(/[\r\n]+/g, " ").replace(/\\/g, "\\\\").replace(/"/g, '\\"').trim();
+  return `"${flat}"`;
+}
+
 export function assembleAgentConfig(state: AgentConfigState, format: (typeof OUTPUT_FORMATS)[number]["key"]): string {
   const type = PROJECT_TYPES.find((item) => item.key === state.projectType);
   const stacks = [
@@ -153,8 +180,15 @@ export function assembleAgentConfig(state: AgentConfigState, format: (typeof OUT
     { label: "빌드", value: state.commands.build }
   ].filter((entry) => entry.value.trim().length > 0);
 
-  if (format === "cursorrules") {
+  if (format === "cursor") {
+    // Cursor의 현행 규격: .cursor/rules/*.mdc — 머리말(frontmatter)로 적용 범위를 정한다.
+    // alwaysApply: true = 프로젝트 전체에 항상 적용(예전 .cursorrules 한 장과 같은 동작).
     const lines = [
+      "---",
+      `description: ${yamlValue(`${name} 작업 규칙`)}`,
+      "alwaysApply: true",
+      "---",
+      "",
       `# ${name} 작업 규칙`,
       ...(state.projectDesc.trim() ? [state.projectDesc.trim()] : []),
       ...(type ? [`프로젝트 유형: ${type.label}`] : []),

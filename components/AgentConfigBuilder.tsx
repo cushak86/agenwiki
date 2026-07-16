@@ -50,7 +50,10 @@ export function AgentConfigBuilder() {
   const [shareNotice, setShareNotice] = useState<string | null>(null);
 
   const output = useMemo(() => assembleAgentConfig(state, format), [state, format]);
-  const filename = OUTPUT_FORMATS.find((item) => item.key === format)?.filename ?? "CLAUDE.md";
+  const activeFormat = OUTPUT_FORMATS.find((item) => item.key === format);
+  const filename = activeFormat?.filename ?? "CLAUDE.md";
+  // 두는 위치는 형식마다 다르다 — Cursor만 최상위가 아니라 .cursor/rules/ 안이다
+  const placement = activeFormat?.placement ?? "";
 
   // 공유 링크(?c=)로 진입하면 설정을 복원한다.
   useEffect(() => {
@@ -270,9 +273,7 @@ export function AgentConfigBuilder() {
           </button>
         </div>
         {shareNotice ? <p className="mt-2 text-xs leading-5 text-accent">{shareNotice}</p> : null}
-        <p className="mt-3 text-xs leading-5 text-muted">
-          내려받은 파일을 프로젝트 최상위 폴더에 두면 Claude Code·Codex·Cursor 같은 AI 코딩 도구가 자동으로 읽습니다.
-        </p>
+        <p className="mt-3 text-xs leading-5 text-muted">{placement}</p>
       </section>
     </div>
   );
