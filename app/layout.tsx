@@ -25,6 +25,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ko">
       <body className="font-sans antialiased">
+        <a
+          href="https://www.latpeed.com/products/1TaKZ"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block bg-accent px-4 py-2.5 text-center text-sm font-medium text-white transition hover:opacity-90"
+        >
+          📕 『1인 AI 회사 실전기』 출간 — 이 사이트를 굴리는 1인 AI 회사의 428커밋 실전 기록 · 런칭 특가 14,900원 →
+        </a>
         <SiteHeader />
         <main>{children}</main>
         <SiteFooter />
