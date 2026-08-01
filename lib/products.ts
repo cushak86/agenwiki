@@ -53,7 +53,7 @@ export const products: Product[] = [
     price: null,
     url: "https://www.latpeed.com/products/z0eWl",
     cover: "/store/minibook.png",
-    relatedGuides: ["verify-ai-completion-report", "filter-fabricated-sources"]
+    relatedGuides: ["verify-ai-completion-report", "filter-fabricated-sources", "getting-started-with-ai-agents"]
   },
   {
     id: "rankup-core",
