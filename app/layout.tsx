@@ -18,7 +18,11 @@ export const metadata: Metadata = {
     // GSC 소유권 인증 토큰(공개값). Vercel 환경변수로 덮어쓸 수 있음.
     google:
       process.env.NEXT_PUBLIC_GSC_VERIFICATION ??
-      "JQ07wJjhBF42tXyNQitGgdkk03TyUGeHjY3RewluX9U"
+      "JQ07wJjhBF42tXyNQitGgdkk03TyUGeHjY3RewluX9U",
+    other: {
+      // 네이버 서치어드바이저 소유확인 토큰(공개값)
+      "naver-site-verification": "c1adb4b8fea62db5e2a41e7d5182fe252236e679"
+    }
   }
 };
 
