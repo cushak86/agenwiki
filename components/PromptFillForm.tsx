@@ -42,7 +42,7 @@ export function PromptFillForm({ promptText, slug }: { promptText: string; slug:
   const filledCount = names.filter((name) => (values[name] ?? "").trim().length > 0).length;
 
   return (
-    <section className="mt-8 max-w-3xl rounded-lg border border-line bg-white p-5">
+    <section className="mt-8 max-w-3xl rounded-lg border border-line bg-panel p-5">
       <div className="mb-1 flex items-center justify-between gap-4">
         <h2 className="text-lg font-semibold text-ink">빈칸 채워서 완성하기</h2>
         <span className="text-xs font-medium text-muted">
@@ -66,7 +66,7 @@ export function PromptFillForm({ promptText, slug }: { promptText: string; slug:
               value={values[name] ?? ""}
               onChange={(event) => setValues((prev) => ({ ...prev, [name]: event.target.value }))}
               placeholder="값을 입력하세요"
-              className="w-full rounded-md border border-line bg-white px-3 py-2 text-sm leading-6 text-ink outline-none transition placeholder:text-muted focus:border-accent"
+              className="w-full rounded-md border border-line bg-panel px-3 py-2 text-sm leading-6 text-ink outline-none transition placeholder:text-muted focus:border-accent"
             />
           </div>
         ))}

@@ -75,26 +75,26 @@ export default function IndexLogPage() {
       <section className="mt-10 max-w-3xl">
         <h2 className="text-xl font-semibold text-ink">최신 측정</h2>
         <dl className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-lg border border-line bg-white p-4">
+          <div className="rounded-lg border border-line bg-panel p-4">
             <dt className="text-xs font-medium text-muted">색인 / 고정 표본</dt>
             <dd className="mt-1 text-2xl font-bold text-ink">
               {latest.indexed}
               <span className="text-base font-medium text-muted"> / {BASELINE_SIZE}</span>
             </dd>
             <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-line">
-              <div className="h-full rounded-full bg-accent" style={{ width: formatRate(getIndexedRate(latest)) }} />
+              <div className="h-full rounded-full bg-accentDeep" style={{ width: formatRate(getIndexedRate(latest)) }} />
             </div>
             <p className="mt-2 text-xs text-muted">{formatRate(getIndexedRate(latest))}</p>
           </div>
-          <div className="rounded-lg border border-line bg-white p-4">
+          <div className="rounded-lg border border-line bg-panel p-4">
             <dt className="text-xs font-medium text-muted">노출</dt>
             <dd className="mt-1 text-2xl font-bold text-ink">{latest.impressions}</dd>
           </div>
-          <div className="rounded-lg border border-line bg-white p-4">
+          <div className="rounded-lg border border-line bg-panel p-4">
             <dt className="text-xs font-medium text-muted">클릭</dt>
             <dd className="mt-1 text-2xl font-bold text-ink">{latest.clicks}</dd>
           </div>
-          <div className="rounded-lg border border-line bg-white p-4">
+          <div className="rounded-lg border border-line bg-panel p-4">
             <dt className="text-xs font-medium text-muted">다음 측정</dt>
             <dd className="mt-1 text-2xl font-bold text-ink">{NEXT_MEASUREMENT_AT}</dd>
           </div>
@@ -109,7 +109,7 @@ export default function IndexLogPage() {
 
       <section className="mt-10">
         <h2 className="text-xl font-semibold text-ink">회차별 기록</h2>
-        <div className="mt-4 overflow-x-auto rounded-lg border border-line bg-white">
+        <div className="mt-4 overflow-x-auto rounded-lg border border-line bg-panel">
           <table className="w-full min-w-[640px] border-collapse text-sm">
             <thead>
               <tr className="border-b border-line text-left text-xs font-medium text-muted">
@@ -186,7 +186,7 @@ export default function IndexLogPage() {
 
       <section className="mt-10 max-w-3xl">
         <h2 className="text-xl font-semibold text-ink">이 기록의 조건</h2>
-        <div className="mt-4 overflow-x-auto rounded-lg border border-line bg-white">
+        <div className="mt-4 overflow-x-auto rounded-lg border border-line bg-panel">
           <table className="w-full min-w-[480px] border-collapse text-sm">
             <thead>
               <tr className="border-b border-line text-left text-xs font-medium text-muted">

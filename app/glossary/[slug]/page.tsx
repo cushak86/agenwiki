@@ -72,7 +72,7 @@ export default function GlossaryDetailPage({ params }: { params: { slug: string 
               <li key={term.slug}>
                 <Link
                   href={`/glossary/${term.slug}`}
-                  className="rounded-full border border-line bg-white px-3 py-1.5 text-sm font-medium text-ink transition hover:border-accent hover:text-accent"
+                  className="rounded-full border border-line bg-panel px-3 py-1.5 text-sm font-medium text-ink transition hover:border-accent hover:text-accent"
                 >
                   {term.term}
                 </Link>

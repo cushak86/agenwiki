@@ -12,9 +12,9 @@ export const mdxComponents: MDXComponents = {
     );
   },
   h3: (props) => <h3 className="mt-8 text-xl font-semibold text-ink" {...props} />,
-  p: (props) => <p className="my-4 leading-8 text-neutral-700" {...props} />,
-  ul: (props) => <ul className="my-5 list-disc space-y-2 pl-6 leading-8 text-neutral-700" {...props} />,
-  ol: (props) => <ol className="my-5 list-decimal space-y-2 pl-6 leading-8 text-neutral-700" {...props} />,
+  p: (props) => <p className="my-4 leading-8 text-body" {...props} />,
+  ul: (props) => <ul className="my-5 list-disc space-y-2 pl-6 leading-8 text-body" {...props} />,
+  ol: (props) => <ol className="my-5 list-decimal space-y-2 pl-6 leading-8 text-body" {...props} />,
   a: ({ href = "", ...props }) => {
     if (href.startsWith("/")) {
       return <Link href={href} className="font-medium text-accent underline underline-offset-4" {...props} />;
@@ -30,7 +30,7 @@ export const mdxComponents: MDXComponents = {
       />
     );
   },
-  code: (props) => <code className="rounded bg-neutral-100 px-1.5 py-0.5 text-sm text-ink" {...props} />,
+  code: (props) => <code className="rounded bg-panel2 px-1.5 py-0.5 text-sm text-ink" {...props} />,
   pre: (props) => (
     <pre
       className="my-6 overflow-x-auto rounded-lg border border-line bg-neutral-950 p-4 text-sm leading-7 text-neutral-100"
@@ -39,11 +39,11 @@ export const mdxComponents: MDXComponents = {
   ),
   table: (props) => (
     <div className="my-6 overflow-x-auto rounded-lg border border-line">
-      <table className="w-full border-collapse text-left text-sm leading-6 text-neutral-700" {...props} />
+      <table className="w-full border-collapse text-left text-sm leading-6 text-body" {...props} />
     </div>
   ),
-  thead: (props) => <thead className="bg-neutral-100 text-ink" {...props} />,
+  thead: (props) => <thead className="bg-panel2 text-ink" {...props} />,
   tr: (props) => <tr className="border-b border-line last:border-b-0" {...props} />,
   th: (props) => <th className="px-4 py-2.5 font-semibold text-ink" {...props} />,
-  td: (props) => <td className="px-4 py-2.5 align-top text-neutral-700" {...props} />
+  td: (props) => <td className="px-4 py-2.5 align-top text-body" {...props} />
 };

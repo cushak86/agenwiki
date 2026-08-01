@@ -40,7 +40,7 @@ export default function TopicsPage() {
           <Link
             key={topic.slug}
             href={`/topics/${topic.slug}`}
-            className="flex min-h-40 flex-col justify-between rounded-lg border border-line bg-white p-5 shadow-sm transition hover:border-accent"
+            className="flex min-h-40 flex-col justify-between rounded-lg border border-line bg-panel p-5 transition hover:border-accent"
           >
             <div className="space-y-2">
               <h2 className="text-lg font-semibold leading-snug text-ink">{topic.name}</h2>

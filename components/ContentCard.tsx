@@ -24,14 +24,18 @@ export function ContentCard({ type, meta }: { type: ContentType; meta: ContentMe
   const date = getDate(meta);
 
   return (
-    <article className="flex min-h-56 flex-col justify-between rounded-lg border border-line bg-white p-5 shadow-sm">
+    <article className="group flex min-h-56 flex-col justify-between rounded-xl border border-line bg-panel p-5 transition hover:-translate-y-0.5 hover:border-accent/60">
       <div className="space-y-3">
-        <div className="flex items-center justify-between gap-3 text-xs font-medium text-muted">
-          <span>{typeLabels[type]}</span>
-          {date ? <time dateTime={date}>{date}</time> : null}
+        <div className="flex items-center justify-between gap-3 text-xs font-bold">
+          <span className="uppercase tracking-widest text-accentSoft">{typeLabels[type]}</span>
+          {date ? (
+            <time dateTime={date} className="font-medium tabular-nums text-muted">
+              {date}
+            </time>
+          ) : null}
         </div>
-        <h3 className="text-lg font-semibold leading-snug text-ink">
-          <Link href={`/${type}/${meta.slug}`} className="hover:text-accent">
+        <h3 className="text-lg font-bold leading-snug text-ink">
+          <Link href={`/${type}/${meta.slug}`} className="transition group-hover:text-accentSoft">
             {title}
           </Link>
         </h3>

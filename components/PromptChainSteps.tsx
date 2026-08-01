@@ -21,7 +21,7 @@ export function PromptChainSteps({ slug, steps }: { slug: string; steps: ChainSt
       </p>
       <ol className="mt-4 space-y-6">
         {steps.map((step, index) => (
-          <li key={step.title} className={`rounded-lg border bg-white p-5 ${done[index] ? "border-accent" : "border-line"}`}>
+          <li key={step.title} className={`rounded-lg border bg-panel p-5 ${done[index] ? "border-accent" : "border-line"}`}>
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h2 className="text-lg font-semibold text-ink">
@@ -35,8 +35,8 @@ export function PromptChainSteps({ slug, steps }: { slug: string; steps: ChainSt
                 onClick={() => toggle(index)}
                 className={`rounded-md border px-3 py-2 text-sm font-semibold transition ${
                   done[index]
-                    ? "border-accent bg-accent text-white"
-                    : "border-line bg-white text-ink hover:border-accent hover:text-accent"
+                    ? "border-accent bg-accentDeep text-white"
+                    : "border-line bg-panel text-ink hover:border-accent hover:text-accent"
                 }`}
               >
                 {done[index] ? "완료 ✓" : "완료 표시"}
@@ -53,7 +53,7 @@ export function PromptChainSteps({ slug, steps }: { slug: string; steps: ChainSt
             {index < steps.length - 1 ? (
               <p className="mt-3 text-xs leading-5 text-muted">
                 ↓ 이 단계의 결과를 복사해 다음 단계 프롬프트의{" "}
-                <code className="rounded bg-neutral-100 px-1">{`{step${index + 1}_result}`}</code> 자리에 붙여넣으세요.
+                <code className="rounded bg-panel2 px-1">{`{step${index + 1}_result}`}</code> 자리에 붙여넣으세요.
               </p>
             ) : null}
           </li>

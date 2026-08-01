@@ -21,7 +21,7 @@ function Chip({ active, label, onClick }: { active: boolean; label: string; onCl
       type="button"
       onClick={onClick}
       className={`rounded-full border px-4 py-2 text-sm font-medium transition ${
-        active ? "border-accent bg-accent text-white" : "border-line bg-white text-ink hover:border-accent hover:text-accent"
+        active ? "border-accent bg-accentDeep text-white" : "border-line bg-panel text-ink hover:border-accent hover:text-accent"
       }`}
     >
       {label}
@@ -30,7 +30,7 @@ function Chip({ active, label, onClick }: { active: boolean; label: string; onCl
 }
 
 const inputClass =
-  "w-full rounded-md border border-line bg-white px-3 py-2 text-sm leading-6 text-ink outline-none transition placeholder:text-muted focus:border-accent";
+  "w-full rounded-md border border-line bg-panel px-3 py-2 text-sm leading-6 text-ink outline-none transition placeholder:text-muted focus:border-accent";
 
 export function AgentConfigBuilder() {
   const [state, setState] = useState<AgentConfigState>({
@@ -112,7 +112,7 @@ export function AgentConfigBuilder() {
 
   return (
     <div className="space-y-8">
-      <section className="rounded-lg border border-line bg-white p-5">
+      <section className="rounded-lg border border-line bg-panel p-5">
         <h2 className="text-base font-semibold text-ink">
           <span className="mr-2 text-accent">1단계</span>프로젝트 소개
         </h2>
@@ -163,7 +163,7 @@ export function AgentConfigBuilder() {
         />
       </section>
 
-      <section className="rounded-lg border border-line bg-white p-5">
+      <section className="rounded-lg border border-line bg-panel p-5">
         <h2 className="text-base font-semibold text-ink">
           <span className="mr-2 text-accent">2단계</span>자주 쓰는 명령어 (아는 것만)
         </h2>
@@ -190,7 +190,7 @@ export function AgentConfigBuilder() {
         </div>
       </section>
 
-      <section className="rounded-lg border border-line bg-white p-5">
+      <section className="rounded-lg border border-line bg-panel p-5">
         <h2 className="text-base font-semibold text-ink">
           <span className="mr-2 text-accent">3단계</span>작업 규칙
         </h2>
@@ -237,7 +237,7 @@ export function AgentConfigBuilder() {
         />
       </section>
 
-      <section className="rounded-lg border border-accent bg-white p-5">
+      <section className="rounded-lg border border-accent bg-panel p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-lg font-semibold text-ink">완성된 파일</h2>
           <div className="flex flex-wrap items-center gap-2">
@@ -253,21 +253,21 @@ export function AgentConfigBuilder() {
           <button
             type="button"
             onClick={copyOutput}
-            className="rounded-md border border-line bg-white px-3 py-2 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent"
+            className="rounded-md border border-line bg-panel px-3 py-2 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent"
           >
             {copied ? "복사됨" : "복사"}
           </button>
           <button
             type="button"
             onClick={downloadOutput}
-            className="rounded-md border border-line bg-white px-3 py-2 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent"
+            className="rounded-md border border-line bg-panel px-3 py-2 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent"
           >
             ⬇ {filename} 다운로드
           </button>
           <button
             type="button"
             onClick={copyShareLink}
-            className="rounded-md border border-line bg-white px-3 py-2 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent"
+            className="rounded-md border border-line bg-panel px-3 py-2 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent"
           >
             🔗 공유 링크 복사
           </button>

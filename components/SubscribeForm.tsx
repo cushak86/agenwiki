@@ -60,7 +60,7 @@ export function SubscribeForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-lg border border-line bg-white p-5">
+    <form onSubmit={handleSubmit} className="rounded-lg border border-line bg-panel p-5">
       <h2 className="text-lg font-semibold text-ink">{heading}</h2>
       <p className="mt-1 text-sm leading-6 text-muted">{description}</p>
       <div className="mt-4 flex flex-col gap-3 md:flex-row">
@@ -75,7 +75,7 @@ export function SubscribeForm({
         <button
           type="submit"
           disabled={status === "loading"}
-          className="h-11 shrink-0 rounded-md bg-accent px-5 text-sm font-semibold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:bg-neutral-300"
+          className="h-11 shrink-0 rounded-md bg-accentDeep px-5 text-sm font-semibold text-white transition hover:bg-accentDeep disabled:cursor-not-allowed disabled:bg-panel2"
         >
           {status === "loading" ? "구독 중…" : "구독"}
         </button>
@@ -95,7 +95,7 @@ export function SubscribeForm({
       {status === "success" || status === "error" ? (
         <p
           role="status"
-          className={`mt-3 text-sm leading-6 ${status === "success" ? "text-accent" : "text-red-600"}`}
+          className={`mt-3 text-sm leading-6 ${status === "success" ? "text-accent" : "text-red-400"}`}
         >
           {message}
         </p>

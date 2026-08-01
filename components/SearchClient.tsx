@@ -63,7 +63,7 @@ export function SearchClient({ items }: { items: SearchItem[] }) {
         onChange={(event) => setQuery(event.target.value)}
         placeholder="가이드, 용어, 프롬프트, 뉴스레터를 검색해보세요 (예: RAG, 에이전트, 프롬프트)"
         autoFocus
-        className="w-full rounded-md border border-line bg-white px-4 py-3 text-base text-ink outline-none transition placeholder:text-muted focus:border-accent"
+        className="w-full rounded-md border border-line bg-panel px-4 py-3 text-base text-ink outline-none transition placeholder:text-muted focus:border-accent"
       />
 
       <div className="mt-8">
@@ -80,7 +80,7 @@ export function SearchClient({ items }: { items: SearchItem[] }) {
               {results.map((item) => (
                 <article
                   key={`${item.type}-${item.slug}`}
-                  className="flex min-h-56 flex-col justify-between rounded-lg border border-line bg-white p-5 shadow-sm"
+                  className="flex min-h-56 flex-col justify-between rounded-lg border border-line bg-panel p-5"
                 >
                   <div className="space-y-3">
                     <span className="text-xs font-medium text-muted">{typeLabels[item.type]}</span>

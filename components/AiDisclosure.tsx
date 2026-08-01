@@ -23,7 +23,7 @@ const DISCLOSURE_LINK_LABEL = "제작 과정 자세히 보기";
  */
 export function AiDisclosure() {
   return (
-    <aside className="mt-10 max-w-3xl rounded-lg border border-line bg-white p-5">
+    <aside className="mt-10 max-w-3xl rounded-lg border border-line bg-panel p-5">
       <p className="text-sm font-semibold text-accent">{DISCLOSURE_LABEL}</p>
       <p className="mt-2 text-sm leading-6 text-muted">{DISCLOSURE_BODY}</p>
       <Link href="/about" className="mt-3 inline-block text-sm font-medium text-ink hover:text-accent">

@@ -36,7 +36,7 @@ export function TableOfContents({ body }: { body: string }) {
   }
 
   return (
-    <nav aria-label="목차" className="prose-shell mb-8 rounded-lg border border-line bg-white p-5">
+    <nav aria-label="목차" className="prose-shell mb-8 rounded-lg border border-line bg-panel p-5">
       <p className="text-sm font-semibold text-ink">목차</p>
       <ol className="mt-3 space-y-2 text-sm">
         {headings.map((heading) => (

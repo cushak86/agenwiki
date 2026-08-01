@@ -4,7 +4,7 @@
 
 :root {
   --font-pretendard: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 * {
@@ -17,8 +17,13 @@ html {
 
 body {
   margin: 0;
-  background: #fbfbf8;
-  color: #171717;
+  background: #101019;
+  color: #eceaf6;
+}
+
+::selection {
+  background: rgba(98, 70, 234, 0.45);
+  color: #fff;
 }
 
 .prose-shell {
@@ -27,6 +32,14 @@ body {
 
 .prose-shell > :first-child {
   margin-top: 0;
+}
+
+/* 커버 이미지 카드 상단 라운딩 */
+.cover-img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
 }
 
 /* TODO: Pretendard self-host font 파일을 public/fonts에 추가하면 next/font/local로 교체한다. */

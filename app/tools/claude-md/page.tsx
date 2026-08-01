@@ -34,9 +34,9 @@ export default function ClaudeMdGeneratorPage() {
             Claude Code가 세션을 시작할 때 자동으로 읽는 프로젝트 안내서입니다. 프로젝트 구조, 자주 쓰는 명령어, 코드
             스타일, 하지 말아야 할 것을 적어두면 AI가 매번 같은 걸 물어보지 않고 팀의 규칙대로 작업합니다. Codex 등
             여러 도구가 함께 읽는 공통 규격으로는 AGENTS.md가 쓰입니다. Cursor는 프로젝트 최상위가 아니라{" "}
-            <code className="rounded bg-neutral-100 px-1">.cursor/rules/</code> 폴더 안의{" "}
-            <code className="rounded bg-neutral-100 px-1">.mdc</code> 파일을 읽습니다 — 예전에 쓰던 최상위{" "}
-            <code className="rounded bg-neutral-100 px-1">.cursorrules</code> 한 장은 Cursor 공식 문서에서 빠졌기에,
+            <code className="rounded bg-panel2 px-1">.cursor/rules/</code> 폴더 안의{" "}
+            <code className="rounded bg-panel2 px-1">.mdc</code> 파일을 읽습니다 — 예전에 쓰던 최상위{" "}
+            <code className="rounded bg-panel2 px-1">.cursorrules</code> 한 장은 Cursor 공식 문서에서 빠졌기에,
             이 생성기는 현행 규격으로 만들어 드립니다. 내용은 거의 같아서 세 형식을 모두 만들어 줍니다.
           </p>
         </section>

@@ -13,7 +13,7 @@ function Chip({ active, label, onClick }: { active: boolean; label: string; onCl
       type="button"
       onClick={onClick}
       className={`rounded-full border px-4 py-2 text-sm font-medium transition ${
-        active ? "border-accent bg-accent text-white" : "border-line bg-white text-ink hover:border-accent hover:text-accent"
+        active ? "border-accent bg-accentDeep text-white" : "border-line bg-panel text-ink hover:border-accent hover:text-accent"
       }`}
     >
       {label}
@@ -139,7 +139,7 @@ export function PromptBuilder() {
 
   return (
     <div className="space-y-8">
-      <section className="rounded-lg border border-line bg-white p-5">
+      <section className="rounded-lg border border-line bg-panel p-5">
         <StepHeading step="1단계" title="무엇을 하시나요?" />
         <div className="mt-4 flex flex-wrap gap-2">
           {TASKS.map((item) => (
@@ -148,7 +148,7 @@ export function PromptBuilder() {
         </div>
       </section>
 
-      <section className="rounded-lg border border-line bg-white p-5">
+      <section className="rounded-lg border border-line bg-panel p-5">
         <StepHeading step="2단계" title="누가 읽나요? 어떤 톤으로?" />
         <p className="mt-2 text-sm text-muted">독자</p>
         <div className="mt-2 flex flex-wrap gap-2">
@@ -169,7 +169,7 @@ export function PromptBuilder() {
         </div>
       </section>
 
-      <section className="rounded-lg border border-line bg-white p-5">
+      <section className="rounded-lg border border-line bg-panel p-5">
         <StepHeading step="3단계" title="재료를 담으세요 (선택)" />
         <p className="mt-2 text-sm text-muted">품질 규칙</p>
         <div className="mt-2 flex flex-wrap gap-2">
@@ -199,15 +199,15 @@ export function PromptBuilder() {
           value={note}
           onChange={(event) => setNote(event.target.value)}
           placeholder="예: 300자 이내로, 존댓말로, 영어 병기"
-          className="mt-2 w-full rounded-md border border-line bg-white px-3 py-2 text-sm leading-6 text-ink outline-none transition placeholder:text-muted focus:border-accent"
+          className="mt-2 w-full rounded-md border border-line bg-panel px-3 py-2 text-sm leading-6 text-ink outline-none transition placeholder:text-muted focus:border-accent"
         />
       </section>
 
-      <section className="rounded-lg border border-line bg-white p-5">
+      <section className="rounded-lg border border-line bg-panel p-5">
         <StepHeading step="4단계" title={task ? `${task.inputLabel} 붙여넣기 (선택)` : "내용 붙여넣기 (선택)"} />
         <p className="mt-2 text-sm leading-6 text-muted">
           여기 붙여넣으면 완성 프롬프트에 바로 들어갑니다. 비워 두면{" "}
-          <code className="rounded bg-neutral-100 px-1">{task ? `{${task.inputLabel}}` : "{자리}"}</code> 자리로 남아,
+          <code className="rounded bg-panel2 px-1">{task ? `{${task.inputLabel}}` : "{자리}"}</code> 자리로 남아,
           챗봇에서 직접 채울 수 있습니다.
         </p>
         <textarea
@@ -215,11 +215,11 @@ export function PromptBuilder() {
           value={input}
           onChange={(event) => setInput(event.target.value)}
           placeholder={task?.inputPlaceholder ?? "먼저 1단계에서 작업을 선택하세요"}
-          className="mt-3 w-full rounded-md border border-line bg-white px-3 py-2 text-sm leading-6 text-ink outline-none transition placeholder:text-muted focus:border-accent"
+          className="mt-3 w-full rounded-md border border-line bg-panel px-3 py-2 text-sm leading-6 text-ink outline-none transition placeholder:text-muted focus:border-accent"
         />
       </section>
 
-      <section className="rounded-lg border border-accent bg-white p-5">
+      <section className="rounded-lg border border-accent bg-panel p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-lg font-semibold text-ink">완성된 프롬프트</h2>
           {ready ? (
@@ -242,14 +242,14 @@ export function PromptBuilder() {
               <button
                 type="button"
                 onClick={copyShareLink}
-                className="rounded-md border border-line bg-white px-3 py-2 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent"
+                className="rounded-md border border-line bg-panel px-3 py-2 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent"
               >
                 🔗 레시피 링크 복사
               </button>
               <button
                 type="button"
                 onClick={saveRecipe}
-                className="rounded-md border border-line bg-white px-3 py-2 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent"
+                className="rounded-md border border-line bg-panel px-3 py-2 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent"
               >
                 💾 내 레시피에 저장
               </button>
@@ -263,7 +263,7 @@ export function PromptBuilder() {
       </section>
 
       {saved.length > 0 ? (
-        <section className="rounded-lg border border-line bg-white p-5">
+        <section className="rounded-lg border border-line bg-panel p-5">
           <h2 className="text-base font-semibold text-ink">내 레시피</h2>
           <ul className="mt-3 space-y-2">
             {saved.map((item) => (

@@ -58,7 +58,7 @@ export default function PromptDetailPage({ params }: { params: { slug: string } 
           <TagChips tags={meta.tags} />
         </div>
       </div>
-      <section className="mt-8 max-w-3xl rounded-lg border border-line bg-white p-5">
+      <section className="mt-8 max-w-3xl rounded-lg border border-line bg-panel p-5">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-lg font-semibold text-ink">복사 대상 프롬프트</h2>
           <div className="flex flex-wrap items-center gap-2">

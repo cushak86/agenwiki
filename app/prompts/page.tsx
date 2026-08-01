@@ -23,7 +23,7 @@ export default function PromptsPage() {
       <div className="mt-8 grid gap-4 md:grid-cols-2">
         <Link
           href="/prompts/builder"
-          className="rounded-lg border border-accent bg-white p-6 shadow-sm transition hover:shadow-md"
+          className="rounded-lg border border-accent bg-panel p-6 transition hover:border-accent"
         >
           <p className="text-sm font-semibold text-accent">🧪 프롬프트 빌더</p>
           <h2 className="mt-2 text-xl font-bold text-ink">클릭 몇 번으로 프롬프트 완성</h2>
@@ -35,7 +35,7 @@ export default function PromptsPage() {
           <Link
             key={chain.slug}
             href={`/prompts/chains/${chain.slug}`}
-            className="rounded-lg border border-accent bg-white p-6 shadow-sm transition hover:shadow-md"
+            className="rounded-lg border border-accent bg-panel p-6 transition hover:border-accent"
           >
             <p className="text-sm font-semibold text-accent">⛓ 프롬프트 체인</p>
             <h2 className="mt-2 text-xl font-bold text-ink">{chain.title}</h2>
@@ -44,7 +44,7 @@ export default function PromptsPage() {
         ))}
         <Link
           href="/tools/claude-md"
-          className="rounded-lg border border-accent bg-white p-6 shadow-sm transition hover:shadow-md"
+          className="rounded-lg border border-accent bg-panel p-6 transition hover:border-accent"
         >
           <p className="text-sm font-semibold text-accent">🤖 도구</p>
           <h2 className="mt-2 text-xl font-bold text-ink">CLAUDE.md 생성기</h2>

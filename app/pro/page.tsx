@@ -69,7 +69,7 @@ export default function ProPage() {
           <h2 className="text-xl font-bold text-ink">✅ 무료 — 지금 바로</h2>
           <ul className="mt-4 space-y-3">
             {FREE_ITEMS.map((item) => (
-              <li key={item.name} className="rounded-lg border border-line bg-white p-4">
+              <li key={item.name} className="rounded-lg border border-line bg-panel p-4">
                 <Link href={item.href} className="font-semibold text-ink hover:text-accent">
                   {item.name} →
                 </Link>
@@ -83,7 +83,7 @@ export default function ProPage() {
           <h2 className="text-xl font-bold text-ink">🔒 Pro — 준비 중</h2>
           <ul className="mt-4 space-y-3">
             {PRO_TEASERS.map((item) => (
-              <li key={item.name} className="rounded-lg border border-dashed border-line bg-white p-4">
+              <li key={item.name} className="rounded-lg border border-dashed border-line bg-panel p-4">
                 <p className="font-semibold text-ink">{item.name}</p>
                 <p className="mt-1 text-sm leading-6 text-muted">{item.desc}</p>
               </li>

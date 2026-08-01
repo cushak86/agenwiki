@@ -11,7 +11,7 @@ export function TagChips({ tags }: { tags: string[] }) {
         <Link
           key={tag}
           href={`/topics/${encodeURIComponent(tag)}`}
-          className="rounded-full border border-line bg-white px-3 py-1 text-xs font-medium text-muted transition hover:border-accent hover:text-accent"
+          className="rounded-full border border-line bg-panel px-3 py-1 text-xs font-medium text-muted transition hover:border-accent hover:text-accent"
         >
           #{tag}
         </Link>

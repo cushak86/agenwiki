@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { Analytics } from "@vercel/analytics/react";
 import "@/app/globals.css";
 import { SiteFooter } from "@/components/SiteFooter";
@@ -25,14 +26,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ko">
       <body className="font-sans antialiased">
-        <a
-          href="https://www.latpeed.com/products/1TaKZ"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block bg-accent px-4 py-2.5 text-center text-sm font-medium text-white transition hover:opacity-90"
+        <Link
+          href="/store"
+          className="block bg-accentDeep px-4 py-2.5 text-center text-sm font-medium text-white transition hover:opacity-90"
         >
-          📕 『1인 AI 회사 실전기』 출간 — 이 사이트를 굴리는 1인 AI 회사의 428커밋 실전 기록 · 런칭 특가 14,900원 →
-        </a>
+          📕 이 사이트를 굴린 428커밋의 기록이 상품이 됐습니다 — 전자책·스타터 키트 보기 →
+        </Link>
         <SiteHeader />
         <main>{children}</main>
         <SiteFooter />
