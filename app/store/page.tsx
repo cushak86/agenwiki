@@ -1,5 +1,6 @@
+import Image from "next/image";
 import { ProductCard } from "@/components/ProductCard";
-import { chronicleProducts, rankupProducts } from "@/lib/products";
+import { chronicleProducts, comboProduct, formatPrice, rankupProducts } from "@/lib/products";
 import { buildMetadata } from "@/lib/seo";
 
 export const dynamic = "force-static";
@@ -26,7 +27,40 @@ export default function StorePage() {
         </p>
       </header>
 
-      <section className="mt-12">
+      <a
+        href={comboProduct.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group mt-10 flex flex-col overflow-hidden rounded-2xl border border-accent/40 bg-panel transition hover:-translate-y-0.5 hover:border-accent sm:flex-row"
+      >
+        <div className="w-full shrink-0 sm:w-64">
+          <Image
+            src={comboProduct.cover}
+            alt={`${comboProduct.name} 커버`}
+            width={500}
+            height={500}
+            className="h-full w-full object-cover"
+          />
+        </div>
+        <div className="flex flex-1 flex-col justify-center gap-2 p-6 md:p-8">
+          <span className="w-fit rounded-full bg-accentDeep px-3 py-1 text-xs font-bold text-white">
+            {comboProduct.badge} · 가장 알뜰한 구성
+          </span>
+          <h2 className="mt-1 text-2xl font-extrabold leading-snug text-ink transition group-hover:text-accentSoft">
+            {comboProduct.name}
+          </h2>
+          <p className="text-sm leading-6 text-body">{comboProduct.description}</p>
+          <div className="mt-2 flex items-baseline gap-3">
+            <span className="text-sm text-muted line-through">148,800원</span>
+            <span className="text-2xl font-extrabold tabular-nums text-ink">{formatPrice(comboProduct)}</span>
+            <span className="ml-auto text-sm font-bold text-accent transition group-hover:translate-x-0.5">
+              세트로 받기 →
+            </span>
+          </div>
+        </div>
+      </a>
+
+      <section className="mt-14">
         <div className="flex items-baseline justify-between">
           <h2 className="text-xl font-bold text-ink">실전 기록 시리즈</h2>
           <span className="text-sm text-muted">멀티에이전트 운영의 기록과 파일</span>

@@ -1,7 +1,7 @@
 // 상품 단일 진실 소스 — 사이트 전역(홈·스토어·배너)이 여기만 읽는다.
 // 가격·URL이 바뀌면 이 파일 하나만 고친다.
 
-export type ProductLine = "chronicle" | "rankup";
+export type ProductLine = "chronicle" | "rankup" | "bundle";
 
 export interface Product {
   id: string;
@@ -82,6 +82,21 @@ export const products: Product[] = [
     relatedGuides: []
   }
 ];
+
+export const comboProduct: Product = {
+  id: "combo",
+  line: "bundle",
+  name: "완전판 세트 — 실전기 + 스타터 키트 + 랭크업 코어",
+  tagline: "만들고·굴리고·검색되게, 세 권을 하나로",
+  description:
+    "1인 AI 회사를 운영하며 남긴 세 결과물을 통합본 한 권으로. 낱개 합 148,800원을 세트가로 묶었습니다.",
+  price: 119000,
+  priceNote: "낱개 합 148,800원",
+  url: "https://www.latpeed.com/products/Jc_Xg",
+  cover: "/store/combo.png",
+  badge: "완전판",
+  relatedGuides: []
+};
 
 export const chronicleProducts = products.filter((p) => p.line === "chronicle");
 export const rankupProducts = products.filter((p) => p.line === "rankup");
