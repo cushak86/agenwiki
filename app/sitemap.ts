@@ -17,7 +17,9 @@ const staticRoutes = [
   "/about",
   "/lab/index-log",
   "/terms",
-  "/privacy"
+  "/privacy",
+  "/rankup",
+  "/rankup/tools/keyword-vault.html"
 ];
 const contentTypes: ContentType[] = ["guides", "glossary", "prompts", "newsletter"];
 
