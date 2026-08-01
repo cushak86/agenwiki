@@ -5,7 +5,7 @@ import { getContentDescription, getContentHref, getContentTitle } from "@/lib/co
 export const siteConfig = {
   name: "agenwiki",
   description: "AI 전반 지식백과와 에이전트 실전 가이드",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://agenwiki.vercel.app"
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://agenwiki.online"
 };
 
 // 페이지별 cover가 없을 때 쓰는 사이트 기본 OG 이미지.
