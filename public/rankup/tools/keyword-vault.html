@@ -1,0 +1,113 @@
+<!DOCTYPE html><html lang="ko"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex"><!-- 임시 스테이징(도메인 미정) -->
+<title>키워드금고 템플릿 — 랭크업 STEP 0 동반 시트</title>
+<meta name="description" content="검색 수요가 검증된 키워드 30개를 뽑는 시트. 판정 두 칸은 수식이 자동으로 채웁니다. 무료 다운로드.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{--ink:#153741;--teal:#2E6E7E;--accent:#E2574C;--sub:#5B7480;--line:#DCE6EA;--bg:#F7FAFB}
+  body{font-family:Pretendard,-apple-system,'Malgun Gothic',sans-serif;color:var(--ink);background:var(--bg);
+    line-height:1.65;-webkit-font-smoothing:antialiased}
+  .hero{background:linear-gradient(160deg,#153741 0%,#1F4E5F 55%,#2E6E7E 135%);color:#fff;padding:56px 24px 48px}
+  .in{max-width:720px;margin:0 auto}
+  .eyebrow{display:inline-block;border:1.5px solid rgba(255,255,255,.4);border-radius:99px;padding:6px 16px;
+    font-size:13px;font-weight:700;color:#dceaf0;margin-bottom:20px;letter-spacing:.02em}
+  h1{font-size:34px;font-weight:800;line-height:1.28;letter-spacing:-.03em;margin-bottom:14px}
+  h1 .u{box-shadow:inset 0 -12px 0 rgba(226,87,76,.5)}
+  .lead{font-size:17px;color:#cfe0e6;margin-bottom:28px}
+  .dl{display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:#fff;text-decoration:none;
+    font-size:17px;font-weight:800;padding:15px 28px;border-radius:12px;transition:.2s}
+  .dl:hover{background:#c9483e;transform:translateY(-2px)}
+  .dl small{font-weight:600;font-size:13px;opacity:.85}
+  .sec{padding:44px 24px;border-bottom:1px solid var(--line)}
+  h2{font-size:21px;font-weight:800;letter-spacing:-.02em;margin-bottom:18px}
+  h3{font-size:15px;font-weight:800;color:var(--teal);margin:26px 0 10px}
+  p{margin-bottom:14px}
+  .tw{overflow-x:auto;margin:14px 0 20px}
+  table{width:100%;border-collapse:collapse;font-size:14.5px;background:#fff;min-width:480px}
+  th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}
+  th{background:#EEF4F6;font-weight:800;font-size:13.5px;white-space:nowrap}
+  code{background:#EAF2F5;border-radius:5px;padding:2px 7px;font-size:13.5px;font-weight:700;color:var(--teal)}
+  ol{margin:0 0 16px 20px}li{margin-bottom:8px}
+  .gate{background:#fff;border:1px solid var(--line);border-left:4px solid var(--teal);border-radius:10px;padding:18px 20px;margin:18px 0}
+  .gate b{display:block;margin-bottom:8px}
+  .rx{background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+  .rx dt{font-weight:800;margin-top:14px;font-size:14.5px}
+  .rx dt:first-child{margin-top:0}
+  .rx dd{margin-left:0;color:var(--sub);font-size:14.5px}
+  .cta{background:#153741;color:#fff;padding:44px 24px;text-align:center}
+  .cta h2{color:#fff;margin-bottom:10px}
+  .cta p{color:#b7cdd5;font-size:15.5px;margin-bottom:22px}
+  .cta a{display:inline-block;background:#fff;color:#153741;text-decoration:none;font-weight:800;
+    padding:14px 26px;border-radius:11px;font-size:16px}
+  .foot{padding:26px 24px;font-size:13px;color:var(--sub);text-align:center}
+  .foot a{color:var(--teal)}
+</style></head><body>
+
+<div class="hero"><div class="in">
+  <span class="eyebrow">랭크업 STEP 0 동반 시트 · 무료</span>
+  <h1>검색 수요가 검증된<br>키워드 <span class="u">30개를 뽑는 시트</span></h1>
+  <p class="lead">판정 두 칸은 수식이 이미 들어 있습니다. 당신이 채우는 칸은 다섯 개뿐입니다.</p>
+  <a class="dl" href="keyword-vault-template.csv" download>키워드금고 템플릿 받기 <small>CSV · 50행</small></a>
+</div></div>
+
+<div class="sec"><div class="in">
+  <h2>1. 시트 열기</h2>
+  <ol>
+    <li>sheets.google.com → 빈 스프레드시트 만들기</li>
+    <li>[파일] → [가져오기] → [업로드] 탭에 받은 CSV를 끌어다 놓기</li>
+    <li>가져오기 위치 <b>"현재 시트 바꾸기"</b>, 구분자 "자동 감지" → [데이터 가져오기]</li>
+  </ol>
+  <p>엑셀에서도 열리지만 <b>수식은 구글 시트에서만 자동 계산</b>됩니다. 시트를 권합니다.</p>
+
+  <h2>2. 채우는 순서</h2>
+  <div class="tw"><table>
+    <tr><th>칸</th><th>넣는 것</th><th>어디서</th></tr>
+    <tr><td><b>A 키워드</b></td><td>수확한 키워드 하나씩</td><td>네이버 자동완성·연관검색어</td></tr>
+    <tr><td><b>B 출처</b></td><td><code>자동완성</code> <code>연관</code> <code>직접</code></td><td>어디서 주웠는지</td></tr>
+    <tr><td><b>C 월간검색수</b></td><td>PC + 모바일 <b>합산 숫자</b></td><td>searchad.naver.com → 도구 → 키워드 도구</td></tr>
+    <tr><td>D 검색수판정</td><td colspan="2">— <b>자동</b> — 100 미만 <code>탈락</code> · 100~1,000 <code>황금</code> · 1,000~5,000 <code>채택</code> · 초과 <code>보류</code></td></tr>
+    <tr><td><b>E 점령자</b></td><td><code>공식</code> <code>매체</code> <code>블로그</code> <code>부실</code></td><td>네이버에서 실제 검색</td></tr>
+    <tr><td><b>F 경쟁판정</b></td><td><code>O</code> <code>△</code> <code>X</code> (둘 다 O면 <code>OO</code>)</td><td>아래 판정표</td></tr>
+    <tr><td>G 추세</td><td><code>상승</code> <code>유지</code> <code>하락</code></td><td>datalab.naver.com (선택)</td></tr>
+    <tr><td>H 채택</td><td colspan="2">— <b>자동</b> — [황금·채택] + [O·OO] → <code>Y</code>, 그 외 <code>N</code></td></tr>
+  </table></div>
+
+  <h3>경쟁판정표 (F열에 넣을 값)</h3>
+  <div class="tw"><table>
+    <tr><th>1페이지에 뭐가 있나</th><th>F</th><th>뜻</th></tr>
+    <tr><td>공공기관·공식 사이트·뉴스·대형 매체가 다수</td><td><code>X</code></td><td>권위로 밀린다. 비집을 틈이 없다</td></tr>
+    <tr><td>2년 이상 지난 글, 질문글, 부실한 문서가 다수</td><td><code>O</code></td><td>콘텐츠 공백. 제대로 쓴 글 하나로 이긴다</td></tr>
+    <tr><td>개인 블로그·카페인데 품질이 좋음</td><td><code>△</code></td><td>이길 수 있으나 글 품질 승부</td></tr>
+    <tr><td>네이버도 구글도 O</td><td><code>OO</code></td><td><b>최우선</b></td></tr>
+  </table></div>
+
+  <div class="gate">
+    <b>통과 게이트 — 끝났는지는 느낌이 아니라 이 셋으로 확인합니다</b>
+    A열에 키워드 50개 이상 · C열 검색수 빈칸 없음 · <b>H열 <code>Y</code>가 30개 이상</b><br>
+    <span style="color:var(--sub);font-size:14px">Y가 모자라면 접미어(방법·후기·비용·가격·추천·비교·차이·순서·기간·조건·서류·실패)와 대상어(초보·직장인·자취·아기·40대·소자본·무자본·지역명)를 조합해 더 수확하세요.</span>
+  </div>
+
+  <h2>3. 막혔을 때</h2>
+  <dl class="rx">
+    <dt>D·H열에 수식이 글자로 보인다</dt><dd>엑셀에서 연 경우입니다. 구글 시트로 가져오세요.</dd>
+    <dt>검색광고 가입이 안 된다</dt><dd>사업자 없이 개인으로 가입됩니다. 광고를 집행하지 않아도 키워드 도구는 무료입니다.</dd>
+    <dt>검색수가 전부 100 미만이다</dt><dd>주제가 너무 좁습니다. 상위 주제어로 한 단계 올라가 다시 수확하세요.</dd>
+    <dt>전부 X로 나온다</dt><dd>헤드 키워드만 모은 경우입니다. 3어절 이상 롱테일로 다시 보세요.</dd>
+    <dt>Y가 30개를 훌쩍 넘는다</dt><dd>황금(100~1,000) + OO부터 위로 30개만 남기세요. 나머지는 2~3개월 차 재고입니다.</dd>
+  </dl>
+</div></div>
+
+<div class="cta"><div class="in">
+  <h2>이 시트는 12단계 중 첫 단계입니다</h2>
+  <p>키워드가 정해지면 다음은 사이트 구조 · 기술 SEO · 네이버·구글 등록 · 색인 루틴입니다.<br>
+  코어 코스는 그 전부를 딸깍 단위로 다룹니다. 완주 후 지표 미달 시 전액 환급.</p>
+  <a href="https://www.latpeed.com/products/KfhhM">코어 코스 보기 — 베타 1기 20명</a>
+</div></div>
+
+<div class="foot">
+  <a href="../index.html">← 랭크업 소개로</a> · 무료분 STEP 0~2 PDF도 같은 페이지에 있습니다
+</div>
+</body></html>
