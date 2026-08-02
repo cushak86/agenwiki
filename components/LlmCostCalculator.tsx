@@ -20,6 +20,17 @@ function formatKrw(v: number): string {
   return `${Math.round(v).toLocaleString("ko-KR")}원`;
 }
 
+type SortKey = "name" | "priceInput" | "priceOutput" | "monthlyInput" | "monthlyOutput" | "total";
+
+const SORT_COLUMNS: { key: SortKey; label: string; align: "left" | "right" }[] = [
+  { key: "name", label: "모델", align: "left" },
+  { key: "priceInput", label: "입력 $/1M", align: "left" },
+  { key: "priceOutput", label: "출력 $/1M", align: "left" },
+  { key: "monthlyInput", label: "월 입력 비용", align: "right" },
+  { key: "monthlyOutput", label: "월 출력 비용", align: "right" },
+  { key: "total", label: "월 합계", align: "right" }
+];
+
 export function LlmCostCalculator() {
   const [requestsPerMonth, setRequestsPerMonth] = useState(3000);
   const [inputTokens, setInputTokens] = useState(1000);
@@ -36,15 +47,50 @@ export function LlmCostCalculator() {
   const estimated = sampleText.trim() ? estimateTokens(sampleText) : null;
 
   const effectiveOutputTokens = Math.round(outputTokens * effortMultiplier);
+  const [sortKey, setSortKey] = useState<SortKey>("total");
+  const [ascending, setAscending] = useState(true);
 
   const rows = useMemo(() => {
-    return MODELS.map((model) => {
+    const list = MODELS.map((model) => {
       const price = prices[model.id];
       const monthlyInput = (requestsPerMonth * inputTokens * price.input) / 1_000_000;
       const monthlyOutput = (requestsPerMonth * effectiveOutputTokens * price.output) / 1_000_000;
-      return { model, price, monthlyInput, monthlyOutput, total: monthlyInput + monthlyOutput };
-    }).sort((a, b) => a.total - b.total);
-  }, [prices, requestsPerMonth, inputTokens, effectiveOutputTokens]);
+      return {
+        model,
+        price,
+        priceInput: price.input,
+        priceOutput: price.output,
+        monthlyInput,
+        monthlyOutput,
+        total: monthlyInput + monthlyOutput
+      };
+    });
+    list.sort((a, b) => {
+      const direction = ascending ? 1 : -1;
+      if (sortKey === "name") {
+        return a.model.name.localeCompare(b.model.name) * direction;
+      }
+      return (a[sortKey] - b[sortKey]) * direction;
+    });
+    return list;
+  }, [prices, requestsPerMonth, inputTokens, effectiveOutputTokens, sortKey, ascending]);
+
+  // "최저" 배지는 정렬 순서와 무관하게 실제 최저가 모델에 붙인다
+  const cheapestId = useMemo(() => {
+    if (rows.length === 0) {
+      return null;
+    }
+    return rows.reduce((min, row) => (row.total < min.total ? row : min), rows[0]).model.id;
+  }, [rows]);
+
+  function toggleSort(key: SortKey) {
+    if (key === sortKey) {
+      setAscending((v) => !v);
+    } else {
+      setSortKey(key);
+      setAscending(true);
+    }
+  }
 
   function setPrice(id: string, key: "input" | "output", value: number) {
     setPrices((prev) => ({ ...prev, [id]: { ...prev[id], [key]: Math.max(0, value) } }));
@@ -164,21 +210,27 @@ export function LlmCostCalculator() {
         <table className="w-full min-w-[720px] border-collapse text-sm">
           <thead>
             <tr className="border-b border-line text-left text-xs font-bold uppercase tracking-wider text-muted">
-              <th className="py-3 pr-3">모델</th>
-              <th className="py-3 pr-3">입력 $/1M</th>
-              <th className="py-3 pr-3">출력 $/1M</th>
-              <th className="py-3 pr-3 text-right">월 입력 비용</th>
-              <th className="py-3 pr-3 text-right">월 출력 비용</th>
-              <th className="py-3 text-right">월 합계</th>
+              {SORT_COLUMNS.map((col) => (
+                <th key={col.key} className={`py-3 ${col.align === "right" ? "text-right" : ""} ${col.key !== "total" ? "pr-3" : ""}`}>
+                  <button
+                    type="button"
+                    onClick={() => toggleSort(col.key)}
+                    className={`transition hover:text-ink ${sortKey === col.key ? "text-accent" : ""}`}
+                  >
+                    {col.label}
+                    {sortKey === col.key ? (ascending ? " ↑" : " ↓") : ""}
+                  </button>
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
-            {rows.map(({ model, price, monthlyInput, monthlyOutput, total }, index) => (
-              <tr key={model.id} className={`border-b border-line/60 ${index === 0 ? "bg-accentDeep/10" : ""}`}>
+            {rows.map(({ model, price, monthlyInput, monthlyOutput, total }) => (
+              <tr key={model.id} className={`border-b border-line/60 ${model.id === cheapestId ? "bg-accentDeep/10" : ""}`}>
                 <td className="py-3 pr-3">
                   <span className="font-semibold text-ink">{model.name}</span>
                   <span className="ml-2 text-xs text-muted">{model.provider}</span>
-                  {index === 0 ? (
+                  {model.id === cheapestId ? (
                     <span className="ml-2 rounded-full border border-accent/40 px-2 py-0.5 text-[11px] font-bold text-accentSoft">
                       최저
                     </span>
@@ -217,6 +269,7 @@ export function LlmCostCalculator() {
       </div>
 
       <p className="mt-4 text-xs leading-5 text-muted">
+        열 제목을 누르면 그 열 기준으로 정렬되고, 다시 누르면 순서가 뒤집힙니다(비싼 순으로 보고 싶을 때).
         단가 칸을 직접 고치면 표가 다시 계산됩니다. 캐시된 입력, 배치 할인, 장문 컨텍스트 구간 단가는
         반영하지 않은 단순 계산입니다.
       </p>

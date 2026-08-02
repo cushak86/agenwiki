@@ -173,7 +173,8 @@ export const EFFORT_PRESETS = [
   { key: "minimal", label: "최소", multiplier: 1, description: "추론 거의 없음 — 표시 출력만 과금" },
   { key: "low", label: "낮음", multiplier: 1.5, description: "가벼운 추론" },
   { key: "medium", label: "중간", multiplier: 3, description: "일반적 추론 작업" },
-  { key: "high", label: "높음", multiplier: 6, description: "깊은 추론 — 복잡한 분석·코딩" }
+  { key: "high", label: "높음", multiplier: 6, description: "깊은 추론 — 복잡한 분석·코딩" },
+  { key: "max", label: "최대", multiplier: 12, description: "최대 추론 예산 — 최난도 작업·심층 연구" }
 ] as const;
 
 /**
