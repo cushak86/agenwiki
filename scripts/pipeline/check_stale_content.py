@@ -29,6 +29,26 @@ CATEGORY_RE = re.compile(r'^category:\s*"?([^"\n]+)"?\s*$', re.MULTILINE)
 UPDATED_RE = re.compile(r'^updatedAt:\s*"?(\d{4}-\d{2}-\d{2})"?\s*$', re.MULTILINE)
 
 
+MODELS_TS = REPO_ROOT / "lib" / "models.ts"
+MODELS_AS_OF_RE = re.compile(r'MODELS_AS_OF\s*=\s*"(\d{4}-\d{2}-\d{2})"')
+
+
+def check_models_freshness(cutoff: date) -> str | None:
+    """도구(요금 계산기·비교표·위저드)의 단가 기준 시점도 같은 60일 규칙으로 점검한다.
+
+    단가는 문서보다 빨리 낡고, 낡은 단가는 계산기 신뢰를 직접 깎는다.
+    갱신 방법: lib/models.ts 의 단가를 공식 요금 페이지와 대조해 고치고 MODELS_AS_OF 를 올린다.
+    """
+    match = MODELS_AS_OF_RE.search(MODELS_TS.read_text(encoding="utf-8"))
+    if not match:
+        return "lib/models.ts 에서 MODELS_AS_OF 를 찾지 못했습니다 — 형식이 바뀌었는지 확인 필요"
+    as_of = date.fromisoformat(match.group(1))
+    if as_of < cutoff:
+        age = (date.today() - as_of).days
+        return f"도구 단가 기준(MODELS_AS_OF={as_of}) {age}일 경과 — lib/models.ts 단가 재확인 필요"
+    return None
+
+
 def main() -> int:
     cutoff = date.today() - timedelta(days=MAX_AGE_DAYS)
     stale = []
@@ -46,9 +66,17 @@ def main() -> int:
         if updated < cutoff:
             stale.append((updated, category, path.name))
 
-    if not stale:
-        print(f"OK: 비교·연구 글 전부 {MAX_AGE_DAYS}일 이내 갱신 상태입니다.")
+    models_warning = check_models_freshness(cutoff)
+
+    if not stale and not models_warning:
+        print(f"OK: 비교·연구 글과 도구 단가 전부 {MAX_AGE_DAYS}일 이내 갱신 상태입니다.")
         return 0
+
+    if models_warning:
+        print(models_warning)
+
+    if not stale:
+        return 1
 
     print(f"재점검 필요 {len(stale)}건 ({MAX_AGE_DAYS}일 초과):")
     for updated, category, name in sorted(stale):
