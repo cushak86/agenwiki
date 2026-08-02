@@ -1,7 +1,7 @@
 "use client";
 
 import { track } from "@vercel/analytics";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { OpenInButtons } from "@/components/OpenInButtons";
 import { PromptCopyButton } from "@/components/PromptCopyButton";
 import { AUDIENCES, FORMATS, INGREDIENTS, TASKS, TONES, assemblePrompt } from "@/lib/builder";
@@ -93,11 +93,16 @@ export function PromptBuilder() {
     return filled.length > 0 ? prompt.replace(`{${task.inputLabel}}`, filled) : prompt;
   }, [ready, task, audience, tone, formatKeys, ingredientKeys, note, input]);
 
+  const outputRef = useRef<HTMLElement | null>(null);
+
   // 완성 상태 최초 도달 1회만 기록 — 어떤 작업 유형이 실제로 조립되는지가 다음 재료 투자의 근거.
+  // 같은 타이밍에 결과 섹션으로 스크롤한다 — 결과가 페이지 맨 아래라, 특히 모바일에서
+  // 프롬프트가 조립돼도 화면 밖이면 "동작 안 한다"로 보이기 때문.
   useEffect(() => {
     if (ready && !tracked) {
       setTracked(true);
       track("builder_ready", { task: taskKey ?? "" });
+      outputRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }, [ready, tracked, taskKey]);
 
@@ -219,7 +224,7 @@ export function PromptBuilder() {
         />
       </section>
 
-      <section className="rounded-lg border border-accent bg-panel p-5">
+      <section ref={outputRef} className="scroll-mt-24 rounded-lg border border-accent bg-panel p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-lg font-semibold text-ink">완성된 프롬프트</h2>
           {ready ? (
@@ -234,7 +239,18 @@ export function PromptBuilder() {
             <code>{completed}</code>
           </pre>
         ) : (
-          <p className="mt-3 text-sm leading-6 text-muted">1단계(작업)와 2단계(독자·톤)를 선택하면 여기에 프롬프트가 조립됩니다.</p>
+          <div className="mt-3 space-y-1.5 text-sm leading-6">
+            {/* 무엇이 남았는지 항목별로 보여준다 — 정적 안내문은 "골랐는데 왜 안 나오지"를 만든다 */}
+            <p className={task ? "font-medium text-accent" : "text-muted"}>
+              {task ? `✓ 작업: ${task.label}` : "○ 1단계에서 작업을 선택하세요"}
+            </p>
+            <p className={audience ? "font-medium text-accent" : "text-muted"}>
+              {audience ? `✓ 독자: ${audience.label}` : "○ 2단계에서 독자를 선택하세요"}
+            </p>
+            <p className={tone ? "font-medium text-accent" : "text-muted"}>
+              {tone ? `✓ 톤: ${tone.label}` : "○ 2단계에서 톤을 선택하세요"}
+            </p>
+          </div>
         )}
         {ready ? (
           <div className="mt-4 border-t border-line pt-4">
