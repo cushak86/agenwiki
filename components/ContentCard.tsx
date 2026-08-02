@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getContentDescription, getContentTitle } from "@/lib/meta";
 import type { ContentMeta, ContentType } from "@/lib/types";
+import { PromptCopyButton } from "@/components/PromptCopyButton";
 import { TagChips } from "@/components/TagChips";
 
 const typeLabels: Record<ContentType, string> = {
@@ -62,8 +63,12 @@ export function ContentCard({
         </h3>
         <p className="text-sm leading-6 text-muted">{description}</p>
       </div>
-      <div className="relative z-10 mt-5">
+      <div className="relative z-10 mt-5 space-y-3">
         <TagChips tags={meta.tags} onTagClick={onTagClick} />
+        {"promptText" in meta ? (
+          // 프롬프트 카드는 상세 진입 없이 목록에서 바로 복사할 수 있게 한다 (개선안 2-5 잔여 항목)
+          <PromptCopyButton text={meta.promptText} slug={meta.slug} event="prompt_copy_list" />
+        ) : null}
       </div>
     </article>
   );

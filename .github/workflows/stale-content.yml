@@ -1,0 +1,20 @@
+# 비교·연구 카테고리 문서가 60일 넘게 갱신되지 않으면 실패해서 알린다.
+# 규칙 정의는 scripts/pipeline/check_stale_content.py — 여기는 주기 실행만 담당.
+name: stale-content-check
+
+on:
+  schedule:
+    # 매주 월요일 06:00 KST (일요일 21:00 UTC)
+    - cron: "0 21 * * 0"
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 60일 초과 비교·연구 문서 점검
+        run: python scripts/pipeline/check_stale_content.py
