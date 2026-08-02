@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { estimateTokens, MODELS } from "@/lib/models";
+import { EFFORT_PRESETS, estimateTokens, MODELS } from "@/lib/models";
 
 const inputClass =
   "w-full rounded-md border border-line bg-panel px-3 py-2 text-sm tabular-nums text-ink outline-none transition focus:border-accent";
@@ -25,6 +25,8 @@ export function LlmCostCalculator() {
   const [inputTokens, setInputTokens] = useState(1000);
   const [outputTokens, setOutputTokens] = useState(500);
   const [fxRate, setFxRate] = useState(1400);
+  // 추론(thinking) 토큰은 출력으로 과금 — 출력 토큰에 배수를 곱해 근사한다
+  const [effortMultiplier, setEffortMultiplier] = useState(1);
   const [sampleText, setSampleText] = useState("");
   // 단가는 사용자가 직접 고칠 수 있다 — 기본값이 낡아도 계산기는 유효하게.
   const [prices, setPrices] = useState<Record<string, { input: number; output: number }>>(
@@ -33,14 +35,16 @@ export function LlmCostCalculator() {
 
   const estimated = sampleText.trim() ? estimateTokens(sampleText) : null;
 
+  const effectiveOutputTokens = Math.round(outputTokens * effortMultiplier);
+
   const rows = useMemo(() => {
     return MODELS.map((model) => {
       const price = prices[model.id];
       const monthlyInput = (requestsPerMonth * inputTokens * price.input) / 1_000_000;
-      const monthlyOutput = (requestsPerMonth * outputTokens * price.output) / 1_000_000;
+      const monthlyOutput = (requestsPerMonth * effectiveOutputTokens * price.output) / 1_000_000;
       return { model, price, monthlyInput, monthlyOutput, total: monthlyInput + monthlyOutput };
     }).sort((a, b) => a.total - b.total);
-  }, [prices, requestsPerMonth, inputTokens, outputTokens]);
+  }, [prices, requestsPerMonth, inputTokens, effectiveOutputTokens]);
 
   function setPrice(id: string, key: "input" | "output", value: number) {
     setPrices((prev) => ({ ...prev, [id]: { ...prev[id], [key]: Math.max(0, value) } }));
@@ -89,6 +93,45 @@ export function LlmCostCalculator() {
             className={`mt-1.5 ${inputClass}`}
           />
         </label>
+      </div>
+
+      <div className="mt-4 rounded-lg border border-line bg-panel p-5">
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="text-xs font-semibold text-muted">추론 강도 (effort)</span>
+          {EFFORT_PRESETS.map((preset) => (
+            <button
+              key={preset.key}
+              type="button"
+              onClick={() => setEffortMultiplier(preset.multiplier)}
+              title={preset.description}
+              className={`rounded-lg px-3 py-1.5 text-sm font-semibold transition ${
+                effortMultiplier === preset.multiplier
+                  ? "bg-accentDeep text-white"
+                  : "border border-line bg-panel text-muted hover:text-ink"
+              }`}
+            >
+              {preset.label} ×{preset.multiplier}
+            </button>
+          ))}
+          <label className="flex items-center gap-2 text-xs font-semibold text-muted">
+            직접 입력
+            <input
+              type="number"
+              min={1}
+              step={0.5}
+              value={effortMultiplier}
+              onChange={(e) => setEffortMultiplier(Math.max(1, Number(e.target.value) || 1))}
+              className="w-16 rounded-md border border-line bg-panel px-2 py-1 text-sm tabular-nums text-ink outline-none focus:border-accent"
+            />
+            배
+          </label>
+        </div>
+        <p className="mt-3 text-xs leading-5 text-muted">
+          추론(thinking) 토큰은 화면에 보이지 않아도 <strong className="text-body">출력 토큰으로 과금</strong>
+          됩니다. 위 배수는 요청당 출력 토큰에 곱해지는 대략값이며(실제 배수는 작업 난이도·모델에 따라 크게
+          다름), 현재 계산에 쓰이는 요청당 출력은{" "}
+          <strong className="tabular-nums text-body">{effectiveOutputTokens.toLocaleString()}</strong> 토큰입니다.
+        </p>
       </div>
 
       <details className="mt-4 rounded-lg border border-line bg-panel p-5">

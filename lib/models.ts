@@ -1,6 +1,9 @@
 // 주요 LLM API 모델 스펙·단가 데이터 — /tools/llm-cost, /tools/model-compare, /tools/model-picker 공용.
 //
-// 단가 출처: 2026-08-02 기준 공개 가격 비교 사이트 교차 확인(tokencalculator.ai, aipricing.guru 등).
+// 단가 출처: 2026-08-02 기준 교차 확인 —
+//   GPT-5.6 Luna/Terra/Sol: 자체 가이드 openai-gpt-5-6-family.mdx (Simon Willison 정리 기준)
+//   Claude Fable 5/Opus 5/Sonnet 5/Haiku 4.5: benchlm.ai 2026-08-02 표 + 가격 비교 사이트 교차
+//   나머지: tokencalculator.ai, aipricing.guru 교차 확인
 // 단가는 빠르게 바뀐다 — MODELS_AS_OF 를 UI에 반드시 노출하고, 계산기에서는 사용자가
 // 단가를 직접 고쳐 계산할 수 있게 한다. 갱신 시 이 파일의 숫자와 MODELS_AS_OF 를 함께 올릴 것.
 // 확인 경로: PROVIDER_PRICING_URLS 의 공식 요금 페이지.
@@ -35,22 +38,34 @@ export const PROVIDER_PRICING_URLS: Record<ModelInfo["provider"], string> = {
 
 export const MODELS: ModelInfo[] = [
   {
-    id: "gpt-5-2",
+    id: "gpt-5-6-sol",
     provider: "OpenAI",
-    name: "GPT-5.2",
-    inputPer1M: 1.75,
-    outputPer1M: 14.0,
-    contextWindow: 400_000,
-    strengths: ["reasoning", "coding"]
+    name: "GPT-5.6 Sol",
+    inputPer1M: 5.0,
+    outputPer1M: 30.0,
+    contextWindow: 1_000_000,
+    strengths: ["reasoning", "coding"],
+    note: "5.6 계열 최상위. 최대 출력 128K"
   },
   {
-    id: "gpt-5",
+    id: "gpt-5-6-terra",
     provider: "OpenAI",
-    name: "GPT-5",
-    inputPer1M: 1.25,
-    outputPer1M: 10.0,
-    contextWindow: 400_000,
-    strengths: ["reasoning", "writing"]
+    name: "GPT-5.6 Terra",
+    inputPer1M: 2.5,
+    outputPer1M: 15.0,
+    contextWindow: 1_000_000,
+    strengths: ["reasoning", "writing"],
+    note: "5.6 계열 중간 크기"
+  },
+  {
+    id: "gpt-5-6-luna",
+    provider: "OpenAI",
+    name: "GPT-5.6 Luna",
+    inputPer1M: 1.0,
+    outputPer1M: 6.0,
+    contextWindow: 1_000_000,
+    strengths: ["budget", "writing", "long-context"],
+    note: "5.6 계열 소형"
   },
   {
     id: "gpt-5-mini",
@@ -71,13 +86,24 @@ export const MODELS: ModelInfo[] = [
     strengths: ["budget"]
   },
   {
-    id: "claude-opus-4-5",
+    id: "claude-fable-5",
     provider: "Anthropic",
-    name: "Claude Opus 4.5",
+    name: "Claude Fable 5",
+    inputPer1M: 10.0,
+    outputPer1M: 50.0,
+    contextWindow: 1_000_000,
+    strengths: ["reasoning", "coding", "writing"],
+    note: "Opus 위 신설 티어 (2026-06 출시)"
+  },
+  {
+    id: "claude-opus-5",
+    provider: "Anthropic",
+    name: "Claude Opus 5",
     inputPer1M: 5.0,
     outputPer1M: 25.0,
-    contextWindow: 200_000,
-    strengths: ["reasoning", "coding", "writing"]
+    contextWindow: 1_000_000,
+    strengths: ["reasoning", "coding", "writing"],
+    note: "2026-07-24 출시"
   },
   {
     id: "claude-sonnet-5",
@@ -85,8 +111,7 @@ export const MODELS: ModelInfo[] = [
     name: "Claude Sonnet 5",
     inputPer1M: 2.0,
     outputPer1M: 10.0,
-    contextWindow: 200_000,
-    contextNote: "1M 베타",
+    contextWindow: 1_000_000,
     strengths: ["coding", "writing"],
     note: "출시 가격. 2026-09-01부터 $3/$15 예정으로 안내됨"
   },
@@ -137,6 +162,19 @@ export const MODELS: ModelInfo[] = [
     strengths: ["budget", "long-context"]
   }
 ];
+
+/**
+ * 추론 강도(effort) 프리셋.
+ * 추론(thinking/reasoning) 토큰은 응답에 보이지 않아도 출력 토큰으로 과금된다 —
+ * 그래서 출력 토큰 배수로 근사한다. 실제 배수는 작업 난이도·모델에 따라 크게
+ * 달라지므로 대략값이며, UI에서 사용자가 배수를 직접 고칠 수 있게 한다.
+ */
+export const EFFORT_PRESETS = [
+  { key: "minimal", label: "최소", multiplier: 1, description: "추론 거의 없음 — 표시 출력만 과금" },
+  { key: "low", label: "낮음", multiplier: 1.5, description: "가벼운 추론" },
+  { key: "medium", label: "중간", multiplier: 3, description: "일반적 추론 작업" },
+  { key: "high", label: "높음", multiplier: 6, description: "깊은 추론 — 복잡한 분석·코딩" }
+] as const;
 
 /**
  * 글자 수 기반 토큰 추정. 정확한 값은 토크나이저마다 다르다 —
