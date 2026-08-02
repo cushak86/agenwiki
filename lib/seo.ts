@@ -73,6 +73,46 @@ export function metadataForContent(type: ContentType, meta: ContentMeta): Metada
   });
 }
 
+/**
+ * 사이트 전역 WebSite 스키마 — 엔티티 명시 + 사이트 내 검색(SearchAction) 선언.
+ * /search 는 ?q= 초기 쿼리를 지원한다(SearchClient) — 템플릿과 실제 동작이 일치해야 한다.
+ */
+export function websiteJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: siteConfig.name,
+    url: siteConfig.url,
+    description: siteConfig.description,
+    inLanguage: "ko",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: `${siteConfig.url}/search?q={search_term_string}`
+      },
+      "query-input": "required name=search_term_string"
+    }
+  };
+}
+
+/** 사이트 전역 Organization 스키마 — 운영 주체 엔티티. */
+export function organizationJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: siteConfig.name,
+    url: siteConfig.url,
+    logo: absoluteUrl("/images/logo.png"),
+    contactPoint: {
+      "@type": "ContactPoint",
+      email: "cushak@icloud.com",
+      contactType: "customer support",
+      availableLanguage: ["ko"]
+    }
+  };
+}
+
 export function articleJsonLd(meta: GuideMeta) {
   return {
     "@context": "https://schema.org",

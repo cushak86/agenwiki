@@ -47,6 +47,14 @@ export function SearchClient({ items }: { items: SearchItem[] }) {
   const [typeFilter, setTypeFilter] = useState<ContentType | "all">("all");
   const trimmed = query.trim();
 
+  // ?q= 초기 쿼리 지원 — WebSite 스키마의 SearchAction 템플릿(/search?q=...)과 동작을 일치시킨다.
+  useEffect(() => {
+    const initial = new URLSearchParams(window.location.search).get("q");
+    if (initial) {
+      setQuery(initial);
+    }
+  }, []);
+
   const results = useMemo(() => {
     if (trimmed.length === 0) {
       return [];
