@@ -62,7 +62,12 @@ export function SubscribeForm({
   return (
     <form onSubmit={handleSubmit} className="rounded-lg border border-line bg-panel p-5">
       <h2 className="text-lg font-semibold text-ink">{heading}</h2>
-      <p className="mt-1 text-sm leading-6 text-muted">{description}</p>
+      <p className="mt-1 text-sm leading-6 text-muted">
+        {description}{" "}
+        <a href="/newsletter" className="font-medium text-ink underline-offset-2 hover:text-accent hover:underline">
+          지난 호 보기 →
+        </a>
+      </p>
       <div className="mt-4 flex flex-col gap-3 md:flex-row">
         <input
           type="email"
@@ -80,7 +85,7 @@ export function SubscribeForm({
           {status === "loading" ? "구독 중…" : "구독"}
         </button>
       </div>
-      <label className="mt-3 flex items-start gap-2 text-xs leading-5 text-muted">
+      <label className="mt-3 flex items-start gap-2 text-[13px] leading-5 text-body">
         <input
           type="checkbox"
           checked={agreed}

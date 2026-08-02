@@ -36,7 +36,7 @@ export function OpenInButtons({ text, slug }: { text: string; slug: string }) {
             key={target.key}
             type="button"
             onClick={() => openIn(target)}
-            className="rounded-md border border-line bg-panel px-3 py-2 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent"
+            className="inline-flex min-h-[44px] items-center rounded-md border border-line bg-panel px-4 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent"
           >
             {target.label} ↗
           </button>

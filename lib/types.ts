@@ -59,4 +59,5 @@ export type SearchItem = {
   title: string;
   description: string;
   tags: string[];
+  excerpt: string;
 };

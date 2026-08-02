@@ -1,4 +1,4 @@
-import { ContentCard } from "@/components/ContentCard";
+import { FilteredCardList } from "@/components/FilteredCardList";
 import { getAll } from "@/lib/content";
 import { buildMetadata } from "@/lib/seo";
 
@@ -16,11 +16,12 @@ export default function GuidesPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-12">
       <h1 className="text-3xl font-bold text-ink">가이드</h1>
-      <p className="mt-3 max-w-2xl leading-8 text-muted">AI 에이전트, 도구, 자동화 워크플로우를 실전 중심으로 정리합니다.</p>
-      <div className="mt-8 grid gap-4 md:grid-cols-3">
-        {guides.map((guide) => (
-          <ContentCard key={guide.slug} type="guides" meta={guide} />
-        ))}
+      <p className="mt-3 max-w-2xl leading-8 text-muted">
+        AI 에이전트, 도구, 자동화 워크플로우를 실전 중심으로 정리합니다. 난이도 탭과 태그로 원하는
+        글만 좁혀 볼 수 있습니다.
+      </p>
+      <div className="mt-8">
+        <FilteredCardList entries={guides.map((meta) => ({ type: "guides" as const, meta }))} withDifficultyTabs />
       </div>
     </div>
   );

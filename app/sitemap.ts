@@ -10,6 +10,7 @@ const staticRoutes = [
   "/glossary",
   "/prompts",
   "/prompts/builder",
+  "/tools",
   "/tools/claude-md",
   ...CHAINS.map((chain) => `/prompts/chains/${chain.slug}`),
   "/newsletter",

@@ -49,6 +49,9 @@ export default function NewsletterDetailPage({ params }: { params: { slug: strin
         <p className="text-sm font-semibold text-accent">Issue #{meta.issueNumber}</p>
         <h1 className="mt-3 text-4xl font-bold leading-tight text-ink">{meta.title}</h1>
         <p className="mt-4 leading-8 text-muted">{meta.summary}</p>
+        <p className="mt-3 text-sm tabular-nums text-muted">
+          발행 <time dateTime={meta.publishedAt}>{meta.publishedAt}</time>
+        </p>
         <div className="mt-5">
           <TagChips tags={meta.tags} />
         </div>
@@ -58,7 +61,7 @@ export default function NewsletterDetailPage({ params }: { params: { slug: strin
           <Mdx source={record.body} />
         </Prose>
       </div>
-      <AiDisclosure />
+      <AiDisclosure title={meta.title} pathname={`/newsletter/${meta.slug}`} />
       <RelatedContent type="newsletter" slug={meta.slug} tags={meta.tags} />
       <section id="subscribe" className="mt-12">
         <SubscribeForm />

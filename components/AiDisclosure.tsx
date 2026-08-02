@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { absoluteUrl } from "@/lib/seo";
 
 // AI 생성 고지: 모든 글 하단(본문과 관련 글 사이)에 들어간다 — guides·glossary·prompts·newsletter 전 타입.
 //
@@ -16,19 +17,43 @@ const DISCLOSURE_BODY =
 
 const DISCLOSURE_LINK_LABEL = "제작 과정 자세히 보기";
 
+const REPORT_EMAIL = "cushak@icloud.com";
+
 /**
- * 글 하단 AI 생성 고지 배너.
- * 본문 흐름을 끊지 않도록 Prose 바깥, RelatedContent 앞에 둔다.
- * 콘텐츠 타입과 무관하게 동일한 문구를 쓰므로 props를 받지 않는다.
+ * 오류를 발견한 그 자리(개별 문서)에서 바로 제보할 수 있게 문서 제목·URL을 프리필한 mailto 링크를 만든다.
+ * 독자 제보가 사실상 유일한 교정 경로라서(/about), 진입 마찰을 최대한 줄이는 것이 목적.
  */
-export function AiDisclosure() {
+function reportHref(title?: string, pathname?: string) {
+  if (!title || !pathname) {
+    return `mailto:${REPORT_EMAIL}?subject=${encodeURIComponent("[오류 제보] agenwiki")}`;
+  }
+
+  const subject = encodeURIComponent(`[오류 제보] ${title}`);
+  const body = encodeURIComponent(`문서: ${absoluteUrl(pathname)}\n\n틀린 부분:\n`);
+  return `mailto:${REPORT_EMAIL}?subject=${subject}&body=${body}`;
+}
+
+/**
+ * 글 하단 AI 생성 고지 배너 + 오류 제보 버튼.
+ * 본문 흐름을 끊지 않도록 Prose 바깥, RelatedContent 앞에 둔다.
+ * title/pathname을 주면 제보 메일에 문서 정보가 프리필된다.
+ */
+export function AiDisclosure({ title, pathname }: { title?: string; pathname?: string } = {}) {
   return (
     <aside className="mt-10 max-w-3xl rounded-lg border border-line bg-panel p-5">
       <p className="text-sm font-semibold text-accent">{DISCLOSURE_LABEL}</p>
       <p className="mt-2 text-sm leading-6 text-muted">{DISCLOSURE_BODY}</p>
-      <Link href="/about" className="mt-3 inline-block text-sm font-medium text-ink hover:text-accent">
-        {DISCLOSURE_LINK_LABEL} →
-      </Link>
+      <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2">
+        <a
+          href={reportHref(title, pathname)}
+          className="inline-flex min-h-[44px] items-center rounded-md border border-line bg-panel2 px-4 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent"
+        >
+          이 문서에서 틀린 부분을 봤나요? 알려주기
+        </a>
+        <Link href="/about" className="text-sm font-medium text-ink hover:text-accent">
+          {DISCLOSURE_LINK_LABEL} →
+        </Link>
+      </div>
     </aside>
   );
 }

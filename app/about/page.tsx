@@ -135,6 +135,28 @@ export default function AboutPage() {
       </section>
 
       <section className="mt-10">
+        <h2 className="text-xl font-semibold text-ink">기여 방법</h2>
+        <p className="mt-3 leading-8 text-muted">
+          독자 제보가 이 사이트의 유일한 교정 경로입니다. 제보는 이렇게 처리됩니다.
+        </p>
+        <ol className="mt-3 list-decimal space-y-2 pl-5">
+          <li className="leading-8 text-muted">
+            <strong className="font-semibold text-ink">제보</strong> — 모든 문서 하단의 &ldquo;틀린 부분을
+            봤나요?&rdquo; 버튼을 누르면 문서 주소가 채워진 메일이 열립니다. 틀린 부분만 적어 보내 주세요.
+            용어사전 하단에서는 다뤄 줬으면 하는 용어도 신청할 수 있습니다.
+          </li>
+          <li className="leading-8 text-muted">
+            <strong className="font-semibold text-ink">반영</strong> — 확인 후 본문을 고칩니다. 판단이 필요한
+            내용이면 원문을 다시 확인하고 고칩니다.
+          </li>
+          <li className="leading-8 text-muted">
+            <strong className="font-semibold text-ink">수정일 갱신</strong> — 고친 문서는 최종 수정일(
+            <code>updatedAt</code>)을 함께 올립니다. 언제 무엇이 고쳐졌는지 문서에서 확인할 수 있습니다.
+          </li>
+        </ol>
+      </section>
+
+      <section className="mt-10">
         <h2 className="text-xl font-semibold text-ink">연락 경로</h2>
         <p className="mt-3 leading-8 text-muted">
           오류 신고와 문의는 이메일로 받습니다 —{" "}

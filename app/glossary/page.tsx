@@ -21,6 +21,21 @@ export default function GlossaryPage() {
       <div className="mt-8">
         <GlossaryIndex items={terms} />
       </div>
+
+      <section className="mt-12 rounded-lg border border-line bg-panel p-5">
+        <h2 className="text-lg font-semibold text-ink">찾는 용어가 없나요?</h2>
+        <p className="mt-2 text-sm leading-6 text-muted">
+          다뤄 줬으면 하는 용어를 알려 주세요. 신청이 곧 다음 용어의 우선순위가 됩니다.
+        </p>
+        <a
+          href={`mailto:cushak@icloud.com?subject=${encodeURIComponent("[용어 신청] ")}&body=${encodeURIComponent(
+            "다뤄 줬으면 하는 용어:\n\n어떤 맥락에서 마주쳤나요? (선택):\n"
+          )}`}
+          className="mt-3 inline-flex min-h-[44px] items-center rounded-md border border-line bg-panel2 px-4 text-sm font-semibold text-ink transition hover:border-accent hover:text-accent"
+        >
+          이 용어를 다뤄 주세요 →
+        </a>
+      </section>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ContentCard } from "@/components/ContentCard";
+import { FilteredCardList } from "@/components/FilteredCardList";
 import { CHAINS } from "@/lib/chains";
 import { getAll } from "@/lib/content";
 import { buildMetadata } from "@/lib/seo";
@@ -55,10 +55,8 @@ export default function PromptsPage() {
       </div>
 
       <h2 className="mt-12 text-xl font-bold text-ink">프롬프트 라이브러리</h2>
-      <div className="mt-6 grid gap-4 md:grid-cols-3">
-        {prompts.map((prompt) => (
-          <ContentCard key={prompt.slug} type="prompts" meta={prompt} />
-        ))}
+      <div className="mt-6">
+        <FilteredCardList entries={prompts.map((meta) => ({ type: "prompts" as const, meta }))} />
       </div>
     </div>
   );

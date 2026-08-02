@@ -54,6 +54,9 @@ export default function PromptDetailPage({ params }: { params: { slug: string } 
         <p className="text-sm font-semibold text-accent">{meta.targetModel}</p>
         <h1 className="mt-3 text-4xl font-bold leading-tight text-ink">{meta.title}</h1>
         <p className="mt-4 leading-8 text-muted">{meta.description}</p>
+        <p className="mt-3 text-sm tabular-nums text-muted">
+          발행 <time dateTime={meta.publishedAt}>{meta.publishedAt}</time>
+        </p>
         <div className="mt-5">
           <TagChips tags={meta.tags} />
         </div>
@@ -66,7 +69,8 @@ export default function PromptDetailPage({ params }: { params: { slug: string } 
             <OpenInButtons text={meta.promptText} slug={meta.slug} />
           </div>
         </div>
-        <pre className="overflow-x-auto rounded-md bg-neutral-950 p-4 text-sm leading-7 text-neutral-100">
+        {/* pre-wrap: 한 줄 프롬프트가 모바일에서 가로 5,000px 오버플로를 만들던 것을 줄바꿈으로 해소 */}
+        <pre className="whitespace-pre-wrap break-words rounded-md bg-neutral-950 p-4 text-sm leading-7 text-neutral-100">
           <code>{meta.promptText}</code>
         </pre>
       </section>
@@ -76,7 +80,7 @@ export default function PromptDetailPage({ params }: { params: { slug: string } 
           <Mdx source={record.body} />
         </Prose>
       </div>
-      <AiDisclosure />
+      <AiDisclosure title={meta.title} pathname={`/prompts/${meta.slug}`} />
       <RelatedContent type="prompts" slug={meta.slug} tags={meta.tags} />
     </div>
   );

@@ -25,7 +25,7 @@ export default function SearchPage() {
     <div className="mx-auto max-w-6xl px-4 py-12">
       <h1 className="text-3xl font-bold text-ink">검색</h1>
       <p className="mt-3 max-w-2xl leading-8 text-muted">
-        가이드, 용어사전, 프롬프트, 뉴스레터 전체를 제목·설명·태그 기준으로 검색합니다.
+        가이드, 용어사전, 프롬프트, 뉴스레터 전체를 제목·설명·태그·본문 도입부 기준으로 검색합니다.
       </p>
       <div className="mt-8">
         <SearchClient items={items} />

@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
+import { getContentDescription, getContentTitle } from "@/lib/meta";
 import type { ContentMeta, ContentRecord, ContentType, SearchItem, TaggedContent } from "@/lib/types";
 
 const contentRoot = path.join(process.cwd(), "content");
@@ -268,7 +269,17 @@ export function getAll(type: ContentType): ContentMeta[] {
       const published = "publishedAt" in meta ? meta.publishedAt : "";
       return published === "" || published <= today;
     })
-    .sort((a, b) => sortDate(b).localeCompare(sortDate(a)));
+    .sort((a, b) => {
+      const byDate = sortDate(b).localeCompare(sortDate(a));
+      if (byDate !== 0) {
+        return byDate;
+      }
+      // 같은 날짜 안에서는 호수 내림차순 — 뉴스레터가 3→4→1 순으로 뒤섞이는 것을 막는다.
+      if ("issueNumber" in a && "issueNumber" in b) {
+        return b.issueNumber - a.issueNumber;
+      }
+      return a.slug.localeCompare(b.slug);
+    });
 }
 
 export function getBySlug(type: ContentType, slug: string): ContentRecord {
@@ -294,44 +305,46 @@ export function getAllTags(): string[] {
   return Array.from(new Set(tags)).sort((a, b) => a.localeCompare(b, "ko"));
 }
 
-export function getContentHref(type: ContentType, slug: string) {
-  return `/${type}/${slug}`;
-}
+export { getContentDescription, getContentHref, getContentTitle } from "@/lib/meta";
 
-export function getContentTitle(meta: ContentMeta) {
-  if ("term" in meta) {
-    return meta.term;
-  }
+/**
+ * 본문에서 검색용 발췌를 만든다: h2 헤딩 전체 + 본문 앞부분.
+ * 마크다운 문법·링크 URL 을 벗겨 순수 텍스트만 남긴다.
+ * 본문에만 등장하는 개념(청킹, 리랭킹 등)이 검색에 걸리게 하는 것이 목적이므로
+ * 전문 색인이 아니라 헤딩+앞 500자면 충분하다.
+ */
+function searchExcerpt(body: string): string {
+  const headings = Array.from(body.matchAll(/^##+\s+(.+)$/gm)).map((m) => m[1].trim());
+  const text = body
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/^#+\s+.+$/gm, " ")
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
+    .replace(/[*_`>|-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 500);
 
-  return meta.title;
-}
-
-export function getContentDescription(meta: ContentMeta) {
-  if ("description" in meta) {
-    return meta.description;
-  }
-
-  if ("shortDef" in meta) {
-    return meta.shortDef;
-  }
-
-  return meta.summary;
+  return [...headings, text].join(" ");
 }
 
 /**
  * 빌드/렌더 시점에 모든 콘텐츠(guides/glossary/prompts/newsletter)를 모아
- * title/description/tags 기준의 경량 검색 인덱스를 만든다.
+ * title/description/tags/본문 발췌 기준의 경량 검색 인덱스를 만든다.
  * fs를 사용하는 서버 전용 함수이므로 서버 컴포넌트에서만 호출하고,
  * 결과(SearchItem[])만 클라이언트 컴포넌트로 props 전달할 것.
  */
 export function getSearchIndex(): SearchItem[] {
   return contentTypes.flatMap((type) =>
-    getAll(type).map((meta) => ({
-      type,
-      slug: meta.slug,
-      title: getContentTitle(meta),
-      description: getContentDescription(meta),
-      tags: meta.tags
-    }))
+    getAll(type).map((meta) => {
+      const { body } = getBySlug(type, meta.slug);
+      return {
+        type,
+        slug: meta.slug,
+        title: getContentTitle(meta),
+        description: getContentDescription(meta),
+        tags: meta.tags,
+        excerpt: searchExcerpt(body)
+      };
+    })
   );
 }

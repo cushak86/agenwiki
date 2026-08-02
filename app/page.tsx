@@ -34,6 +34,34 @@ const stats = [
   { k: "운영 실록 커밋", v: "428+" }
 ];
 
+// 히어로 바로 아래 3분기 진입 카드 — 방문자가 상품보다 콘텐츠를 먼저 만나게 한다.
+const entryCards = [
+  {
+    href: "/guides/getting-started-with-ai-agents",
+    label: "처음이라면",
+    title: "AI 에이전트 입문 가이드",
+    description: "에이전트가 무엇이고 어디서부터 시작하는지, 첫 걸음을 안내합니다."
+  },
+  {
+    href: "/glossary",
+    label: "용어부터",
+    title: "AI 용어사전",
+    description: "RAG, 임베딩, 환각 — 자주 마주치는 개념을 짧고 명확하게 확인합니다."
+  },
+  {
+    href: "/prompts",
+    label: "바로 쓰기",
+    title: "복사해 쓰는 프롬프트",
+    description: "역할·형식·품질 규칙까지 갖춘 프롬프트를 복사해 바로 씁니다."
+  }
+];
+
+const tools = [
+  { href: "/prompts/builder", label: "🧪 프롬프트 빌더", description: "클릭 몇 번으로 프롬프트 조립" },
+  { href: "/tools/claude-md", label: "🤖 CLAUDE.md 생성기", description: "AI 코딩 도구 설정 파일 만들기" },
+  { href: "/tools", label: "⛓ 도구 전체 보기", description: "프롬프트 체인 등 인터랙티브 도구 모음" }
+];
+
 export default function HomePage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-14">
@@ -60,19 +88,20 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="mt-12">
-        <div className="flex items-baseline justify-between">
-          <h2 className="text-2xl font-bold text-ink">기록으로 만든 상품</h2>
-          <Link href="/store" className="text-sm font-bold text-accent hover:text-accentSoft">
-            스토어 전체 →
-          </Link>
-        </div>
-        <p className="mt-2 text-sm text-muted">
-          이 회사가 실제로 굴린 기록에서 나온 것들입니다. 각색은 없습니다.
-        </p>
-        <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {chronicleProducts.map((p) => (
-            <ProductCard key={p.id} product={p} />
+      <section className="mt-10">
+        <div className="grid gap-4 md:grid-cols-3">
+          {entryCards.map((card) => (
+            <Link
+              key={card.href}
+              href={card.href}
+              className="group rounded-xl border border-line bg-panel p-5 transition hover:-translate-y-0.5 hover:border-accent/60"
+            >
+              <p className="text-xs font-bold uppercase tracking-widest text-accentSoft">{card.label}</p>
+              <h2 className="mt-2 text-lg font-bold text-ink transition group-hover:text-accentSoft">
+                {card.title}
+              </h2>
+              <p className="mt-2 text-sm leading-6 text-muted">{card.description}</p>
+            </Link>
           ))}
         </div>
       </section>
@@ -94,6 +123,40 @@ export default function HomePage() {
           </section>
         ))}
       </div>
+
+      <section className="mt-14">
+        <h2 className="text-2xl font-bold text-ink">직접 만들어 보기</h2>
+        <p className="mt-2 text-sm text-muted">읽는 데서 끝나지 않도록, 로그인 없이 쓰는 도구를 두었습니다.</p>
+        <div className="mt-5 grid gap-4 md:grid-cols-3">
+          {tools.map((tool) => (
+            <Link
+              key={tool.href}
+              href={tool.href}
+              className="rounded-xl border border-line bg-panel p-5 transition hover:-translate-y-0.5 hover:border-accent/60"
+            >
+              <p className="text-sm font-semibold text-accent">{tool.label}</p>
+              <p className="mt-2 text-sm leading-6 text-muted">{tool.description}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-14">
+        <div className="flex items-baseline justify-between">
+          <h2 className="text-2xl font-bold text-ink">기록으로 만든 상품</h2>
+          <Link href="/store" className="text-sm font-bold text-accent hover:text-accentSoft">
+            스토어 전체 →
+          </Link>
+        </div>
+        <p className="mt-2 text-sm text-muted">
+          이 회사가 실제로 굴린 기록에서 나온 것들입니다. 각색은 없습니다.
+        </p>
+        <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {chronicleProducts.map((p) => (
+            <ProductCard key={p.id} product={p} />
+          ))}
+        </div>
+      </section>
 
       <section id="subscribe" className="mt-14">
         <SubscribeForm />

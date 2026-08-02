@@ -12,6 +12,17 @@ const typeLabels: Record<ContentType, string> = {
   newsletter: "뉴스레터"
 };
 
+const TYPE_FILTERS: { key: ContentType | "all"; label: string }[] = [
+  { key: "all", label: "전체" },
+  { key: "guides", label: "가이드" },
+  { key: "glossary", label: "용어" },
+  { key: "prompts", label: "프롬프트" },
+  { key: "newsletter", label: "뉴스레터" }
+];
+
+// 검색어 입력 전 빈 화면에 보여줄 추천 검색어 — 현재 토픽 상위 개념에서 뽑았다.
+const SUGGESTED_QUERIES = ["RAG", "프롬프트 인젝션", "MCP", "파인튜닝", "벡터 DB", "컨텍스트 윈도우", "멀티에이전트", "환각"];
+
 function matches(item: SearchItem, query: string) {
   const needle = query.toLowerCase();
 
@@ -23,11 +34,17 @@ function matches(item: SearchItem, query: string) {
     return true;
   }
 
-  return item.tags.some((tag) => tag.toLowerCase().includes(needle));
+  if (item.tags.some((tag) => tag.toLowerCase().includes(needle))) {
+    return true;
+  }
+
+  // 본문 발췌(헤딩+앞부분)까지 본다 — 제목에 없는 개념(청킹, 리랭킹 등)도 걸리게.
+  return item.excerpt.toLowerCase().includes(needle);
 }
 
 export function SearchClient({ items }: { items: SearchItem[] }) {
   const [query, setQuery] = useState("");
+  const [typeFilter, setTypeFilter] = useState<ContentType | "all">("all");
   const trimmed = query.trim();
 
   const results = useMemo(() => {
@@ -37,6 +54,8 @@ export function SearchClient({ items }: { items: SearchItem[] }) {
 
     return items.filter((item) => matches(item, trimmed));
   }, [items, trimmed]);
+
+  const visible = typeFilter === "all" ? results : results.filter((item) => item.type === typeFilter);
 
   // 결과 0건 검색어는 다음 콘텐츠·도구 투자의 근거가 된다. 타이핑이 멈춘 뒤 1회만 기록.
   useEffect(() => {
@@ -68,22 +87,64 @@ export function SearchClient({ items }: { items: SearchItem[] }) {
 
       <div className="mt-8">
         {trimmed.length === 0 ? (
-          <p className="text-sm leading-6 text-muted">
-            검색어를 입력하면 가이드·용어사전·프롬프트·뉴스레터에서 제목, 설명, 태그를 기준으로 결과를 찾아드립니다.
-          </p>
+          <div>
+            <p className="text-sm leading-6 text-muted">
+              제목·설명·태그와 본문 도입부를 기준으로 가이드·용어사전·프롬프트·뉴스레터 전체에서
+              찾아드립니다. 이런 검색어로 시작해 보세요:
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {SUGGESTED_QUERIES.map((suggestion) => (
+                <button
+                  key={suggestion}
+                  type="button"
+                  onClick={() => setQuery(suggestion)}
+                  className="rounded-full border border-line bg-panel px-4 py-2 text-sm font-medium text-muted transition hover:border-accent hover:text-accent"
+                >
+                  {suggestion}
+                </button>
+              ))}
+            </div>
+          </div>
         ) : results.length === 0 ? (
           <p className="text-sm leading-6 text-muted">&ldquo;{trimmed}&rdquo;에 대한 결과가 없습니다.</p>
         ) : (
           <div>
-            <p className="mb-4 text-sm text-muted">총 {results.length}개 결과</p>
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-wrap gap-2">
+                {TYPE_FILTERS.map((filter) => {
+                  const count =
+                    filter.key === "all" ? results.length : results.filter((r) => r.type === filter.key).length;
+                  if (filter.key !== "all" && count === 0) {
+                    return null;
+                  }
+                  return (
+                    <button
+                      key={filter.key}
+                      type="button"
+                      onClick={() => setTypeFilter(filter.key)}
+                      className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
+                        typeFilter === filter.key
+                          ? "border-accent bg-accentDeep/30 text-ink"
+                          : "border-line bg-panel text-muted hover:border-accent hover:text-accent"
+                      }`}
+                    >
+                      {filter.label} <span className="tabular-nums opacity-70">{count}</span>
+                    </button>
+                  );
+                })}
+              </div>
+              <p className="text-sm text-muted">총 {visible.length}개 결과</p>
+            </div>
             <div className="grid gap-4 md:grid-cols-3">
-              {results.map((item) => (
+              {visible.map((item) => (
                 <article
                   key={`${item.type}-${item.slug}`}
                   className="flex min-h-56 flex-col justify-between rounded-lg border border-line bg-panel p-5"
                 >
                   <div className="space-y-3">
-                    <span className="text-xs font-medium text-muted">{typeLabels[item.type]}</span>
+                    <span className="inline-block rounded-full border border-accent/40 px-2.5 py-0.5 text-xs font-bold text-accentSoft">
+                      {typeLabels[item.type]}
+                    </span>
                     <h3 className="text-lg font-semibold leading-snug text-ink">
                       <Link href={`/${item.type}/${item.slug}`} className="hover:text-accent">
                         {item.title}

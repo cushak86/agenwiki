@@ -265,6 +265,39 @@ def validate_source_block(content_type, data, path):
     )
 
 
+def validate_template_sections(content_type, path):
+    """문서 템플릿 3종의 최소 구조를 발행 게이트에서 검사한다.
+
+    발행 경로에서만 강제한다 — lib/content.ts(빌드)에 넣으면 규칙 이전의 기존 문서가
+    전부 빌드를 깨뜨리므로, 새로 발행되는 문서부터 적용되는 여기가 맞는 위치다.
+      guides:   본문 내 용어사전 링크(/glossary/...) 2개 이상 — 내부 링크 밀도 표준
+      glossary: "## 개념" 과 "## 쓰임새" 섹션 — 용어형 템플릿 최소 구조
+      prompts:  "## 사용 예시" 섹션 — 입력→출력 샘플 표준
+    """
+    text = path.read_text(encoding="utf-8")
+
+    if content_type == "guides":
+        links = re.findall(r"\]\(/glossary/[a-z0-9-]+\)", text)
+        if len(links) < 2:
+            fail(
+                f"{path}: 가이드 본문에 용어사전 링크가 {len(links)}개입니다 (최소 2개).\n"
+                "  본문에서 처음 등장하는 핵심 개념 2곳 이상을 [용어](/glossary/slug) 로 연결하세요."
+            )
+    elif content_type == "glossary":
+        for heading in ("## 개념", "## 쓰임새"):
+            if heading not in text:
+                fail(
+                    f'{path}: 용어 문서에 "{heading}" 섹션이 없습니다.\n'
+                    "  용어형 템플릿: ## 개념 / ## 쓰임새 (+ 권장: ## 자주 하는 오해)"
+                )
+    elif content_type == "prompts":
+        if "## 사용 예시" not in text:
+            fail(
+                f'{path}: 프롬프트 문서에 "## 사용 예시" 섹션이 없습니다.\n'
+                "  입력(변수를 채운 예)과 출력(요약 샘플)을 보여주는 것이 프롬프트형 템플릿 표준입니다."
+            )
+
+
 def run(command, check=True):
     command = list(command)
     if command:
@@ -346,6 +379,7 @@ def main():
     data = parse_frontmatter(staging_path)
     validate_frontmatter(args.type, data, args.slug, staging_path)
     validate_source_block(args.type, data, staging_path)
+    validate_template_sections(args.type, staging_path)
 
     target_dir = REPO_ROOT / "content" / args.type
     target_path = target_dir / f"{args.slug}.mdx"

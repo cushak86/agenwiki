@@ -26,6 +26,19 @@ body {
   color: #fff;
 }
 
+/* 한국어 제목이 어절 중간에서 갈라지지 않게 한다 ("…쉽게 이해하/기" 방지) */
+h1,
+h2,
+h3,
+h4 {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+h1 {
+  text-wrap: balance;
+}
+
 .prose-shell {
   max-width: 760px;
 }
