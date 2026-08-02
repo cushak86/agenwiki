@@ -37,6 +37,16 @@ export const BASELINE_SIZE = 81;
 // 최신 회차가 앞에 오도록 유지한다(표·최신 스냅샷이 이 순서를 그대로 쓴다).
 export const INDEX_LOG_ROUNDS: IndexLogRound[] = [
   {
+    round: 2,
+    measuredAt: "2026-08-02",
+    dayNumber: 23,
+    indexed: 34,
+    impressions: 41,
+    clicks: 0,
+    impressionsWindow: "2026-07-03~07-30",
+    note: "색인 27→34건(33.3%→42.0%), 노출 3→41회. /terms 1건이 색인에서 이탈해 원인 확인이 필요합니다. 측정 표본은 기준선 81건 그대로입니다 — 이 사이 도메인이 agenwiki.online으로 바뀌고 문서가 대량 추가되어 기준선 밖 신규 URL 147건이 잡혔지만, 회차 간 비교를 위해 표본에 넣지 않았습니다. 클릭은 여전히 0 — 노출된 검색어(RAG·벡터DB 계열)의 평균 순위가 40~100위권이라 클릭 전환 이전 단계입니다."
+  },
+  {
     round: 1,
     measuredAt: "2026-07-16",
     dayNumber: 6,
@@ -49,7 +59,7 @@ export const INDEX_LOG_ROUNDS: IndexLogRound[] = [
 ];
 
 // 다음 측정 예정일. 회차를 추가할 때마다 함께 옮긴다.
-export const NEXT_MEASUREMENT_AT = "2026-07-23";
+export const NEXT_MEASUREMENT_AT = "2026-08-09";
 
 // 0으로 나눌 걱정은 없다 — BASELINE_SIZE가 0이 아닌 리터럴 상수임을 타입 검사가 보장한다.
 export function getIndexedRate(round: IndexLogRound) {
