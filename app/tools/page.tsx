@@ -21,6 +21,46 @@ export default function ToolsPage() {
 
       <div className="mt-8 grid gap-4 md:grid-cols-2">
         <Link
+          href="/tools/llm-cost"
+          className="rounded-lg border border-accent bg-panel p-6 transition hover:border-accentSoft"
+        >
+          <p className="text-sm font-semibold text-accent">💰 LLM API 요금 계산기</p>
+          <h2 className="mt-2 text-xl font-bold text-ink">내 사용량이면 한 달에 얼마?</h2>
+          <p className="mt-2 text-sm leading-6 text-muted">
+            월 요청 수와 토큰만 넣으면 GPT·Claude·Gemini 등 주요 모델 월 비용을 원화로 비교합니다.
+          </p>
+        </Link>
+        <Link
+          href="/tools/model-compare"
+          className="rounded-lg border border-accent bg-panel p-6 transition hover:border-accentSoft"
+        >
+          <p className="text-sm font-semibold text-accent">📊 모델 스펙 비교표</p>
+          <h2 className="mt-2 text-xl font-bold text-ink">단가·컨텍스트 정렬 비교</h2>
+          <p className="mt-2 text-sm leading-6 text-muted">
+            주요 모델의 API 단가와 컨텍스트 윈도우를 열 클릭으로 정렬해 비교합니다.
+          </p>
+        </Link>
+        <Link
+          href="/tools/model-picker"
+          className="rounded-lg border border-accent bg-panel p-6 transition hover:border-accentSoft"
+        >
+          <p className="text-sm font-semibold text-accent">🧭 모델 선택 위저드</p>
+          <h2 className="mt-2 text-xl font-bold text-ink">질문 3개로 모델 후보 좁히기</h2>
+          <p className="mt-2 text-sm leading-6 text-muted">
+            용도·예산·분량을 고르면 조건에 맞는 후보 3개를 근거와 함께 추천합니다.
+          </p>
+        </Link>
+        <Link
+          href="/tools/chunking"
+          className="rounded-lg border border-accent bg-panel p-6 transition hover:border-accentSoft"
+        >
+          <p className="text-sm font-semibold text-accent">✂️ RAG 청킹 시뮬레이터</p>
+          <h2 className="mt-2 text-xl font-bold text-ink">문서가 어떻게 잘리는지 눈으로 확인</h2>
+          <p className="mt-2 text-sm leading-6 text-muted">
+            텍스트를 붙여넣고 청크 크기·오버랩·전략을 바꿔 보며 RAG 분할 동작을 실험합니다.
+          </p>
+        </Link>
+        <Link
           href="/prompts/builder"
           className="rounded-lg border border-accent bg-panel p-6 transition hover:border-accentSoft"
         >

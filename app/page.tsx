@@ -57,9 +57,9 @@ const entryCards = [
 ];
 
 const tools = [
-  { href: "/prompts/builder", label: "🧪 프롬프트 빌더", description: "클릭 몇 번으로 프롬프트 조립" },
-  { href: "/tools/claude-md", label: "🤖 CLAUDE.md 생성기", description: "AI 코딩 도구 설정 파일 만들기" },
-  { href: "/tools", label: "⛓ 도구 전체 보기", description: "프롬프트 체인 등 인터랙티브 도구 모음" }
+  { href: "/tools/llm-cost", label: "💰 LLM 요금 계산기", description: "내 사용량 기준 월 비용을 모델별 비교" },
+  { href: "/tools/chunking", label: "✂️ RAG 청킹 시뮬레이터", description: "문서가 어떻게 잘리는지 눈으로 확인" },
+  { href: "/tools", label: "⛓ 도구 전체 보기", description: "모델 비교표·위저드·빌더 등 도구 모음" }
 ];
 
 export default function HomePage() {

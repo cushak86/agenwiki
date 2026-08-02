@@ -83,7 +83,10 @@ export default function GuideDetailPage({ params }: { params: { slug: string } }
         <aside className="mt-8 max-w-3xl rounded-lg border border-accent/40 bg-panel p-4 text-sm leading-6 text-muted">
           <strong className="font-semibold text-ink">기준 시점: {meta.updatedAt.slice(0, 7)}</strong> — 모델·서비스
           비교는 빠르게 낡습니다. 이 글은 위 시점 기준이며, 최신 사양·가격은 각 서비스의 공식 문서를
-          확인하세요.
+          확인하세요.{" "}
+          <Link href="/tools/model-compare" className="font-medium text-ink hover:text-accent">
+            모델 스펙 비교표에서 정렬 비교 →
+          </Link>
         </aside>
       ) : null}
 
