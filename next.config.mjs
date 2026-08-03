@@ -3,6 +3,14 @@ const nextConfig = {
   reactStrictMode: true,
   async redirects() {
     return [
+      // 호스트 정규화: vercel.app 별칭 접속을 정식 도메인으로 308 (2026-08-03 사장님 보고 — vercel.app이 200으로 유지되던 문제)
+      // canonical 태그는 이미 agenwiki.online을 가리키지만, 호스트 단 리다이렉트가 정석(중복 호스트 색인 원천 차단)
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "agenwiki.vercel.app" }],
+        destination: "https://agenwiki.online/:path*",
+        permanent: true
+      },
       // 태그/토픽 체계 재설계(docs/seo/2026-07-11-태그-토픽-체계-재설계.md) 3절 대응표 74건
       // ai-agent-basics
       { source: "/topics/ai-agent", destination: "/topics/ai-agent-basics", permanent: true },
