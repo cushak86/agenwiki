@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { CHAINS } from "@/lib/chains";
 import { getAll, getAllTags } from "@/lib/content";
 import { absoluteUrl } from "@/lib/seo";
-import type { ContentType } from "@/lib/types";
+import type { ContentMeta, ContentType } from "@/lib/types";
 
 const staticRoutes = [
   "/",
@@ -28,11 +28,15 @@ const staticRoutes = [
 ];
 const contentTypes: ContentType[] = ["guides", "glossary", "prompts", "newsletter"];
 
+const lastModified = (meta: ContentMeta) =>
+  "updatedAt" in meta ? meta.updatedAt : meta.publishedAt;
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const pages = staticRoutes.map((route) => ({ url: absoluteUrl(route) }));
   const contentPages = contentTypes.flatMap((type) =>
     getAll(type).map((meta) => ({
-      url: absoluteUrl(`/${type}/${meta.slug}`)
+      url: absoluteUrl(`/${type}/${meta.slug}`),
+      lastModified: lastModified(meta)
     }))
   );
   const topicPages = getAllTags().map((tag) => ({
