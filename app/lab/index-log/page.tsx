@@ -98,13 +98,17 @@ export default function IndexLogPage() {
             </div>
             <p className="mt-2 text-xs text-muted">{formatRate(getIndexedRate(latest))}</p>
           </div>
+          {/* 속성 라벨을 숫자 바로 밑에 붙인다. 이 페이지는 agenwiki.online 에 있으니 라벨이 없으면
+              독자는 이 노출을 agenwiki.online 것으로 읽는다 — 실제로는 옛 도메인 속성 값이다. */}
           <div className="rounded-lg border border-line bg-panel p-4">
             <dt className="text-xs font-medium text-muted">노출</dt>
             <dd className="mt-1 text-2xl font-bold text-ink">{latest.impressions}</dd>
+            <p className="mt-1 text-[11px] leading-4 text-muted">{latest.property}</p>
           </div>
           <div className="rounded-lg border border-line bg-panel p-4">
             <dt className="text-xs font-medium text-muted">클릭</dt>
             <dd className="mt-1 text-2xl font-bold text-ink">{latest.clicks}</dd>
+            <p className="mt-1 text-[11px] leading-4 text-muted">{latest.property}</p>
           </div>
           <div className="rounded-lg border border-line bg-panel p-4">
             <dt className="text-xs font-medium text-muted">다음 측정</dt>
@@ -218,6 +222,14 @@ export default function IndexLogPage() {
         <p className="mt-3 max-w-3xl text-xs leading-5 text-muted">
           노출·클릭은 GSC 4주 누적치로, 색인 측정일과 집계 구간이 다릅니다(
           {INDEX_LOG_ROUNDS.map((round) => `${round.round}회차: ${round.impressionsWindow}`).join(", ")}).
+        </p>
+        {/* 도메인 이전 중이라 속성이 둘이다. 어느 쪽에서 읽었는지를 안 밝히면 회차 간 비교가 조용히 깨진다. */}
+        <p className="mt-2 max-w-3xl text-xs leading-5 text-muted">
+          노출·클릭을 읽은 GSC 속성:{" "}
+          {[...new Set(INDEX_LOG_ROUNDS.map((round) => round.property))].join(", ")}. 이 사이트는
+          agenwiki.vercel.app에서 agenwiki.online으로 도메인을 옮겼고, 구글이 아직 옛 URL에 실적을 붙이고
+          있습니다(리다이렉트는 308로 정상 동작 중). 같은 구간을 지금 도메인 속성에 물으면 3회차 기준 노출 6·클릭
+          0입니다. 회차 간 비교는 같은 속성끼리만 유효합니다.
         </p>
         {INDEX_LOG_ROUNDS.some((round) => round.note) ? (
           <ul className="mt-4 max-w-3xl space-y-2">

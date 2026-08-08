@@ -7,6 +7,15 @@
 //                            measuredAt 시점의 스냅샷이다.
 //   - impressions / clicks : Google Search Console 실적 보고서의 4주 누적치. 색인 측정일과 집계 구간이
 //                            다르다(1회차: 2026-06-16~07-13). 같은 날짜의 값이 아니므로 표에 각주가 붙는다.
+//
+// ⚠️ **어느 속성에서 읽었는지를 반드시 property 에 적어라.** (2026-08-09 추가)
+//    이 사이트는 agenwiki.vercel.app → agenwiki.online 으로 도메인을 옮겼고, GSC 속성이 둘로 남았다.
+//    같은 집계 구간을 두 속성에 물으면 답이 다르다 — 3회차 구간(2026-07-09~08-05) 실측:
+//      https://agenwiki.vercel.app/  → 노출 52 · 클릭 1
+//      sc-domain:agenwiki.online     → 노출  6 · 클릭 0
+//    구글이 아직 옛 URL 에 실적을 붙이고 있어서 그렇다(리다이렉트는 308 로 정상 동작 중).
+//    속성을 안 적으면 다음 회차에 속성을 바꾸는 순간 52→6 이 '폭락'으로 읽힌다. 실제로는 자 바뀐 것이다.
+//    **회차 간 비교는 같은 속성끼리만 하고, 속성이 바뀌면 그 회차부터 계열을 새로 시작해라.**
 
 export type IndexLogRound = {
   round: number;
@@ -20,6 +29,11 @@ export type IndexLogRound = {
   clicks: number;
   /** impressions·clicks의 집계 구간(예: "2026-06-16~07-13"). */
   impressionsWindow: string;
+  /**
+   * impressions·clicks를 읽은 GSC 속성. 도메인 이전 중이라 회차마다 다를 수 있어 필수다 —
+   * 안 적으면 속성이 바뀌는 회차에 숫자가 통째로 뒤집히고, 그걸 성과 변화로 오독하게 된다.
+   */
+  property: string;
   note?: string;
 };
 
@@ -44,7 +58,8 @@ export const INDEX_LOG_ROUNDS: IndexLogRound[] = [
     impressions: 52,
     clicks: 1,
     impressionsWindow: "2026-07-09~08-05",
-    note: "색인 34→33건(42.0%→40.7%). /glossary/transformer 1건이 색인에서 이탈했습니다 — 2회차의 /terms 이탈에 이어 두 번째라, 이탈이 계속되는지 다음 회차에 봅니다. 이번 회차의 큰 발견은 색인이 아니라 측정입니다. 판독 스크립트가 '총 노출·총 클릭'을 검색어 차원 상위 20행의 합으로 계산하고 있었는데, 구글은 희소 검색어를 익명화해 그 차원에서 아예 빼기 때문에 실제보다 적게 나옵니다. 차원 없이 총계를 다시 물으니 노출 30→52, 그리고 클릭이 0이 아니라 1이었습니다(/topics/ai-research-insights, 평균순위 6.5). 1·2회차의 노출 3·41도 같은 방식으로 축소된 값이라, 이번 회차와 직접 비교할 수 없습니다 — 늘어난 것처럼 보이는 부분에 측정 수정분이 섞여 있습니다. 그래서 이 회차는 '증가'라고 부르지 않습니다."
+    property: "https://agenwiki.vercel.app/ (구 도메인 속성)",
+    note: "색인 34→33건(42.0%→40.7%). /glossary/transformer 1건이 색인에서 이탈했습니다 — 2회차의 /terms 이탈에 이어 두 번째라, 이탈이 계속되는지 다음 회차에 봅니다. 이번 회차의 큰 발견은 색인이 아니라 측정입니다. 판독 스크립트가 '총 노출·총 클릭'을 검색어 차원 상위 20행의 합으로 계산하고 있었는데, 구글은 희소 검색어를 익명화해 그 차원에서 아예 빼기 때문에 실제보다 적게 나옵니다. 차원 없이 총계를 다시 물으니 노출 30→52, 그리고 클릭이 0이 아니라 1이었습니다(/topics/ai-research-insights, 평균순위 6.5). 1·2회차의 노출 3·41도 같은 방식으로 축소된 값이라, 이번 회차와 직접 비교할 수 없습니다 — 늘어난 것처럼 보이는 부분에 측정 수정분이 섞여 있습니다. 그래서 이 회차는 '증가'라고 부르지 않습니다. [2026-08-09 추가] 같은 날 더 큰 것을 발견했습니다. 위 노출 52·클릭 1은 옛 도메인 속성(agenwiki.vercel.app)에서 읽은 값이고, 지금 도메인인 agenwiki.online 속성에 똑같은 구간을 물으면 노출 6·클릭 0입니다. 리다이렉트는 308로 정상 동작하지만 구글이 아직 옛 URL에 실적을 붙이고 있어서 그렇습니다. 세 회차 모두 옛 속성 값이라 회차끼리는 비교가 되지만, 이 숫자를 '지금 도메인의 성적'으로 읽으면 안 됩니다. 그래서 이제 회차마다 어느 속성에서 읽었는지를 함께 적습니다."
   },
   {
     round: 2,
@@ -54,6 +69,7 @@ export const INDEX_LOG_ROUNDS: IndexLogRound[] = [
     impressions: 41,
     clicks: 0,
     impressionsWindow: "2026-07-03~07-30",
+    property: "https://agenwiki.vercel.app/ (구 도메인 속성)",
     note: "색인 27→34건(33.3%→42.0%), 노출 3→41회. /terms 1건이 색인에서 이탈해 원인 확인이 필요합니다. 측정 표본은 기준선 81건 그대로입니다 — 이 사이 도메인이 agenwiki.online으로 바뀌고 문서가 대량 추가되어 기준선 밖 신규 URL 147건이 잡혔지만, 회차 간 비교를 위해 표본에 넣지 않았습니다. 클릭은 여전히 0 — 노출된 검색어(RAG·벡터DB 계열)의 평균 순위가 40~100위권이라 클릭 전환 이전 단계입니다."
   },
   {
@@ -64,6 +80,7 @@ export const INDEX_LOG_ROUNDS: IndexLogRound[] = [
     impressions: 3,
     clicks: 0,
     impressionsWindow: "2026-06-16~07-13",
+    property: "https://agenwiki.vercel.app/ (구 도메인 속성)",
     note: "사이트 공개 6일차 첫 측정. 사이트맵 81건 전수를 URL Inspection API로 확인했습니다. 6일은 색인 지연과 크롤 실패를 구분하기에 짧아, 33.3%가 정상인지 아닌지는 판단하지 않습니다."
   }
 ];
