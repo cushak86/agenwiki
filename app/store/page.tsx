@@ -51,10 +51,12 @@ export default function StorePage() {
           </h2>
           <p className="text-sm leading-6 text-body">{comboProduct.description}</p>
           <div className="mt-2 flex items-baseline gap-3">
-            <span className="text-sm text-muted line-through">148,800원</span>
             <span className="text-2xl font-extrabold tabular-nums text-ink">{formatPrice(comboProduct)}</span>
+            {comboProduct.priceNote ? (
+              <span className="text-sm text-muted">{comboProduct.priceNote}</span>
+            ) : null}
             <span className="ml-auto text-sm font-bold text-accent transition group-hover:translate-x-0.5">
-              세트로 받기 →
+              대기 신청하기 →
             </span>
           </div>
         </div>
@@ -101,6 +103,10 @@ export default function StorePage() {
         <h2 className="text-lg font-bold text-ink">구매 전에 알아두실 것</h2>
         <ul className="mt-4 space-y-2 text-sm leading-7 text-body">
           <li>· 결제와 파일 발송은 콘텐츠 판매 플랫폼 래피드(Latpeed)가 처리하며, 결제 즉시 자동 발송됩니다.</li>
+          <li>
+            · 랭크업 코어와 완전판 세트는 아직 판매를 시작하지 않았습니다. 결제 대신 베타 1기 대기 신청만
+            받으며, 정식 오픈 시 신청하신 순서대로 안내드립니다.
+          </li>
           <li>· 랭크업은 순위를 보장하지 않습니다. 완주 후 8주 내 색인율 90%·노출 100회 미달 시 전액 환급합니다.</li>
           <li>
             · 상품의 근거가 된 기록은 이 사이트의{" "}

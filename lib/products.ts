@@ -10,8 +10,11 @@ export interface Product {
   tagline: string;
   description: string;
   price: number | null; // null = 무료
+  /** true = 아직 판매 전. 결제 링크 대신 대기 신청으로 보내고 가격 자리에 "판매 예정"을 표시한다.
+   *  (price 는 정식 오픈 예정가로 남겨 둔다 — null 로 비우면 "무료"로 표시되어 거짓이 된다) */
+  comingSoon?: boolean;
   priceNote?: string;
-  url: string; // 구매/수령 링크 (래피드 또는 내부)
+  url: string; // 구매/수령/대기신청 링크 (래피드 또는 내부)
   cover: string; // public/ 기준 경로
   badge?: string;
   /** 이 상품과 관련 깊은 가이드 슬러그 — 상호 연계용 */
@@ -63,10 +66,11 @@ export const products: Product[] = [
     description:
       "키워드 발굴부터 네이버·구글 등록, 색인 루틴까지. 순위는 보장하지 않습니다 — 대신 완주 후 지표 미달 시 전액 환급합니다.",
     price: 99000,
-    priceNote: "정가 249,000원 · 베타 1기 20명",
-    url: "https://www.latpeed.com/products/KfhhM",
+    comingSoon: true,
+    priceNote: "정식 오픈 예정가 99,000원",
+    url: "/rankup#pricing",
     cover: "/store/rankup-core.png",
-    badge: "베타 1기",
+    badge: "베타 1기 대기 신청",
     relatedGuides: []
   },
   {
@@ -89,10 +93,11 @@ export const comboProduct: Product = {
   name: "완전판 세트 — 실전기 + 스타터 키트 + 랭크업 코어",
   tagline: "만들고·굴리고·검색되게, 세 권을 하나로",
   description:
-    "1인 AI 회사를 운영하며 남긴 세 결과물을 통합본 한 권으로. 낱개 합 148,800원을 세트가로 묶었습니다.",
+    "1인 AI 회사를 운영하며 남긴 세 결과물을 통합본 한 권으로. 랭크업 코어가 들어가는 구성이라, 코어가 정식 오픈할 때 함께 판매합니다.",
   price: 119000,
-  priceNote: "낱개 합 148,800원",
-  url: "https://www.latpeed.com/products/Jc_Xg",
+  comingSoon: true,
+  priceNote: "정식 오픈 예정가 119,000원",
+  url: "/rankup#pricing",
   cover: "/store/combo.png",
   badge: "완전판",
   relatedGuides: []
@@ -102,5 +107,8 @@ export const chronicleProducts = products.filter((p) => p.line === "chronicle");
 export const rankupProducts = products.filter((p) => p.line === "rankup");
 
 export function formatPrice(p: Product): string {
+  if (p.comingSoon) {
+    return "판매 예정";
+  }
   return p.price === null ? "무료" : `${p.price.toLocaleString("ko-KR")}원`;
 }

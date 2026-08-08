@@ -10,10 +10,17 @@ export const metadata = buildMetadata({
 
 // 이 문서는 실제 코드가 하는 일만 적는다(about 페이지와 같은 원칙). 사실이 아닌 것을 쓰지 마라:
 //   - 자동 수집은 Vercel Web Analytics 뿐이다(app/layout.tsx 의 <Analytics />). 쿠키를 쓰지 않는다.
-//   - 회원가입·로그인·댓글·입력 폼이 없다. 문의는 mailto 링크뿐이라 서버가 받는 개인정보가 없다.
+//     페이지 조회 외에 track() 커스텀 이벤트도 보낸다(components/SubscribeForm·PromptCopyButton·
+//     OpenInButtons·PromptBuilder·AgentConfigBuilder·SearchClient). SearchClient 는 결과 0건 검색어를
+//     최대 50자까지 이벤트에 실어 보낸다 — 아래 "자동으로 수집되는 것"에 적어 두었으니 지우지 마라.
+//   - 회원가입·로그인·댓글은 없다. 다만 뉴스레터 구독 폼이 있다(components/SubscribeForm) — 이메일 주소를
+//     스티비(Stibee) 공개 구독 API로 보낸다. 국내 사업자이므로 국외 이전으로 적지 마라(국외 이전은 Vercel).
+//     "입력 폼이 없다"고 다시 쓰지 마라. 폼을 없애기 전에는 거짓이다.
+//   - 브라우저 저장소를 쓴다: TopBanner 는 sessionStorage(배너 닫음), lib/recipe.ts 는 localStorage(레시피).
+//     둘 다 서버로 전송되지 않는다. 쿠키가 아니므로 "쿠키를 쓰지 않는다"는 여전히 참이다.
 //   - 광고는 현재 없다. Google AdSense 등을 붙이면 광고 쿠키가 생기므로, 그때 이 문서를 먼저 갱신하라.
 //     (아래 "광고" 절과 "시행일"을 함께 고칠 것. 없는 광고를 있다고 쓰지 말 것.)
-const EFFECTIVE_DATE = "2026-07-18";
+const EFFECTIVE_DATE = "2026-08-08";
 const CONTACT_EMAIL = "cushak@icloud.com";
 
 export default function PrivacyPage() {
@@ -27,12 +34,41 @@ export default function PrivacyPage() {
       </p>
 
       <section className="mt-10">
-        <h2 className="text-xl font-semibold text-ink">1. 수집하지 않는 것</h2>
+        <h2 className="text-xl font-semibold text-ink">1. 직접 입력받는 정보 — 뉴스레터 구독</h2>
         <p className="mt-3 leading-8 text-muted">
-          이 사이트에는 <strong className="font-semibold text-ink">회원가입·로그인·댓글·입력 폼이 없습니다.</strong>{" "}
-          따라서 이름·전화번호·주소 같은 개인정보를 방문자에게 직접 입력받지 않습니다. 문의는 아래 이메일 링크로만
-          받는데, 이는 방문자의 메일 프로그램에서 발송되는 것이라 사이트 서버가 그 내용을 저장하지 않습니다. 다만
-          보내 주신 이메일은 운영자의 메일함에는 남습니다.
+          이 사이트에는 <strong className="font-semibold text-ink">회원가입·로그인·댓글 기능이 없습니다.</strong>{" "}
+          방문자에게 <strong className="font-semibold text-ink">개인정보</strong>를 입력받는 곳은{" "}
+          <strong className="font-semibold text-ink">뉴스레터 구독 폼</strong> 하나뿐이며, 여기서 아래와 같이
+          수집합니다.
+        </p>
+        <ul className="mt-3 list-disc space-y-2 pl-5">
+          <li className="leading-8 text-muted">
+            <strong className="font-semibold text-ink">수집 항목</strong> — 이메일 주소(필수). 이름·전화번호·주소
+            같은 다른 개인정보는 받지 않습니다.
+          </li>
+          <li className="leading-8 text-muted">
+            <strong className="font-semibold text-ink">수집·이용 목적</strong> — 뉴스레터 발송. 그 밖의 목적으로는
+            사용하지 않습니다.
+          </li>
+          <li className="leading-8 text-muted">
+            <strong className="font-semibold text-ink">보유·이용 기간</strong> — 구독을 해지하시면 지체 없이
+            파기합니다.
+          </li>
+        </ul>
+        <p className="mt-3 leading-8 text-muted">
+          구독은 동의 여부를 체크한 뒤 신청하고, 발송된 확인 메일의 링크를 눌러야 완료됩니다. 동의를 거부하실 수
+          있으며, 거부하셔도 사이트 이용에는 제한이 없습니다. 구독 해지는 뉴스레터 하단의 수신거부 링크나 아래
+          연락처로 언제든 하실 수 있습니다.
+        </p>
+        <p className="mt-3 leading-8 text-muted">
+          구독 폼 말고도 방문자가 글자를 입력하는 곳이 하나 더 있습니다 — 사이트 검색창입니다. 검색어는 개인정보가
+          아니지만, <strong className="font-semibold text-ink">검색 결과가 0건이었던 경우에 한해</strong> 그 검색어
+          자체가 익명 이벤트로 기록됩니다(누가 입력했는지는 남기지 않습니다). 자세한 내용은 아래{" "}
+          <strong className="font-semibold text-ink">2. 자동으로 수집되는 것</strong>에 적어 두었습니다.
+        </p>
+        <p className="mt-3 leading-8 text-muted">
+          그 밖의 문의는 아래 이메일 링크로만 받는데, 이는 방문자의 메일 프로그램에서 발송되는 것이라 사이트
+          서버가 그 내용을 저장하지 않습니다. 다만 보내 주신 이메일은 운영자의 메일함에는 남습니다.
         </p>
       </section>
 
@@ -43,6 +79,12 @@ export default function PrivacyPage() {
           사용합니다. 어떤 페이지가 얼마나 열렸는지 같은 익명 집계 데이터를 모으며,{" "}
           <strong className="font-semibold text-ink">쿠키를 사용하지 않고</strong> 개인을 식별하는 정보(이름·이메일
           등)를 저장하지 않습니다.
+        </p>
+        <p className="mt-3 leading-8 text-muted">
+          페이지 조회 외에 구독 신청, 프롬프트 복사, 도구 사용 같은 사이트 안에서의 동작도 익명 이벤트로 함께
+          기록합니다. 이때 <strong className="font-semibold text-ink">구독 신청 이벤트에 이메일 주소는 포함되지
+          않습니다.</strong> 다만 검색 결과가 0건이었던 경우에는 어떤 내용을 더 다룰지 정하기 위해 그 검색어
+          자체가 최대 50자까지 이벤트에 함께 기록됩니다. 누가 입력했는지는 기록하지 않습니다.
         </p>
         <p className="mt-3 leading-8 text-muted">
           또한 사이트는 <strong className="font-semibold text-ink">Vercel</strong>에서 호스팅되며, 웹 요청이
@@ -57,6 +99,11 @@ export default function PrivacyPage() {
           <strong className="font-semibold text-ink">현재 이 사이트는 추적·광고 목적의 쿠키를 사용하지 않습니다.</strong>{" "}
           위에서 밝힌 Vercel Web Analytics도 쿠키를 쓰지 않습니다. 그래서 이 사이트를 이용하는 데 별도의 쿠키 동의
           절차가 필요하지 않습니다.
+        </p>
+        <p className="mt-3 leading-8 text-muted">
+          다만 상단 안내 배너를 닫은 상태와 프롬프트 빌더에서 저장한 레시피는 방문자의 브라우저 저장소(세션·로컬
+          스토리지)에 남습니다. 이 값은 서버로 전송되지 않고 그 브라우저 안에만 있으며, 브라우저 저장소를 비우면
+          함께 지워집니다.
         </p>
       </section>
 
@@ -74,12 +121,18 @@ export default function PrivacyPage() {
         <h2 className="text-xl font-semibold text-ink">5. 제3자 서비스</h2>
         <p className="mt-3 leading-8 text-muted">
           사이트 운영을 위해 아래 외부 서비스를 사용합니다. 이들 서비스는 각자의 개인정보처리방침에 따라 데이터를
-          처리하며, 서버는 대한민국 밖(미국 등)에 있을 수 있습니다.
+          처리합니다.
         </p>
         <ul className="mt-3 list-disc space-y-2 pl-5">
           <li className="leading-8 text-muted">
             <strong className="font-semibold text-ink">Vercel Inc.</strong> — 사이트 호스팅 및 방문 통계(Web
-            Analytics). 접속 로그와 익명 집계 통계를 처리합니다.
+            Analytics). 접속 로그와 익명 집계 통계를 처리합니다. 서버가 대한민국 밖(미국 등)에 있어 이 처리는
+            개인정보의 국외 이전에 해당합니다.
+          </li>
+          <li className="leading-8 text-muted">
+            <strong className="font-semibold text-ink">스티비 주식회사(Stibee)</strong> — 뉴스레터 발송 업무
+            위탁. 구독 신청하신 이메일 주소가 스티비에 저장되고 발송·구독 관리에 쓰입니다. 스티비는 국내
+            사업자이므로 이 위탁은 국외 이전에 해당하지 않습니다.
           </li>
         </ul>
         <p className="mt-3 leading-8 text-muted">
@@ -90,27 +143,43 @@ export default function PrivacyPage() {
       <section className="mt-10">
         <h2 className="text-xl font-semibold text-ink">6. 보관과 파기</h2>
         <p className="mt-3 leading-8 text-muted">
-          방문 통계는 익명 집계 형태로만 보관되며 개인을 식별하지 않습니다. 이메일로 보내 주신 문의는 처리 목적이
-          끝나면 지웁니다. 서버 접속 기록의 보관 기간은 호스팅 사업자(Vercel)의 정책을 따릅니다.
+          구독 신청하신 이메일 주소는 구독을 해지하시면 지체 없이 파기합니다. 방문 통계는 익명 집계 형태로만
+          보관되며 개인을 식별하지 않습니다. 이메일로 보내 주신 문의는 처리 목적이 끝나면 지웁니다. 서버 접속
+          기록의 보관 기간은 호스팅 사업자(Vercel)의 정책을 따릅니다.
         </p>
       </section>
 
       <section className="mt-10">
         <h2 className="text-xl font-semibold text-ink">7. 방문자의 권리</h2>
         <p className="mt-3 leading-8 text-muted">
-          이 사이트는 방문자를 식별하는 개인정보를 직접 수집·보관하지 않으므로, 열람·정정·삭제를 요청할 저장된
-          계정 정보가 없습니다. 다만 이메일로 문의를 보내신 경우, 그 이메일의 삭제를 언제든 아래 연락처로 요청하실
-          수 있습니다. 만 14세 미만 아동을 대상으로 개인정보를 수집하지 않습니다.
+          뉴스레터를 구독하신 분은 등록된 이메일 주소에 대해 열람·정정·삭제·처리정지를 언제든 요청하실 수
+          있습니다. 뉴스레터 하단의 수신거부 링크로 직접 해지하실 수도 있고, 아래 연락처로 요청하시면 지체 없이
+          조치합니다. 구독 외에는 방문자를 식별하는 개인정보를 따로 수집·보관하지 않습니다. 이메일로 문의를
+          보내신 경우 그 이메일의 삭제도 아래 연락처로 요청하실 수 있습니다. 만 14세 미만 아동을 대상으로
+          개인정보를 수집하지 않습니다.
         </p>
       </section>
 
       <section className="mt-10">
-        <h2 className="text-xl font-semibold text-ink">8. 문의처</h2>
+        <h2 className="text-xl font-semibold text-ink">8. 개인정보 보호책임자와 문의처</h2>
         <p className="mt-3 leading-8 text-muted">
-          개인정보 처리에 관한 문의와 요청은 이메일로 받습니다 —{" "}
-          <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold text-ink hover:text-accent">
-            {CONTACT_EMAIL}
-          </a>
+          이 사이트는 개인이 운영합니다. 개인정보 처리에 관한 업무를 총괄하고 방문자의 요청을 처리하는 책임자와
+          연락처는 아래와 같습니다.
+        </p>
+        <ul className="mt-3 list-disc space-y-2 pl-5">
+          <li className="leading-8 text-muted">
+            <strong className="font-semibold text-ink">개인정보 보호책임자</strong> — agenwiki 운영자(사이트 운영
+            전반 담당)
+          </li>
+          <li className="leading-8 text-muted">
+            <strong className="font-semibold text-ink">연락처</strong> —{" "}
+            <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold text-ink hover:text-accent">
+              {CONTACT_EMAIL}
+            </a>
+          </li>
+        </ul>
+        <p className="mt-3 leading-8 text-muted">
+          개인정보 처리에 관한 문의와 열람·정정·삭제·처리정지 요청은 위 이메일로 받습니다.
         </p>
       </section>
 
