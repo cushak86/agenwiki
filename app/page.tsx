@@ -43,10 +43,15 @@ const stats = [
 // 히어로 바로 아래 3분기 진입 카드 — 방문자가 상품보다 콘텐츠를 먼저 만나게 한다.
 const entryCards = [
   {
-    href: "/guides/getting-started-with-ai-agents",
+    // 원래 /guides/getting-started-with-ai-agents 로 보냈다. 그 글은 본문 1,028자로
+    // 가이드 38편 중 최단이고, 제목이 약속한 "어디서부터 시작하는지"에 해당하는 절이
+    // 문장 두 개 + 실행 로직이 없는 타입 선언 5줄이 전부다(2026-08-09 감사).
+    // 홈에서 가장 먼저 눌리는 카드가 사이트에서 가장 얇은 글로 보내고 있었다.
+    // 같은 태그(ai-agent-basics)의 이 글은 3,531자에 실제 실행 코드가 있다.
+    href: "/guides/first-ai-agent-in-30-minutes",
     label: "처음이라면",
-    title: "AI 에이전트 입문 가이드",
-    description: "에이전트가 무엇이고 어디서부터 시작하는지, 첫 걸음을 안내합니다."
+    title: "30분 만에 만드는 첫 에이전트",
+    description: "일 하나를 골라 30분 안에 돌아가는 에이전트를 완성합니다. 코드까지 그대로 따라옵니다."
   },
   {
     href: "/glossary",

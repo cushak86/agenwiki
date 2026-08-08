@@ -88,16 +88,13 @@
   ]
 }
 </script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Product",
-  "name": "랭크업 코어 코스",
-  "description": "검색 상위노출의 조건을 충족한 웹사이트를 12단계로 완성하는 가이드 코스. 순위·노출은 보장하지 않으며, 자사 사이트에 먼저 적용한 검색엔진 등록 단계의 색인 실측을 공개합니다.",
-  "brand": {"@type": "Brand", "name": "랭크업"},
-  "url": "https://agenwiki.online/rankup#pricing"
-}
-</script>
+<!-- Product 구조화 데이터를 뺐다(2026-08-09).
+     이 페이지는 **결제를 받지 않는다** — 화면이 "지금은 결제를 받지 않고 베타 1기 대기 신청만
+     받습니다"라고 적고 있다. 그런데 Product 를 선언하면서 offers 가 없어, 전체 197페이지 중
+     유일하게 필수 속성이 빠진 블록이었다(PRODUCT_NO_OFFER).
+     팔지 않는 것을 상품으로 선언하는 것보다 선언하지 않는 게 낫다.
+     ⚠️ 정식 오픈해 실제로 결제를 받게 되면 그때 offers(price·priceCurrency·availability·url)와
+        함께 되살려라. 가격만 적고 offers 를 빼면 같은 오류가 반복된다. -->
 <style>
   :root{
     --navy:#1F4E5F; --navy-d:#153741; --teal:#2E6E7E; --light:#EAF2F5;
