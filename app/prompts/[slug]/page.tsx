@@ -6,6 +6,7 @@ import { PromptCopyButton } from "@/components/PromptCopyButton";
 import { PromptFillForm } from "@/components/PromptFillForm";
 import { Prose } from "@/components/Prose";
 import { RelatedContent } from "@/components/RelatedContent";
+import { SubscribeForm } from "@/components/SubscribeForm";
 import { TagChips } from "@/components/TagChips";
 import { getAllSlugs, getBySlug } from "@/lib/content";
 import { buildBreadcrumbJsonLd, metadataForContent } from "@/lib/seo";
@@ -82,6 +83,9 @@ export default function PromptDetailPage({ params }: { params: { slug: string } 
       </div>
       <AiDisclosure title={meta.title} pathname={`/prompts/${meta.slug}`} />
       <RelatedContent type="prompts" slug={meta.slug} tags={meta.tags} />
+      <section id="subscribe" className="mt-12">
+        <SubscribeForm source="prompt" />
+      </section>
     </div>
   );
 }

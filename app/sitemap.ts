@@ -17,6 +17,7 @@ const staticRoutes = [
   "/tools/model-picker",
   "/tools/chunking",
   ...CHAINS.map((chain) => `/prompts/chains/${chain.slug}`),
+  "/store",
   "/newsletter",
   "/topics",
   "/about",

@@ -5,6 +5,7 @@ import { GuideProductCTA } from "@/components/GuideProductCTA";
 import { Mdx } from "@/components/Mdx";
 import { Prose } from "@/components/Prose";
 import { RelatedContent } from "@/components/RelatedContent";
+import { SubscribeForm } from "@/components/SubscribeForm";
 import { TableOfContents } from "@/components/TableOfContents";
 import { TagChips } from "@/components/TagChips";
 import { getAll, getAllSlugs, getBySlug } from "@/lib/content";
@@ -132,6 +133,9 @@ export default function GuideDetailPage({ params }: { params: { slug: string } }
       <GuideProductCTA guideSlug={meta.slug} />
       <AiDisclosure title={meta.title} pathname={`/guides/${meta.slug}`} />
       <RelatedContent type="guides" slug={meta.slug} tags={meta.tags} />
+      <section id="subscribe" className="mt-12">
+        <SubscribeForm source="guide" />
+      </section>
     </div>
   );
 }

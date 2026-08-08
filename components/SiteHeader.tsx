@@ -39,12 +39,12 @@ export function SiteHeader() {
           <Link href="/store" className="font-bold text-accentSoft transition hover:text-ink">
             스토어
           </Link>
-          <a
-            href="#subscribe"
+          <Link
+            href="/newsletter#subscribe"
             className="rounded-lg bg-accentDeep px-4 py-2 font-semibold text-white transition hover:bg-accent"
           >
             구독
-          </a>
+          </Link>
         </nav>
 
         <button
@@ -88,13 +88,13 @@ export function SiteHeader() {
               </Link>
             </li>
             <li className="pt-1">
-              <a
-                href="#subscribe"
+              <Link
+                href="/newsletter#subscribe"
                 onClick={() => setOpen(false)}
                 className="block rounded-lg bg-accentDeep px-3 py-2.5 text-center text-sm font-semibold text-white"
               >
                 구독
-              </a>
+              </Link>
             </li>
           </ul>
         </nav>

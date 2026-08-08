@@ -4,6 +4,7 @@ import { AiDisclosure } from "@/components/AiDisclosure";
 import { Mdx } from "@/components/Mdx";
 import { Prose } from "@/components/Prose";
 import { RelatedContent } from "@/components/RelatedContent";
+import { SubscribeForm } from "@/components/SubscribeForm";
 import { TagChips } from "@/components/TagChips";
 import { getAll, getAllSlugs, getBySlug } from "@/lib/content";
 import { buildBreadcrumbJsonLd, definedTermJsonLd, metadataForContent } from "@/lib/seo";
@@ -127,6 +128,9 @@ export default function GlossaryDetailPage({ params }: { params: { slug: string 
       })()}
       <AiDisclosure title={meta.term} pathname={`/glossary/${meta.slug}`} />
       <RelatedContent type="glossary" slug={meta.slug} tags={meta.tags} />
+      <section id="subscribe" className="mt-12">
+        <SubscribeForm source="glossary" />
+      </section>
     </div>
   );
 }
