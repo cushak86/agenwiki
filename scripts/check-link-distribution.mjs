@@ -106,6 +106,30 @@ console.log(`  중앙값        : ${counts[Math.floor(counts.length / 2)]}`);
 console.log(`  최댓값        : ${top[0]?.[1]} (${top.map(([k, n]) => `${k}=${n}`).join(", ")})`);
 if (orphans.length) console.log(`  0인 페이지    : ${orphans.map(([k]) => k).join(", ")}`);
 
+// ── 경로 하드코딩 검사 ─────────────────────────────────────────────────────
+// 콘텐츠 링크는 lib/meta.ts 의 getContentHref/contentHref 를 거쳐야 한다.
+// 2026-08-09 에 프롬프트를 허브 앵커로 옮겼을 때, 경로를 손으로 조립하던 두 곳
+// (ContentCard·SearchClient)만 죽은 URL(308 홉)을 가리켰다. 화면은 멀쩡했다 —
+// 리다이렉트가 받아 주니까. 그래서 사람 눈으로는 안 잡히고 이렇게 세어야 잡힌다.
+const HARDCODE_RE = /href=\{`\/\$\{(?:type|item\.type|entry\.type)\}\//;
+const scanDirs = ["components", "app"];
+const offenders = [];
+const walk = (dir) => {
+  for (const name of readdirSync(dir, { withFileTypes: true })) {
+    const full = join(dir, name.name);
+    if (name.isDirectory()) walk(full);
+    else if (/\.tsx?$/.test(name.name) && HARDCODE_RE.test(readFileSync(full, "utf8"))) offenders.push(full);
+  }
+};
+for (const dir of scanDirs) walk(dir);
+
+if (offenders.length) {
+  console.log(`\n❌ 콘텐츠 경로를 하드코딩한 곳 ${offenders.length}개 — lib/meta.ts 의 contentHref 를 쓰세요.`);
+  offenders.forEach((f) => console.log(`   ${f}`));
+  process.exit(1);
+}
+console.log("✅ 콘텐츠 경로 하드코딩 0건");
+
 if (orphans.length > MAX_ORPHANS) {
   console.log(`\n❌ 인바운드 0인 페이지가 ${orphans.length}편 — 임계 ${MAX_ORPHANS} 초과.`);
   console.log("   동점 구간이 다시 결정적으로 고정됐는지 lib/relatedSelection.ts 를 보라.");

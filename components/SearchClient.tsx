@@ -3,6 +3,7 @@
 import { track } from "@vercel/analytics";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { contentHref } from "@/lib/meta";
 import type { ContentType, SearchItem } from "@/lib/types";
 
 const typeLabels: Record<ContentType, string> = {
@@ -154,7 +155,8 @@ export function SearchClient({ items }: { items: SearchItem[] }) {
                       {typeLabels[item.type]}
                     </span>
                     <h3 className="text-lg font-semibold leading-snug text-ink">
-                      <Link href={`/${item.type}/${item.slug}`} className="hover:text-accent">
+                      {/* 경로를 조립하지 마라 — 프롬프트는 개별 URL 이 아니라 허브 앵커다(lib/meta.ts). */}
+                      <Link href={contentHref(item.type, item.slug, item.tags)} className="hover:text-accent">
                         {item.title}
                       </Link>
                     </h3>

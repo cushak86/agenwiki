@@ -29,11 +29,21 @@ export function promptHubOf(tags: string[]): string {
  * 하드코딩하면 프롬프트처럼 경로 규칙이 바뀔 때 조용히 301 홉이 생기거나 죽은 링크가 남는다.
  */
 export function getContentHref(type: ContentType, meta: ContentMeta) {
+  return contentHref(type, meta.slug, meta.tags);
+}
+
+/**
+ * 메타 객체 없이 (타입·슬러그·태그)만 있을 때 쓰는 하위 버전.
+ * 검색 색인(SearchItem)처럼 ContentMeta 를 그대로 들고 있지 않은 소비자를 위해 열어 둔다 —
+ * **경로 규칙을 두 벌로 만들지 않는 것이 목적이다.** 실제로 2026-08-09 에 프롬프트를 허브로
+ * 옮긴 뒤, 경로를 하드코딩하고 있던 검색 결과만 죽은 URL(308 홉)을 가리키고 있었다.
+ */
+export function contentHref(type: ContentType, slug: string, tags: string[]) {
   if (type === "prompts") {
-    return `/prompts/${promptHubOf(meta.tags)}#${meta.slug}`;
+    return `/prompts/${promptHubOf(tags)}#${slug}`;
   }
 
-  return `/${type}/${meta.slug}`;
+  return `/${type}/${slug}`;
 }
 
 export function getContentTitle(meta: ContentMeta) {
