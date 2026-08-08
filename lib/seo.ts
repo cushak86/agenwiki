@@ -119,9 +119,20 @@ export function articleJsonLd(meta: GuideMeta) {
     "@type": "Article",
     headline: meta.title,
     description: meta.description,
+    // author 를 Person 으로 선언하면 안 된다. 콘텐츠의 author 값은 38건 전부 "agenwiki" 이고
+    // 그건 사람 이름이 아니다 — 실재하지 않는 사람을 저자로 신고하는 셈이라 그 자체가 허위 신호다
+    // (2026-08-08 정정). 실제 저자가 생기면 그때 Person 으로 올리고 url·sameAs 착지점을 함께 둔다.
+    // 지금 이 사이트의 정직한 서술은 "조직이 AI 파이프라인으로 만든다"이고, 그건 AiDisclosure 가
+    // 이미 전 페이지 하단에 밝히고 있다. 스키마도 같은 말을 해야 한다.
     author: {
-      "@type": "Person",
-      name: meta.author
+      "@type": "Organization",
+      name: meta.author,
+      url: siteConfig.url
+    },
+    publisher: {
+      "@type": "Organization",
+      name: siteConfig.name,
+      url: siteConfig.url
     },
     datePublished: meta.publishedAt,
     dateModified: meta.updatedAt,

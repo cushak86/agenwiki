@@ -34,8 +34,8 @@ export default function ModelPickerPage() {
             </Link>
           </li>
           <li>
-            <Link href="/guides/chatgpt-vs-claude" className="text-muted transition hover:text-accent">
-              ChatGPT vs Claude 비교 가이드
+            <Link href="/guides/chatgpt-vs-gemini-vs-claude" className="text-muted transition hover:text-accent">
+              챗GPT vs 제미나이 vs 클로드 비교 가이드
             </Link>
           </li>
         </ul>

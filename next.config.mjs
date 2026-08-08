@@ -11,6 +11,13 @@ const nextConfig = {
         destination: "https://agenwiki.online/:path*",
         permanent: true
       },
+      // 가이드 통합 — 2026-08-08. chatgpt-vs-claude 와 chatgpt-vs-gemini-vs-claude 가
+      // 소제목 7개 중 6개가 글자까지 동일한 near-duplicate 였다("두 서비스 모두…" → "세 서비스 모두…"
+      // 치환이 본문 차이의 대부분). 같은 질의에 자기 URL 두 개가 붙으면 구글이 하나만 대표로 고르고
+      // 나머지를 보류하므로, 자기잠식이 용어↔가이드에서 가이드↔가이드로 옮겨간 형태였다.
+      // 3자 글이 2자 글의 상위집합이라 그쪽으로 통합했고, 2자 글의 고유분(비교표·RAG 링크·FAQ 2문항)은
+      // 「ChatGPT와 Claude만 놓고 보면」 절로 옮겨 담아 손실을 0으로 만들었다.
+      { source: "/guides/chatgpt-vs-claude", destination: "/guides/chatgpt-vs-gemini-vs-claude", permanent: true },
       // 태그/토픽 체계 재설계(docs/seo/2026-07-11-태그-토픽-체계-재설계.md) 3절 대응표 74건
       // ai-agent-basics
       { source: "/topics/ai-agent", destination: "/topics/ai-agent-basics", permanent: true },
