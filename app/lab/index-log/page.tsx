@@ -3,10 +3,12 @@ import {
   BASELINE_FROZEN_AT,
   BASELINE_SIZE,
   INDEX_LOG_ROUNDS,
+  MEASUREMENT_SYSTEMS,
   NEXT_MEASUREMENT_AT,
   getIndexedDelta,
   getIndexedRate,
-  getLatestRound
+  getLatestRound,
+  getSystemRate
 } from "@/lib/indexLog";
 import { buildMetadata } from "@/lib/seo";
 
@@ -114,6 +116,60 @@ export default function IndexLogPage() {
         <p className="mt-3 text-xs leading-5 text-muted">
           분모 {BASELINE_SIZE}건은 {BASELINE_FROZEN_AT} 사이트맵을 동결한 고정 표본입니다. 이후 추가된 URL은
           표본에 넣지 않고 따로 셉니다 — 분모가 회차마다 바뀌면 색인률을 비교할 수 없기 때문입니다.
+        </p>
+      </section>
+
+      {/* 2026-08-08 신설. 이 페이지의 헤드라인이 셋 중 가장 높은 숫자였다는 사실을 숨기지 않기 위한 절.
+          정직성이 이 페이지가 가진 전부라, 유리한 하나만 보이는 구조를 그대로 두면 나머지가 다 무의미해진다. */}
+      <section className="mt-12 max-w-3xl">
+        <h2 className="text-xl font-semibold text-ink">같은 사이트인데 색인률이 세 개입니다</h2>
+        <p className="mt-3 leading-8 text-muted">
+          분모를 언제 동결했느냐에 따라 숫자가 갈립니다. 세 방법론 모두 타당하고 어느 것도 틀리지 않았지만,
+          <strong className="font-semibold text-ink"> 이 페이지가 헤드라인으로 쓰는 것은 그중 가장 높은 숫자</strong>입니다.
+          그 사실을 적어 두지 않으면 이 기록의 의미가 없어지므로 셋을 나란히 놓습니다.
+        </p>
+        <div className="mt-5 overflow-x-auto rounded-lg border border-line bg-panel">
+          <table className="w-full min-w-[640px] border-collapse text-sm">
+            <thead>
+              <tr className="border-b border-line text-left text-xs font-medium text-muted">
+                <th className="px-4 py-3">계통</th>
+                <th className="px-4 py-3">색인 / 표본</th>
+                <th className="px-4 py-3">색인률</th>
+                <th className="px-4 py-3">기준일</th>
+              </tr>
+            </thead>
+            <tbody>
+              {MEASUREMENT_SYSTEMS.map((system, index) => (
+                <tr key={system.label} className={index === 0 ? "border-b border-line bg-accent/5" : "border-b border-line last:border-0"}>
+                  <td className="px-4 py-3 align-top">
+                    <span className="font-semibold text-ink">{system.label}</span>
+                    {index === 0 ? <span className="ml-2 text-xs font-medium text-accent">헤드라인</span> : null}
+                    <p className="mt-1 text-xs leading-5 text-muted">{system.method}</p>
+                  </td>
+                  <td className="px-4 py-3 align-top tabular-nums text-ink">
+                    {system.indexed} / {system.total}
+                  </td>
+                  <td className="px-4 py-3 align-top font-semibold tabular-nums text-ink">
+                    {formatRate(getSystemRate(system))}
+                  </td>
+                  <td className="px-4 py-3 align-top tabular-nums text-muted">{system.measuredAt}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <ul className="mt-4 space-y-2">
+          {MEASUREMENT_SYSTEMS.map((system) => (
+            <li key={system.label} className="text-sm leading-7 text-muted">
+              <strong className="font-semibold text-ink">{system.label}</strong> — {system.why}
+            </li>
+          ))}
+        </ul>
+        <p className="mt-4 leading-8 text-muted">
+          그래서 어떻게 읽어야 하나. <strong className="font-semibold text-ink">회차 간 추이를 보려면 고정 표본</strong>을,
+          <strong className="font-semibold text-ink"> 지금 이 사이트의 실제 상태를 보려면 전체 표본</strong>을 보세요.
+          하나의 숫자로 답하려 하면 반드시 어느 한쪽을 속이게 됩니다. 다음 회차부터는 두 계통을 함께 재서
+          같이 올리겠습니다.
         </p>
       </section>
 

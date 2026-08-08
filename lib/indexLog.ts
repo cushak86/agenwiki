@@ -61,6 +61,59 @@ export const INDEX_LOG_ROUNDS: IndexLogRound[] = [
 // 다음 측정 예정일. 회차를 추가할 때마다 함께 옮긴다.
 export const NEXT_MEASUREMENT_AT = "2026-08-09";
 
+/**
+ * 같은 사이트의 색인률이 **세 개 존재한다**는 사실을 공개하기 위한 대조표.
+ *
+ * 왜 이걸 만들었나 (2026-08-08):
+ *   이 페이지의 헤드라인은 위 고정 표본 계통(81건)이다. 그런데 분모를 언제 동결했느냐에 따라
+ *   같은 사이트의 색인률이 42.0% / 39.1% / 11.6% 로 갈렸고, **하필 공개된 것이 셋 중 가장 높은
+ *   숫자였다.** 세 방법론 모두 타당하고 어느 것도 조작이 아니지만, 유리한 하나만 보이는 구조는
+ *   그 자체로 정직하지 않다. 이 페이지의 가치가 정직성 하나이므로 셋을 나란히 놓는다.
+ *
+ * 여기 숫자를 손으로 고치지 마라 — 각 항목의 method 에 적힌 방식으로 다시 재서 갱신한다.
+ */
+export type MeasurementSystem = {
+  label: string;
+  indexed: number;
+  total: number;
+  /** 측정(또는 표본 동결) 시점. */
+  measuredAt: string;
+  method: string;
+  /** 왜 다른 숫자가 나오는가. */
+  why: string;
+};
+
+export const MEASUREMENT_SYSTEMS: MeasurementSystem[] = [
+  {
+    label: "이 페이지 (고정 표본)",
+    indexed: 34,
+    total: 81,
+    measuredAt: "2026-08-02",
+    method: "URL 검사 API 전수 조회",
+    why: "2026-07-16 사이트맵을 동결한 표본입니다. 회차 간 비교를 위해 분모를 고정했으므로, 그 뒤 발행한 글은 분모에도 분자에도 들어오지 않습니다."
+  },
+  {
+    label: "서치 콘솔 내려받기 (당시 전체)",
+    indexed: 59,
+    total: 151,
+    measuredAt: "2026-08-08",
+    method: "GSC 페이지 보고서 내려받기",
+    why: "그 시점 사이트가 알고 있던 URL 전체입니다. 「발견됨 – 미색인」 79건이 여기 들어 있습니다."
+  },
+  {
+    label: "추적기 (새 도메인 전체 표본)",
+    indexed: 17,
+    total: 147,
+    measuredAt: "2026-08-02",
+    method: "URL 검사 API 전수 조회",
+    why: "커스텀 도메인 전환 뒤 새 주소 기준으로 다시 동결한 표본입니다. 옮긴 지 얼마 안 된 주소라 셋 중 가장 낮습니다."
+  }
+];
+
+export function getSystemRate(system: MeasurementSystem) {
+  return (system.indexed / system.total) * 100;
+}
+
 // 0으로 나눌 걱정은 없다 — BASELINE_SIZE가 0이 아닌 리터럴 상수임을 타입 검사가 보장한다.
 export function getIndexedRate(round: IndexLogRound) {
   return (round.indexed / BASELINE_SIZE) * 100;
