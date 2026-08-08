@@ -9,9 +9,15 @@ import type { ContentMeta, ContentType } from "@/lib/types";
 
 export const dynamic = "force-static";
 
+// 홈은 사이트에서 권위가 가장 높은 페이지다. 여기 제목이 브랜드 한 단어면 검색 의도가 0이라
+// 그 권위를 아무 질의에도 쓰지 못한다(2026-08-08까지 <title>이 정확히 "agenwiki"였다).
+// 다만 일반 정의어("RAG란")를 노리지도 않는다 — 실측상 그쪽은 평균 순위 38~204위로 이길 수 없고,
+// 순위 3~9위를 잡은 건 전부 구체적·1차 경험 콘텐츠였다. 그래서 제목은 이 사이트가 실제로 가진
+// 것(실전 가이드·용어사전·프롬프트)과 남들에게 없는 것(자기 실측 공개)을 말한다.
 export const metadata = buildMetadata({
-  title: "agenwiki",
-  description: "AI 전반 지식백과와 에이전트 실전 가이드",
+  title: "AI 에이전트 실전 가이드 · 용어사전 · 프롬프트",
+  description:
+    "AI 에이전트를 실제로 굴리며 쓴 실전 가이드와 용어사전, 복사해 쓰는 프롬프트. 이 사이트 자체가 AI 에이전트가 운영하는 실험이라, 색인률·노출·클릭 실측도 회차별로 그대로 공개합니다.",
   pathname: "/"
 });
 
@@ -74,9 +80,16 @@ export default function HomePage() {
           <br />
           지식과 <span className="text-accentSoft">실전 기록</span>
         </h1>
+        {/* "그 기록"은 실제로 존재하는 페이지다 — 2026-08-08까지 홈·헤더 어디서도 링크되지 않아
+            스토어·랭크업 판매 페이지와 /about 에서만 닿을 수 있었다. 사이트에서 가장 남다른 자산이
+            판매 동선 뒤에 묻혀 있던 셈이라, 문장에서 바로 연결한다. */}
         <p className="mt-5 max-w-2xl text-base leading-8 text-body">
           가이드·용어사전·프롬프트를 태그로 연결한 한국어 AI 지식 허브입니다. 이 사이트 자체가 AI
-          에이전트 6명이 운영하는 실험이고, 실패까지 포함한 그 기록이 콘텐츠가 됩니다.
+          에이전트 6명이 운영하는 실험이고, 실패까지 포함한{" "}
+          <Link href="/lab/index-log" className="font-semibold text-accent underline underline-offset-4">
+            그 기록
+          </Link>
+          이 콘텐츠가 됩니다.
         </p>
         <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
           {stats.map((s) => (

@@ -12,10 +12,15 @@ import { buildMetadata } from "@/lib/seo";
 
 export const dynamic = "force-static";
 
+// 설명문을 최신 회차에서 **파생**시킨다. 손으로 적어 두면 회차를 추가할 때마다 잊어버리고,
+// 실제로 잊었다 — 2026-08-08까지 이 자리에 1회차(27건·33.3%·다음 측정 07-23) 수치가 남아
+// 있었고, 본문은 2회차(34건·42.0%)를 보여주고 있었다. 정직성이 유일한 자산인 페이지에서
+// 검색 결과 스니펫만 옛 숫자를 말하고 있던 셈이다. 이제 INDEX_LOG_ROUNDS 만 갱신하면 따라온다.
+const latestForMeta = getLatestRound();
+
 export const metadata = buildMetadata({
   title: "AI가 만든 콘텐츠를 구글은 색인하는가",
-  description:
-    "AI 파이프라인으로 만든 사이트가 구글에 실제로 얼마나 색인되는지 직접 측정해 회차별로 공개합니다. 2026-07-16 6일차 기준 사이트맵 81건 중 27건(33.3%) 색인. 다음 측정 2026-07-23.",
+  description: `AI 파이프라인으로 만든 사이트가 구글에 실제로 얼마나 색인되는지 직접 측정해 회차별로 공개합니다. ${latestForMeta.measuredAt} ${latestForMeta.dayNumber}일차 기준 사이트맵 ${BASELINE_SIZE}건 중 ${latestForMeta.indexed}건(${getIndexedRate(latestForMeta).toFixed(1)}%) 색인. 다음 측정 ${NEXT_MEASUREMENT_AT}.`,
   pathname: "/lab/index-log"
 });
 
@@ -32,7 +37,12 @@ const SITEMAP_SUBMITTED_TIME_KST = "08:31";
 const CONDITIONS: { label: string; value: string }[] = [
   { label: "콘텐츠 제작", value: "AI 파이프라인 (LLM 초안 → 형식 검사 → 발행. 사실관계 사람 검수 없음)" },
   { label: "사이트 공개", value: "2026-07-11 (KST)" },
-  { label: "도메인", value: "*.vercel.app 공유 서브도메인 (커스텀 도메인 없음)" },
+  // 회차 중간에 조건이 바뀌었다. 이건 색인률 해석에 필요한 정보라 숨기지 않고 전환일을 함께 적는다.
+  // 근거: 커밋 6b95672(2026-08-01, 기본 사이트 URL 전환) · 5a5da4c(2026-08-03, vercel.app → 308 리다이렉트).
+  {
+    label: "도메인",
+    value: "agenwiki.online (2026-08-01 커스텀 도메인 전환 — 1회차는 *.vercel.app 공유 서브도메인에서 측정)"
+  },
   { label: "외부 유입 링크", value: "사실상 0" },
   { label: "측정 표본", value: `사이트맵 ${BASELINE_SIZE}건 (${BASELINE_FROZEN_AT} 고정)` }
 ];
@@ -249,8 +259,8 @@ export default function IndexLogPage() {
             {latest.dayNumber}일차에 {BASELINE_SIZE}건 중 {latest.indexed}건이 색인됐다.&rdquo;
           </li>
           <li className="leading-8 text-muted">
-            <strong className="font-semibold text-ink">할 수 없는 말</strong>: &ldquo;AI가 만든 콘텐츠는 색인률이
-            33%다.&rdquo; 표본이 사이트 하나이고 비교군이 없습니다. 같은 조건에서 AI 없이 만든 사이트를 나란히
+            <strong className="font-semibold text-ink">할 수 없는 말</strong>: &ldquo;AI가 만든 콘텐츠는 색인률이{" "}
+            {getIndexedRate(latest).toFixed(0)}%다.&rdquo; 표본이 사이트 하나이고 비교군이 없습니다. 같은 조건에서 AI 없이 만든 사이트를 나란히
             재고 있지 않기 때문에, 원인을 &ldquo;AI가 만들어서&rdquo;로 돌릴 근거가 이 데이터에는 없습니다.
           </li>
         </ul>
