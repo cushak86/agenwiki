@@ -77,7 +77,7 @@ export default function StorePage() {
       <section className="mt-14">
         <div className="flex items-baseline justify-between">
           <h2 className="text-xl font-bold text-ink">랭크업 — 검색되는 사이트 만들기</h2>
-          <span className="text-sm text-muted">이 회사가 자기 사이트에 직접 적용 중인 코스</span>
+          <span className="text-sm text-muted">검색엔진 등록 단계를 이 사이트에 먼저 적용해 본 코스</span>
         </div>
         <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {rankupProducts.map((p) => (
@@ -107,7 +107,22 @@ export default function StorePage() {
             · 랭크업 코어와 완전판 세트는 아직 판매를 시작하지 않았습니다. 결제 대신 베타 1기 대기 신청만
             받으며, 정식 오픈 시 신청하신 순서대로 안내드립니다.
           </li>
-          <li>· 랭크업은 순위를 보장하지 않습니다. 완주 후 8주 내 색인율 90%·노출 100회 미달 시 전액 환급합니다.</li>
+          <li>
+            · 랭크업은 순위도 노출도 보장하지 않습니다. 대신 이 코스의 검색엔진 등록 단계(STEP 5 네이버·STEP 6
+            구글)를 이 사이트에 먼저 적용한 색인 실측을{" "}
+            <a href="/lab/index-log" className="font-medium text-accent underline underline-offset-4">
+              색인 실측 로그
+            </a>
+            에 회차별로 공개합니다.
+          </li>
+          <li>
+            · 콘텐츠를 열람(다운로드해 내용을 확인)하기 전이라면 결제 후 7일 이내 전액 환불해 드립니다. 콘텐츠를
+            열람한 뒤에는 디지털 콘텐츠의 성격상 전자상거래법 제17조 제2항에 따라 청약철회가 제한될 수 있습니다 (
+            <a href="/terms" className="font-medium text-accent underline underline-offset-4">
+              이용약관
+            </a>
+            ).
+          </li>
           <li>
             · 상품의 근거가 된 기록은 이 사이트의{" "}
             <a href="/guides" className="font-medium text-accent underline underline-offset-4">

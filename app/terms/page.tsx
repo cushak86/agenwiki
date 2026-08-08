@@ -14,6 +14,11 @@ export const metadata = buildMetadata({
 //   - 회원가입·로그인 기능은 없다. 없는 계정 조항을 지어내지 마라.
 //   - 다만 /store 에서 유료 디지털 상품을 판다(lib/products.ts). "유료 기능이 없다"고 다시 쓰지 마라 —
 //     파는 동안에는 거짓이다. 결제·파일 발송·결제 취소는 래피드(Latpeed)가 대행한다.
+//   - 4절 청약철회 기준은 "콘텐츠를 열람하기 전"이다. 이걸 "파일이 전달되기 전"으로 좁히지 마라.
+//     법정 최소선(제공 개시)보다 소비자에게 넓게 주는 것은 언제나 유효하고, 원래 공개했던 조건이며,
+//     래피드가 "결제 즉시 자동 발송"하는 구조에서 "전달 전"은 환불 창이 사실상 0이 되어 형해화한다.
+//     같은 문장이 /store 와 public/rankup/index.html(결제 안내 본문·약관 모달 4절)에도 있다 —
+//     한 곳을 고치면 세 곳을 함께 고쳐 표현을 일치시켜라. 이 문서가 정본이다.
 const EFFECTIVE_DATE = "2026-08-08";
 const CONTACT_EMAIL = "cushak@icloud.com";
 
@@ -73,11 +78,12 @@ export default function TermsPage() {
           래피드(Latpeed)가 대행하며, 결제 수단과 영수증에 관한 사항은 래피드의 정책을 따릅니다.
         </p>
         <p className="mt-3 leading-8 text-muted">
-          파일이 전달된 뒤에는 디지털 콘텐츠의 성격상{" "}
+          <strong className="font-semibold text-ink">
+            콘텐츠를 열람(다운로드해 내용을 확인)하기 전이라면 결제 후 7일 이내 전액 환불
+          </strong>
+          해 드립니다. 콘텐츠를 열람한 뒤에는 디지털 콘텐츠의 성격상{" "}
           <strong className="font-semibold text-ink">전자상거래법 제17조 제2항</strong>에 따라 청약철회가 제한될 수
-          있습니다. 파일이 전달되기 전이라면{" "}
-          <strong className="font-semibold text-ink">결제 후 7일 이내 전액 환불</strong>해 드립니다. 환불 신청은
-          아래 문의 이메일로 받으며, 접수 후 지체 없이 처리합니다.
+          있습니다. 환불 신청은 아래 문의 이메일로 받으며, 접수 후 지체 없이 처리합니다.
         </p>
       </section>
 

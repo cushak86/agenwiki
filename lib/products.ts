@@ -64,7 +64,7 @@ export const products: Product[] = [
     name: "랭크업 — 12단계 딸깍 가이드",
     tagline: "따라만 하면 검색되는 사이트가 완성됩니다",
     description:
-      "키워드 발굴부터 네이버·구글 등록, 색인 루틴까지. 순위는 보장하지 않습니다 — 대신 완주 후 지표 미달 시 전액 환급합니다.",
+      "키워드 발굴부터 네이버·구글 등록, 색인 루틴까지. 순위는 보장하지 않습니다 — 대신 이 코스의 검색엔진 등록 단계(STEP 5·6)를 이 사이트에 먼저 적용한 색인 실측을 공개합니다.",
     price: 99000,
     comingSoon: true,
     priceNote: "정식 오픈 예정가 99,000원",
@@ -77,11 +77,14 @@ export const products: Product[] = [
     id: "rankup-free",
     line: "rankup",
     name: "랭크업 STEP 0-2",
-    tagline: "검색되는 사이트의 첫 3단계, 오늘 90분",
+    tagline: "검색되는 사이트의 첫 3단계",
+    // PDF 배포 중단 중(2026-08-08) — 구판에 폐기된 성과 보증이 실려 있어 내용 갱신 전까지 링크를
+    // 랜딩 안내로 돌린다. 래피드 무료 상품(products/eaqjY)은 외부라 관리자에서 별도로 내려야 한다.
+    // 갱신 완료 시: description 원복 + url 을 다시 래피드(또는 새 배포 경로)로.
     description:
-      "키워드 발굴 → 플랫폼 선택 → 도메인·세팅. 무료분만으로 사이트가 실제로 열립니다.",
+      "키워드 발굴 → 플랫폼 선택 → 도메인·세팅. 자료를 갱신하는 동안 배포를 잠시 멈췄습니다 — 키워드 판정 시트는 지금도 받으실 수 있습니다.",
     price: null,
-    url: "https://www.latpeed.com/products/eaqjY",
+    url: "/rankup#free-plan",
     cover: "/store/rankup-free.png",
     relatedGuides: []
   }
