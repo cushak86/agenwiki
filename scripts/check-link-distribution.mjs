@@ -113,11 +113,34 @@ const counts = [...inbound.values()].sort((a, b) => a - b);
 const orphans = [...inbound.entries()].filter(([, n]) => n === 0);
 const top = [...inbound.entries()].sort((a, b) => b[1] - a[1]).slice(0, 3);
 
+// ── 본문 링크까지 합친 '진짜 고아' ──────────────────────────────────────────
+// 위 분포는 **위젯 인바운드만** 센다(회귀 감지용). 사람이 글 안에서 건 링크는 안 보인다.
+// 그런데 어떤 글에 편집자가 직접 링크를 걸면 그건 위젯 4칸보다 강한 신호다 —
+// 2026-08-09 에 편집 링크를 하나 달았는데 이 지표가 꿈쩍도 하지 않아서 드러났다.
+// 그래서 본문 링크를 함께 세어 '진짜 고아'를 따로 보고한다. 임계는 위젯 쪽에만 건다
+// (본문 링크는 글을 쓰다 자연히 늘고 줄어, 임계를 걸면 경보가 시끄러워진다).
+const bodyInbound = new Map(all.map((c) => [key(c), 0]));
+for (const type of CONTENT_TYPES) {
+  for (const file of readdirSync(join(CONTENT_DIR, type))) {
+    if (!file.endsWith(".mdx")) continue;
+    const body = readFileSync(join(CONTENT_DIR, type, file), "utf8");
+    for (const [, href] of body.matchAll(/\]\((\/(?:guides|glossary|prompts|newsletter)\/[a-z0-9-]+)/g)) {
+      const k = href.slice(1); // "/guides/x" → "guides/x"
+      if (bodyInbound.has(k) && k !== `${type}/${file.replace(/\.mdx$/, "")}`) {
+        bodyInbound.set(k, bodyInbound.get(k) + 1);
+      }
+    }
+  }
+}
+const trueOrphans = [...inbound.keys()].filter((k) => inbound.get(k) === 0 && (bodyInbound.get(k) ?? 0) === 0);
+
 console.log(`\n콘텐츠 ${all.length}편 · 「관련 글」 위젯 인바운드 분포`);
 console.log(`  인바운드 0    : ${orphans.length}편`);
 console.log(`  중앙값        : ${counts[Math.floor(counts.length / 2)]}`);
 console.log(`  최댓값        : ${top[0]?.[1]} (${top.map(([k, n]) => `${k}=${n}`).join(", ")})`);
 if (orphans.length) console.log(`  0인 페이지    : ${orphans.map(([k]) => k).join(", ")}`);
+console.log(`\n본문 링크까지 합치면 — 진짜 고아 ${trueOrphans.length}편${trueOrphans.length ? `: ${trueOrphans.join(", ")}` : ""}`);
+console.log("  (위 위젯 수치와 다른 이유: 편집자가 본문에 직접 건 링크는 위젯 시뮬레이션에 안 잡힌다)");
 
 // ── 경로 하드코딩 검사 ─────────────────────────────────────────────────────
 // 콘텐츠 링크는 lib/meta.ts 의 getContentHref/contentHref 를 거쳐야 한다.
