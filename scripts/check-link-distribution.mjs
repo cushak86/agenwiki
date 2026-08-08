@@ -186,6 +186,41 @@ if (offenders.length) {
 }
 console.log("✅ 콘텐츠 경로 하드코딩 0건");
 
+// ── 렌더 안 된 마크다운 검사 ─────────────────────────────────────────────────
+// 한국어 문서에서 가장 흔한 마크다운 사고: `**강조(영문)**조사` 처럼 닫는 `**` 앞이 문장부호이고
+// 뒤가 한글이면 CommonMark 의 right-flanking 조건을 못 채워 **굵게 처리가 안 되고 별표가 그대로 찍힌다.**
+// 2026-08-09 실측으로 5개 페이지 6곳에서 발견됐고 그중 3곳은 이번 작업 이전부터 있던 것이다.
+// 눈으로 읽으면 보이는데 아무도 전 페이지를 눈으로 읽지 않는다 — 그래서 센다.
+// (plain text 로 렌더되는 필드에 마크다운을 쓴 경우도 여기서 함께 잡힌다. lib/indexLog.ts 의 note 가 그랬다.)
+{
+  const buildDir = ".next/server/app";
+  const leaked = [];
+  const scanHtml = (dir) => {
+    let entries;
+    try {
+      entries = readdirSync(dir, { withFileTypes: true });
+    } catch {
+      return; // 빌드 전이면 조용히 건너뛴다 — 이 검사는 빌드 산출물이 있을 때만 의미가 있다
+    }
+    for (const e of entries) {
+      const full = join(dir, e.name);
+      if (e.isDirectory()) scanHtml(full);
+      else if (e.name.endsWith(".html")) {
+        const body = readFileSync(full, "utf8").replace(/<script[\s\S]*?<\/script>/g, "");
+        for (const [, text] of body.matchAll(/\*\*([^*<]{1,60})\*\*/g)) leaked.push(`${full}  → **${text}**`);
+      }
+    }
+  };
+  scanHtml(buildDir);
+  if (leaked.length) {
+    console.log(`\n❌ 렌더되지 않은 마크다운 ${leaked.length}건 — 화면에 별표가 그대로 찍힌다.`);
+    leaked.slice(0, 10).forEach((l) => console.log(`   ${l}`));
+    console.log("   고치는 법: 닫는 ** 앞이 문장부호이면 조사를 강조 안에 넣거나 괄호를 강조 밖으로 뺀다.");
+    process.exit(1);
+  }
+  console.log("✅ 렌더되지 않은 마크다운 0건");
+}
+
 // ── 토픽 리다이렉트 정합 검사 ────────────────────────────────────────────────
 // `*-prompts` 태그는 토픽 페이지를 만들지 않고 /prompts/<tag> 허브로 301 한다(next.config.mjs).
 // 그 규칙이 성립하려면 리다이렉트 목록과 실제 태그 집합이 같아야 한다 — 태그를 새로 만들고
