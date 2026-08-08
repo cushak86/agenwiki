@@ -37,6 +37,16 @@ export const BASELINE_SIZE = 81;
 // 최신 회차가 앞에 오도록 유지한다(표·최신 스냅샷이 이 순서를 그대로 쓴다).
 export const INDEX_LOG_ROUNDS: IndexLogRound[] = [
   {
+    round: 3,
+    measuredAt: "2026-08-09",
+    dayNumber: 30,
+    indexed: 33,
+    impressions: 52,
+    clicks: 1,
+    impressionsWindow: "2026-07-09~08-05",
+    note: "색인 34→33건(42.0%→40.7%). /glossary/transformer 1건이 색인에서 이탈했습니다 — 2회차의 /terms 이탈에 이어 두 번째라, 이탈이 계속되는지 다음 회차에 봅니다. **이번 회차의 큰 발견은 색인이 아니라 측정입니다.** 판독 스크립트가 '총 노출·총 클릭'을 검색어 차원 상위 20행의 합으로 계산하고 있었는데, 구글은 희소 검색어를 익명화해 그 차원에서 아예 빼기 때문에 실제보다 적게 나옵니다. 차원 없이 총계를 다시 물으니 노출 30→52, 그리고 **클릭이 0이 아니라 1이었습니다**(/topics/ai-research-insights, 평균순위 6.5). 1·2회차의 노출 3·41도 같은 방식으로 축소된 값이라, 이번 회차와 직접 비교할 수 없습니다 — 늘어난 것처럼 보이는 부분에 측정 수정분이 섞여 있습니다. 그래서 이 회차는 '증가'라고 부르지 않습니다."
+  },
+  {
     round: 2,
     measuredAt: "2026-08-02",
     dayNumber: 23,
@@ -59,7 +69,7 @@ export const INDEX_LOG_ROUNDS: IndexLogRound[] = [
 ];
 
 // 다음 측정 예정일. 회차를 추가할 때마다 함께 옮긴다.
-export const NEXT_MEASUREMENT_AT = "2026-08-09";
+export const NEXT_MEASUREMENT_AT = "2026-08-16";
 
 /**
  * 같은 사이트의 색인률이 **세 개 존재한다**는 사실을 공개하기 위한 대조표.
@@ -86,11 +96,19 @@ export type MeasurementSystem = {
 export const MEASUREMENT_SYSTEMS: MeasurementSystem[] = [
   {
     label: "이 페이지 (고정 표본)",
-    indexed: 34,
+    indexed: 33,
     total: 81,
-    measuredAt: "2026-08-02",
+    measuredAt: "2026-08-09",
     method: "URL 검사 API 전수 조회",
     why: "2026-07-16 사이트맵을 동결한 표본입니다. 회차 간 비교를 위해 분모를 고정했으므로, 그 뒤 발행한 글은 분모에도 분자에도 들어오지 않습니다."
+  },
+  {
+    label: "추적기 (새 도메인 전체 표본)",
+    indexed: 59,
+    total: 147,
+    measuredAt: "2026-08-09",
+    method: "URL 검사 API 전수 조회",
+    why: "커스텀 도메인 전환 뒤 새 주소 기준으로 다시 동결한 표본입니다. 2026-08-02에는 17/147(11.6%)로 셋 중 가장 낮았는데, 이번에 59/147(40.1%)로 올라 고정 표본과 거의 같아졌습니다 — 낮았던 이유가 콘텐츠가 아니라 새 주소가 아직 안 읽혔던 것이었음을 사후에 확인한 셈입니다."
   },
   {
     label: "서치 콘솔 내려받기 (당시 전체)",
@@ -98,15 +116,7 @@ export const MEASUREMENT_SYSTEMS: MeasurementSystem[] = [
     total: 151,
     measuredAt: "2026-08-08",
     method: "GSC 페이지 보고서 내려받기",
-    why: "그 시점 사이트가 알고 있던 URL 전체입니다. 「발견됨 – 미색인」 79건이 여기 들어 있습니다."
-  },
-  {
-    label: "추적기 (새 도메인 전체 표본)",
-    indexed: 17,
-    total: 147,
-    measuredAt: "2026-08-02",
-    method: "URL 검사 API 전수 조회",
-    why: "커스텀 도메인 전환 뒤 새 주소 기준으로 다시 동결한 표본입니다. 옮긴 지 얼마 안 된 주소라 셋 중 가장 낮습니다."
+    why: "그 시점 사이트가 알고 있던 URL 전체입니다. 「발견됨 – 미색인」 79건이 여기 들어 있습니다. 위 추적기 수치와 분모만 다르고(151 vs 147) 분자가 같아 서로를 검증합니다."
   }
 ];
 

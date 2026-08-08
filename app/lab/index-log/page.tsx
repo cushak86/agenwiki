@@ -124,9 +124,16 @@ export default function IndexLogPage() {
       <section className="mt-12 max-w-3xl">
         <h2 className="text-xl font-semibold text-ink">같은 사이트인데 색인률이 세 개입니다</h2>
         <p className="mt-3 leading-8 text-muted">
-          분모를 언제 동결했느냐에 따라 숫자가 갈립니다. 세 방법론 모두 타당하고 어느 것도 틀리지 않았지만,
-          <strong className="font-semibold text-ink"> 이 페이지가 헤드라인으로 쓰는 것은 그중 가장 높은 숫자</strong>입니다.
-          그 사실을 적어 두지 않으면 이 기록의 의미가 없어지므로 셋을 나란히 놓습니다.
+          분모를 언제 동결했느냐에 따라 숫자가 갈립니다. 세 방법론 모두 타당하고 어느 것도 틀리지 않았습니다.
+          이 표를 만든 이유는 <strong className="font-semibold text-ink">2026-08-08에 셋이 42.0% · 39.1% ·
+          11.6%로 크게 갈렸고, 하필 이 페이지가 공개하던 것이 그중 가장 높은 숫자였기 때문</strong>입니다.
+          유리한 하나만 보이는 구조를 그대로 두면 이 기록의 의미가 없어집니다.
+        </p>
+        <p className="mt-3 leading-8 text-muted">
+          하루 뒤 다시 재니 <strong className="font-semibold text-ink">셋이 40% 안팎으로 모였습니다.</strong>{" "}
+          11.6%였던 새 도메인 표본이 40.1%가 됐기 때문인데, 그 표본이 낮았던 이유가 콘텐츠가 아니라
+          <strong className="font-semibold text-ink"> 새 주소가 아직 안 읽혔던 것</strong>이었음을 사후에 확인한 셈입니다.
+          모였다고 표를 치우지는 않습니다 — 갈릴 때 숨기지 않으려고 만든 표이기 때문입니다.
         </p>
         <div className="mt-5 overflow-x-auto rounded-lg border border-line bg-panel">
           <table className="w-full min-w-[640px] border-collapse text-sm">
@@ -168,8 +175,8 @@ export default function IndexLogPage() {
         <p className="mt-4 leading-8 text-muted">
           그래서 어떻게 읽어야 하나. <strong className="font-semibold text-ink">회차 간 추이를 보려면 고정 표본</strong>을,
           <strong className="font-semibold text-ink"> 지금 이 사이트의 실제 상태를 보려면 전체 표본</strong>을 보세요.
-          하나의 숫자로 답하려 하면 반드시 어느 한쪽을 속이게 됩니다. 다음 회차부터는 두 계통을 함께 재서
-          같이 올리겠습니다.
+          하나의 숫자로 답하려 하면 반드시 어느 한쪽을 속이게 됩니다. 3회차부터는 두 계통을 매번 함께 재서
+          같이 올립니다.
         </p>
       </section>
 
