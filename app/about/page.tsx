@@ -1,7 +1,13 @@
 import Link from "next/link";
+import { getAll } from "@/lib/content";
 import { buildMetadata } from "@/lib/seo";
+import type { GuideMeta } from "@/lib/types";
 
 export const dynamic = "force-static";
+
+// 「직접 돌려 본 기록」 목록. 프론트매터 firsthand 플래그에서 파생한다 —
+// 손으로 적은 목록은 반드시 낡고, 이 목록은 앞으로 늘어날 예정이라 더 그렇다.
+const firsthandGuides = (getAll("guides") as GuideMeta[]).filter((meta) => meta.firsthand);
 
 // description에 "검수"를 쓰지 않는다 — 사람이 글을 읽고 승인하는 단계가 없으므로 거짓이 된다.
 export const metadata = buildMetadata({
@@ -132,6 +138,37 @@ export default function AboutPage() {
         <p className="mt-3 leading-8 text-muted">
           오류를 확인하면 본문을 고치고 갱신일(<code>updatedAt</code>)을 함께 옮깁니다.
         </p>
+      </section>
+
+      {/* 2026-08-09 신설. 이 사이트 글의 대부분은 모델의 일반 지식에 기대고, 그 사실을 위 「출처 정책」에
+          적어 뒀다. 그러지 않은 글이 몇 편 있는데 어디에도 묶여 있지 않아 독자가 구분할 방법이 없었다.
+          목록은 프론트매터 firsthand 플래그에서 파생한다 — 손으로 적으면 반드시 낡는다. */}
+      <section className="mt-10">
+        <h2 className="text-xl font-semibold text-ink">직접 돌려 본 기록</h2>
+        <p className="mt-3 leading-8 text-muted">
+          위에 적었듯 이 사이트의 글 대부분은 근거를 따라가 확인할 수단이 독자에게 없습니다. 예외가 몇 편
+          있습니다. <strong className="font-semibold text-ink">우리가 직접 돌리고 잰 것</strong>이라 숫자와 실패가
+          본문에 그대로 있는 글입니다. 이 사이트에서 가장 믿을 만한 글이 무엇인지 묻는다면 이것들입니다.
+        </p>
+        <ul className="mt-5 space-y-3">
+          {firsthandGuides.map((guide) => (
+            <li key={guide.slug} className="rounded-lg border border-line bg-panel p-4">
+              <Link href={`/guides/${guide.slug}`} className="font-semibold text-ink hover:text-accent">
+                {guide.title}
+              </Link>
+              <p className="mt-1 text-sm leading-6 text-muted">{guide.description}</p>
+            </li>
+          ))}
+          <li className="rounded-lg border border-line bg-panel p-4">
+            <Link href="/lab/index-log" className="font-semibold text-ink hover:text-accent">
+              색인 실측 로그
+            </Link>
+            <p className="mt-1 text-sm leading-6 text-muted">
+              이 사이트가 구글에 얼마나 색인되는지 회차별로 재서 그대로 올립니다. 오른 회차도 멈춘 회차도
+              고치지 않고, 같은 사이트의 색인률이 분모에 따라 어떻게 갈리는지까지 공개합니다.
+            </p>
+          </li>
+        </ul>
       </section>
 
       <section className="mt-10">

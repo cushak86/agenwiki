@@ -14,6 +14,11 @@ export type GuideMeta = BaseMeta & {
   updatedAt: string;
   author: string;
   cover?: string;
+  // firsthand: 이 글이 **우리가 직접 돌리고 잰 것**인가. 모델의 일반 지식이 아니라 1차 자료라는 뜻이다.
+  // /about 의 「직접 돌려 본 기록」 목록이 이 플래그에서 파생되므로, 손으로 관리하는 목록이 없다.
+  // 함부로 켜지 마라 — 이 사이트에서 검증 가능한 근거를 가진 글이 어느 것인지 알리는 신호이고,
+  // 남발하면 그 신호가 죽는다. 기준: 우리 자신의 로그·측정·실행 결과가 본문의 뼈대일 것.
+  firsthand?: boolean;
 };
 
 export type GlossaryMeta = BaseMeta & {

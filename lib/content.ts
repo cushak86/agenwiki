@@ -176,7 +176,9 @@ function validateMeta(type: ContentType, data: Record<string, unknown>, fallback
         publishedAt: assertDate(data, "publishedAt", filePath),
         updatedAt: assertDate(data, "updatedAt", filePath),
         author: assertString(data, "author", filePath),
-        cover: data.cover === undefined ? undefined : assertString(data, "cover", filePath)
+        cover: data.cover === undefined ? undefined : assertString(data, "cover", filePath),
+        // firsthand 는 선택이고 기본은 false 다 — 켜는 쪽이 명시적이어야 신호가 산다(lib/types.ts 주석).
+        firsthand: data.firsthand === true
       };
     case "glossary":
       return {
