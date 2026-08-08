@@ -3,11 +3,22 @@ import type { MDXComponents } from "mdx/types";
 import { ModelPriceTable } from "@/components/ModelPriceTable";
 import { headingTextFromNode, slugify } from "@/lib/slugify";
 
-export const mdxComponents: MDXComponents = {
+/**
+ * MDX 컴포넌트 맵을 만든다.
+ *
+ * `idPrefix` 가 필요한 이유 (2026-08-09): 한 페이지에 여러 MDX 를 이어 붙이면 h2 id 가 충돌한다.
+ * 프롬프트 30편은 소제목이 "언제 쓰나 / 사용법 / 사용 예시 / 팁"으로 27편이 동일했고,
+ * 허브로 묶는 순간 한 페이지에 같은 id 가 9개씩 생겼다(HTML 무효 + 앵커가 첫 번째로만 간다).
+ * 개별 페이지였을 땐 드러나지 않던 문제라, 묶는 쪽이 접두어를 줘야 한다.
+ */
+export function createMdxComponents(idPrefix = ""): MDXComponents {
+  const withPrefix = (id: string) => (id ? (idPrefix ? `${idPrefix}--${id}` : id) : undefined);
+
+  return {
   h2: ({ children, ...props }) => {
-    const id = slugify(headingTextFromNode(children));
+    const id = withPrefix(slugify(headingTextFromNode(children)));
     return (
-      <h2 id={id || undefined} className="mt-10 scroll-mt-24 text-2xl font-semibold text-ink" {...props}>
+      <h2 id={id} className="mt-10 scroll-mt-24 text-2xl font-semibold text-ink" {...props}>
         {children}
       </h2>
     );
@@ -50,4 +61,8 @@ export const mdxComponents: MDXComponents = {
   // 본문에서 쓰는 커스텀 블록. 숫자를 MDX 에 손으로 적는 대신 데이터를 읽어 그린다 —
   // 손으로 적으면 lib/models.ts 의 갱신 규율과 이중 진실원이 된다(ModelPriceTable 주석 참조).
   ModelPriceTable
-};
+  };
+}
+
+/** 접두어 없는 기본 맵 — 한 페이지에 MDX 가 하나뿐인 상세 페이지들이 쓴다. */
+export const mdxComponents: MDXComponents = createMdxComponents();

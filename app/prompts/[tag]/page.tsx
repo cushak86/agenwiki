@@ -120,7 +120,9 @@ export default function PromptHubPage({ params }: { params: { tag: string } }) {
               </section>
               <div className="mt-8 max-w-3xl">
                 <Prose>
-                  <Mdx source={record.body} />
+                  {/* 27편의 소제목이 글자까지 같아 접두어 없이는 h2 id 가 한 페이지에서 겹친다
+                      (HTML 무효 + 앵커가 첫 번째로만 간다). 개별 페이지였을 땐 없던 문제다. */}
+                  <Mdx source={record.body} idPrefix={meta.slug} />
                 </Prose>
               </div>
             </article>

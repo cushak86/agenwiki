@@ -212,6 +212,40 @@ console.log("✅ 콘텐츠 경로 하드코딩 0건");
     }
   };
   scanHtml(buildDir);
+
+  // 중복 id 검사. 한 페이지에 여러 MDX 를 이어 붙이면 소제목 슬러그가 겹친다 —
+  // 프롬프트 허브에서 실제로 '사용법' id 가 9개씩 생겼다(HTML 무효 + 앵커가 첫 번째로만 간다).
+  // 페이지를 합칠 때마다 재발하는 종류라 함께 센다.
+  const dupPages = [];
+  const scanIds = (dir) => {
+    let entries;
+    try {
+      entries = readdirSync(dir, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    for (const e of entries) {
+      const full = join(dir, e.name);
+      if (e.isDirectory()) scanIds(full);
+      else if (e.name.endsWith(".html")) {
+        const seen = new Map();
+        for (const [, id] of readFileSync(full, "utf8").matchAll(/\sid="([^"]+)"/g)) {
+          seen.set(id, (seen.get(id) ?? 0) + 1);
+        }
+        const dups = [...seen.entries()].filter(([, n]) => n > 1);
+        if (dups.length) dupPages.push(`${full}  → ${dups.map(([id, n]) => `${id}×${n}`).join(", ")}`);
+      }
+    }
+  };
+  scanIds(buildDir);
+  if (dupPages.length) {
+    console.log(`\n❌ 한 페이지 안에서 id 가 중복된 곳 ${dupPages.length}개 — 앵커가 첫 번째로만 간다.`);
+    dupPages.slice(0, 8).forEach((l) => console.log(`   ${l}`));
+    console.log("   고치는 법: 여러 MDX 를 한 페이지에 이어 붙일 때 <Mdx idPrefix={slug} /> 로 접두어를 준다.");
+    process.exit(1);
+  }
+  console.log("✅ 페이지 내 id 중복 0건");
+
   if (leaked.length) {
     console.log(`\n❌ 렌더되지 않은 마크다운 ${leaked.length}건 — 화면에 별표가 그대로 찍힌다.`);
     leaked.slice(0, 10).forEach((l) => console.log(`   ${l}`));
