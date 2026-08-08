@@ -60,6 +60,19 @@ function parseFrontmatter(text) {
     if (!kv) continue;
     const [, key, rest] = kv;
     if (key === "tags") {
+      // 프론트매터에 두 형식이 섞여 있다: 여러 줄 목록(`tags:\n  - "x"`)과 인라인 배열(`tags: ["x"]`).
+      // **프롬프트 30편은 전부 인라인 배열이다.** 2026-08-09 까지 이 파서가 인라인을 못 읽어
+      // 프롬프트의 태그를 통째로 놓치고 있었고, 그래서 이 계측기가 프롬프트의 태그 공유 관계를
+      // 보지 못했다. 계측기가 눈이 먼 것을 계측기로는 알 수 없다 — 다른 검사를 붙이다 드러났다.
+      const inline = rest.trim().match(/^\[(.*)\]$/);
+      if (inline) {
+        for (const raw of inline[1].split(",")) {
+          const v = raw.trim().replace(/^["']|["']$/g, "");
+          if (v) out.tags.push(v);
+        }
+        inTags = false;
+        continue;
+      }
       inTags = rest.trim() === "";
       continue;
     }
@@ -129,6 +142,25 @@ if (offenders.length) {
   process.exit(1);
 }
 console.log("✅ 콘텐츠 경로 하드코딩 0건");
+
+// ── 토픽 리다이렉트 정합 검사 ────────────────────────────────────────────────
+// `*-prompts` 태그는 토픽 페이지를 만들지 않고 /prompts/<tag> 허브로 301 한다(next.config.mjs).
+// 그 규칙이 성립하려면 리다이렉트 목록과 실제 태그 집합이 같아야 한다 — 태그를 새로 만들고
+// 리다이렉트를 잊으면 404 가 되고, 반대면 죽은 규칙이 남는다. 목록이 두 벌인 곳이라 여기서 묶는다.
+{
+  const promptTags = [...new Set(all.flatMap((c) => c.meta.tags))].filter((t) => t.endsWith("-prompts")).sort();
+  const config = readFileSync("next.config.mjs", "utf8");
+  const redirected = [...config.matchAll(/source:\s*"\/topics\/([a-z0-9-]+-prompts)"/g)].map((m) => m[1]).sort();
+  const missing = promptTags.filter((t) => !redirected.includes(t));
+  const stale = redirected.filter((t) => !promptTags.includes(t));
+  if (missing.length || stale.length) {
+    console.log("\n❌ 토픽 리다이렉트가 태그와 어긋난다.");
+    if (missing.length) console.log(`   리다이렉트 누락(404 위험): ${missing.join(", ")}`);
+    if (stale.length) console.log(`   죽은 리다이렉트: ${stale.join(", ")}`);
+    process.exit(1);
+  }
+  console.log(`✅ 토픽 리다이렉트 정합 (${promptTags.length}개 태그)`);
+}
 
 if (orphans.length > MAX_ORPHANS) {
   console.log(`\n❌ 인바운드 0인 페이지가 ${orphans.length}편 — 임계 ${MAX_ORPHANS} 초과.`);

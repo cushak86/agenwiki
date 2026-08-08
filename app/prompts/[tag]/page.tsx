@@ -11,7 +11,7 @@ import { getAll, getBySlug } from "@/lib/content";
 import { promptHubOf } from "@/lib/meta";
 import { buildBreadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 import { getTopicDescription, getTopicName } from "@/lib/topics";
-import type { PromptMeta } from "@/lib/types";
+import type { GuideMeta, PromptMeta } from "@/lib/types";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
@@ -59,6 +59,7 @@ export default function PromptHubPage({ params }: { params: { tag: string } }) {
 
   const name = getTopicName(params.tag);
   const others = [...grouped.entries()].filter(([tag]) => tag !== params.tag);
+  const relatedGuides = (getAll("guides") as GuideMeta[]).filter((meta) => meta.tags.includes(params.tag));
 
   const breadcrumbJsonLd = buildBreadcrumbJsonLd([
     { name: "홈", pathname: "/" },
@@ -126,6 +127,27 @@ export default function PromptHubPage({ params }: { params: { tag: string } }) {
           );
         })}
       </div>
+
+      {/* 같은 태그를 단 가이드. 이 허브가 토픽 페이지를 대체하므로, 토픽 페이지가 보여주던 것을
+          여기가 마저 보여줘야 한다 — 안 그러면 그 가이드가 갈 곳을 잃는다.
+          실제로 meeting-notes-summary-automation 은 productivity-prompts 단일 태그라
+          토픽 페이지가 유일한 묶음 진입로였고, 인바운드 0인 고아이기도 했다. */}
+      {relatedGuides.length > 0 && (
+        <section className="mt-16 max-w-3xl">
+          <h2 className="text-xl font-semibold text-ink">같은 주제의 가이드</h2>
+          <p className="mt-2 text-sm text-muted">프롬프트만으로 부족할 때 읽을 것들입니다.</p>
+          <ul className="mt-4 space-y-3">
+            {relatedGuides.map((guide) => (
+              <li key={guide.slug} className="rounded-lg border border-line bg-panel p-4">
+                <Link href={`/guides/${guide.slug}`} className="font-semibold text-ink hover:text-accent">
+                  {guide.title}
+                </Link>
+                <p className="mt-1 text-sm leading-6 text-muted">{guide.description}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <section className="mt-16 max-w-3xl">
         <h2 className="text-xl font-semibold text-ink">다른 묶음</h2>

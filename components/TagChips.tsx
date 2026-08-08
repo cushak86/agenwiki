@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { topicHref } from "@/lib/meta";
 
 const chipClass =
   "rounded-full border border-line bg-panel px-3 py-1 text-xs font-medium text-muted transition hover:border-accent hover:text-accent";
@@ -21,7 +22,8 @@ export function TagChips({ tags, onTagClick }: { tags: string[]; onTagClick?: (t
             #{tag}
           </button>
         ) : (
-          <Link key={tag} href={`/topics/${encodeURIComponent(tag)}`} className={chipClass}>
+          // 경로를 조립하지 마라 — `*-prompts` 태그는 토픽이 아니라 허브로 간다(lib/meta.ts).
+          <Link key={tag} href={topicHref(tag)} className={chipClass}>
             #{tag}
           </Link>
         )

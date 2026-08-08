@@ -38,6 +38,18 @@ export function getContentHref(type: ContentType, meta: ContentMeta) {
  * **경로 규칙을 두 벌로 만들지 않는 것이 목적이다.** 실제로 2026-08-09 에 프롬프트를 허브로
  * 옮긴 뒤, 경로를 하드코딩하고 있던 검색 결과만 죽은 URL(308 홉)을 가리키고 있었다.
  */
+/**
+ * 태그 묶음 페이지의 정규 경로.
+ *
+ * `*-prompts` 태그는 **토픽 페이지를 두지 않는다** — 같은 태그의 프롬프트 전문과 관련 가이드를
+ * 모두 담은 `/prompts/<tag>` 허브가 있고, 카드 그리드인 토픽 페이지는 그 열화판이기 때문이다
+ * (2026-08-09 실측: 토픽 1,444자 vs 허브 16,109자, 같은 검색 의도). 둘 다 두면 자기잠식이다.
+ * 규칙이 접미사 하나라 파일 시스템을 읽지 않고도 판정할 수 있어 클라이언트에서도 쓸 수 있다.
+ */
+export function topicHref(tag: string) {
+  return tag.endsWith("-prompts") ? `/prompts/${tag}` : `/topics/${encodeURIComponent(tag)}`;
+}
+
 export function contentHref(type: ContentType, slug: string, tags: string[]) {
   if (type === "prompts") {
     return `/prompts/${promptHubOf(tags)}#${slug}`;

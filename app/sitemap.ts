@@ -72,7 +72,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // 토픽 페이지는 소속 글이 갱신되면 실제로 내용이 바뀐다 — 그 최신 날짜를 그대로 쓴다.
   // 지어내는 게 아니라 이미 갖고 있는 메타에서 파생하는 것이라, 글이 늘면 저절로 맞는다.
   // (2026-08-08 이전엔 토픽 15건 + 정적 21건 = 36건이 lastmod 없이 나가고 있었다.)
-  const topicPages = getAllTags().map((tag) => ({
+  // `*-prompts` 태그는 토픽 페이지를 만들지 않으므로 사이트맵에도 넣지 않는다(허브가 정본).
+  const topicPages = getAllTags()
+    .filter((tag) => !tag.endsWith("-prompts"))
+    .map((tag) => ({
     url: absoluteUrl(`/topics/${encodeURIComponent(tag)}`),
     lastModified: newestOf(allContent.filter(({ meta }) => meta.tags.includes(tag)).map(({ meta }) => meta))
   }));

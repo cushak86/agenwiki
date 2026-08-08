@@ -6,8 +6,12 @@ import { buildBreadcrumbJsonLd, buildMetadata } from "@/lib/seo";
 export const dynamic = "force-static";
 export const dynamicParams = false;
 
+// `*-prompts` 태그는 토픽 페이지를 만들지 않는다 — /prompts/<tag> 허브가 같은 의도를 더 두껍게
+// 담고 있어 둘 다 두면 자기잠식이다(lib/meta.ts topicHref 주석). 옛 URL 은 next.config.mjs 가 308 한다.
 export function generateStaticParams() {
-  return getAllTags().map((tag) => ({ tag }));
+  return getAllTags()
+    .filter((tag) => !tag.endsWith("-prompts"))
+    .map((tag) => ({ tag }));
 }
 
 export function generateMetadata({ params }: { params: { tag: string } }) {

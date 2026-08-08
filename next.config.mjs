@@ -11,6 +11,18 @@ const nextConfig = {
         destination: "https://agenwiki.online/:path*",
         permanent: true
       },
+      // 토픽 페이지 폐지(`*-prompts` 6개) — 2026-08-09. 프롬프트 허브가 정본이다.
+      // 같은 태그에 대해 /topics/<tag>(카드 그리드 1,444자)와 /prompts/<tag>(전문 16,109자)가
+      // 동시에 존재하면 자기잠식이다. 허브가 프롬프트 전문 + 같은 태그 가이드까지 담으므로
+      // 토픽 페이지가 보여주던 것을 잃지 않는다.
+      // ⚠️ 규칙은 "태그가 `-prompts` 로 끝나면 허브"다(lib/meta.ts topicHref). 태그를 새로 만들면
+      //    여기에도 한 줄 추가해야 한다 — scripts/check-link-distribution.mjs 가 어긋나면 잡는다.
+      { source: "/topics/productivity-prompts", destination: "/prompts/productivity-prompts", permanent: true },
+      { source: "/topics/developer-prompts", destination: "/prompts/developer-prompts", permanent: true },
+      { source: "/topics/marketing-prompts", destination: "/prompts/marketing-prompts", permanent: true },
+      { source: "/topics/planning-prompts", destination: "/prompts/planning-prompts", permanent: true },
+      { source: "/topics/data-analysis-prompts", destination: "/prompts/data-analysis-prompts", permanent: true },
+      { source: "/topics/learning-prompts", destination: "/prompts/learning-prompts", permanent: true },
       // 프롬프트 개별 URL 폐지 — 2026-08-09. 태그별 허브의 앵커로 영구 리다이렉트.
       // 근거: 30편의 **렌더되는** 고유 글자 수가 중앙값 979자(본문 508 + promptText 406 + 메타)이고
       // 30편 전부 1,500자 미만이었으며, 30편 중 27편의 h2 구조가 글자 하나까지 같았다.
