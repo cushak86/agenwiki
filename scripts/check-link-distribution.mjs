@@ -213,6 +213,57 @@ console.log("✅ 콘텐츠 경로 하드코딩 0건");
   };
   scanHtml(buildDir);
 
+  // 리다이렉트 정합 검사. 2026-08-09 에 /topics/rag 가 자기 자신으로 12홉 무한 308 이 된 채
+  // 사이트맵에 실려 있었다. 원인은 내가 넣은 source:"/topics/RAG" 규칙 — Next 의 redirects() 는
+  // source 를 대소문자 구분 없이 매칭해서 목적지인 /topics/rag 요청까지 그 규칙이 가로챘다.
+  // 당시 나는 `curl -o /dev/null -w '%{http_code}'` 로 308 을 확인하고 "고쳐졌다"고 보고했다 —
+  // **상태코드는 어딘가로 보낸다는 뜻일 뿐 어디로 가는지는 말해주지 않는다.** 그래서 정적으로 센다.
+  const redirectRules = [
+    ...readFileSync(join(process.cwd(), "next.config.mjs"), "utf8").matchAll(
+      /source:\s*"([^"]+)"\s*,\s*destination:\s*"([^"]+)"/g
+    )
+  ].map(([, source, destination]) => ({ source, destination }));
+  const sourceByLower = new Map(redirectRules.map((r) => [r.source.toLowerCase(), r]));
+
+  const selfLoops = redirectRules.filter((r) => r.source.toLowerCase() === r.destination.toLowerCase());
+  const chains = redirectRules.filter((r) => sourceByLower.has(r.destination.toLowerCase()));
+
+  // 살아 있는 내부 링크가 리다이렉트 source 와 (대소문자 무시) 겹치면, 그 페이지는 링크돼 있으면서
+  // 동시에 리다이렉트 대상이다 — 자기 자신으로 보내지는 순간 무한 루프다.
+  const linkedPaths = new Set();
+  const collectLinks = (dir) => {
+    let entries;
+    try {
+      entries = readdirSync(dir, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    for (const e of entries) {
+      const full = join(dir, e.name);
+      if (e.isDirectory()) collectLinks(full);
+      else if (e.name.endsWith(".html")) {
+        for (const [, href] of readFileSync(full, "utf8").matchAll(/href="(\/[^"#?]*)"/g)) {
+          linkedPaths.add(href.replace(/\/$/, "") || "/");
+        }
+      }
+    }
+  };
+  collectLinks(buildDir);
+  const linkedButRedirected = [...linkedPaths].filter((p) => sourceByLower.has(p.toLowerCase()));
+
+  if (selfLoops.length || chains.length || linkedButRedirected.length) {
+    console.log(`\n❌ 리다이렉트 정합 실패`);
+    selfLoops.forEach((r) => console.log(`   [자기루프] ${r.source} → ${r.destination} — 무한 308 이다`));
+    chains.forEach((r) =>
+      console.log(`   [연쇄] ${decodeURIComponent(r.source)} → ${r.destination} → ${sourceByLower.get(r.destination.toLowerCase()).destination} — 최종 목적지로 직접 보내라`)
+    );
+    linkedButRedirected.forEach((p) =>
+      console.log(`   [링크된 페이지가 리다이렉트 대상] ${p} — 규칙 source "${sourceByLower.get(p.toLowerCase()).source}" 와 겹친다`)
+    );
+    process.exit(1);
+  }
+  console.log(`✅ 리다이렉트 정합 (규칙 ${redirectRules.length}건 — 자기루프·연쇄·링크충돌 0)`);
+
   // 중복 id 검사. 한 페이지에 여러 MDX 를 이어 붙이면 소제목 슬러그가 겹친다 —
   // 프롬프트 허브에서 실제로 '사용법' id 가 9개씩 생겼다(HTML 무효 + 앵커가 첫 번째로만 간다).
   // 페이지를 합칠 때마다 재발하는 종류라 함께 센다.

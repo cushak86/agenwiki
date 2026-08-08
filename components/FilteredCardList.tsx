@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { ContentCard } from "@/components/ContentCard";
+import { topicHref } from "@/lib/meta";
 import { getTopicName } from "@/lib/topics";
 import type { ContentMeta, ContentType } from "@/lib/types";
 
@@ -78,7 +79,9 @@ export function TopicFilterBar({
       })}
       {topic ? (
         <Link
-          href={`/topics/${encodeURIComponent(topic)}`}
+          /* topicHref 를 쓴다. `*-prompts` 태그가 넘어오면 하드코딩된 /topics/ 는 308 로 나간다.
+             지금 렌더되는 조합에서는 안 걸렸지만 태그 하나 늘면 바로 걸린다. */
+          href={topicHref(topic)}
           className="text-xs font-semibold text-accent hover:text-accentSoft"
         >
           → {getTopicName(topic)} 토픽 전체 보기

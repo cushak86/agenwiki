@@ -11,13 +11,25 @@ const nextConfig = {
         destination: "https://agenwiki.online/:path*",
         permanent: true
       },
-      // 2026-07-11 태그 재설계 대응표에서 빠져 있던 한 건 — /topics/RAG.
-      // 당시 주석은 "rag 는 신규 슬러그라 대소문자 무관 라우팅으로 별도 리다이렉트 없이 서빙된다"고
-      // 적었으나 **프로덕션에서 거짓이다**(2026-08-09 실측: /topics/RAG → 404, /topics/rag → 200).
-      // 리다이렉트 매칭은 대소문자 무관이 맞지만 **라우팅은 아니다** — 그래서 규칙도 페이지도 없이 404 다.
-      // 재설계 이전에 "RAG" 태그가 실제로 쓰였으므로(what-is-rag·hallucination·fine-tuning-vs-rag)
-      // 색인·외부 링크가 남아 있을 수 있다.
-      { source: "/topics/RAG", destination: "/topics/rag", permanent: true },
+      // ⛔ "/topics/RAG" → "/topics/rag" 리다이렉트를 여기에 넣지 마라. 두 번 당했다.
+      //
+      // 2026-08-09 오전: /topics/RAG 가 404 인 것을 보고 아래 rag 절(93번째 줄 부근)의 경고 주석을
+      // "프로덕션에서 거짓"이라 단정하고 규칙을 넣었다. 상태코드만 재고 308 을 확인한 뒤
+      // "404 → 308 로 살아났다"고 보고했다. **리다이렉트를 따라가 보지 않았다.**
+      // 같은 날 저녁 실측: /topics/rag 가 자기 자신으로 308 무한 루프(curl -L → 12홉 후 포기).
+      // 사이트맵에 들어 있고 /topics 에서 링크되는 살아 있는 페이지가 통째로 죽어 있었다.
+      //
+      // 원인: 이 Next.js 버전의 redirects() 는 source 를 **대소문자 구분 없이** 매칭한다.
+      // 그래서 source:"/topics/RAG" 규칙이 목적지인 /topics/rag 요청까지 가로챈다.
+      // 아래 주석이 이미 이 실패 모드를 실측과 함께 적어 두었는데, 내가 그것을 지웠다.
+      //
+      // /topics/RAG 가 404 인 것은 맞다(라우팅은 대소문자를 구분한다 — 리다이렉트 매칭과 반대다).
+      // 하지만 그건 레거시 대문자 URL 하나의 404 이고, 잘못 고치면 정본 토픽 페이지가 죽는다.
+      // **404 하나를 감수하는 쪽이 옳다.** 정 고치려면 리다이렉트가 아니라 미들웨어에서
+      // `pathname !== pathname.toLowerCase()` 를 명시적으로 비교해야 한다(그 값어치는 아직 없다).
+      //
+      // 교훈: 리다이렉트를 고쳤으면 **-L 로 끝까지 따라가서 최종 URL 을 봐라.** 상태코드 308 은
+      // "고쳐졌다"는 뜻이 아니라 "어딘가로 보낸다"는 뜻일 뿐이다.
       // 토픽 페이지 폐지(`*-prompts` 6개) — 2026-08-09. 프롬프트 허브가 정본이다.
       // 같은 태그에 대해 /topics/<tag>(카드 그리드 1,444자)와 /prompts/<tag>(전문 16,109자)가
       // 동시에 존재하면 자기잠식이다. 허브가 프롬프트 전문 + 같은 태그 가이드까지 담으므로
@@ -106,15 +118,15 @@ const nextConfig = {
       { source: "/topics/%ED%94%84%EB%A1%AC%ED%94%84%ED%8A%B8", destination: "/topics/prompt-engineering", permanent: true }, // 프롬프트
       { source: "/topics/%EC%83%9D%EC%84%B1%ED%98%95AI", destination: "/topics/prompt-engineering", permanent: true }, // 생성형AI
       // productivity-prompts
-      { source: "/topics/%EC%BD%94%EB%93%9C%EB%A6%AC%EB%B7%B0", destination: "/topics/productivity-prompts", permanent: true }, // 코드리뷰
-      { source: "/topics/%EB%94%94%EB%B2%84%EA%B9%85", destination: "/topics/productivity-prompts", permanent: true }, // 디버깅
-      { source: "/topics/%EB%B3%B4%EC%95%88", destination: "/topics/productivity-prompts", permanent: true }, // 보안
-      { source: "/topics/%EB%A6%AC%ED%8C%A9%ED%84%B0%EB%A7%81", destination: "/topics/productivity-prompts", permanent: true }, // 리팩터링
-      { source: "/topics/%EC%9A%94%EC%95%BD", destination: "/topics/productivity-prompts", permanent: true }, // 요약
-      { source: "/topics/%EB%AC%B8%EC%84%9C%EC%B2%98%EB%A6%AC", destination: "/topics/productivity-prompts", permanent: true }, // 문서처리
-      { source: "/topics/%EC%83%9D%EC%82%B0%EC%84%B1", destination: "/topics/productivity-prompts", permanent: true }, // 생산성
-      { source: "/topics/%ED%9A%8C%EC%9D%98%EB%A1%9D", destination: "/topics/productivity-prompts", permanent: true }, // 회의록
-      { source: "/topics/%EC%95%A1%EC%85%98%EC%95%84%EC%9D%B4%ED%85%9C", destination: "/topics/productivity-prompts", permanent: true }, // 액션아이템
+      { source: "/topics/%EC%BD%94%EB%93%9C%EB%A6%AC%EB%B7%B0", destination: "/prompts/productivity-prompts", permanent: true }, // 코드리뷰
+      { source: "/topics/%EB%94%94%EB%B2%84%EA%B9%85", destination: "/prompts/productivity-prompts", permanent: true }, // 디버깅
+      { source: "/topics/%EB%B3%B4%EC%95%88", destination: "/prompts/productivity-prompts", permanent: true }, // 보안
+      { source: "/topics/%EB%A6%AC%ED%8C%A9%ED%84%B0%EB%A7%81", destination: "/prompts/productivity-prompts", permanent: true }, // 리팩터링
+      { source: "/topics/%EC%9A%94%EC%95%BD", destination: "/prompts/productivity-prompts", permanent: true }, // 요약
+      { source: "/topics/%EB%AC%B8%EC%84%9C%EC%B2%98%EB%A6%AC", destination: "/prompts/productivity-prompts", permanent: true }, // 문서처리
+      { source: "/topics/%EC%83%9D%EC%82%B0%EC%84%B1", destination: "/prompts/productivity-prompts", permanent: true }, // 생산성
+      { source: "/topics/%ED%9A%8C%EC%9D%98%EB%A1%9D", destination: "/prompts/productivity-prompts", permanent: true }, // 회의록
+      { source: "/topics/%EC%95%A1%EC%85%98%EC%95%84%EC%9D%B4%ED%85%9C", destination: "/prompts/productivity-prompts", permanent: true }, // 액션아이템
       // fine-tuning-optimization
       { source: "/topics/%ED%95%99%EC%8A%B5", destination: "/topics/fine-tuning-optimization", permanent: true }, // 학습
       { source: "/topics/%EC%A0%84%EC%9D%B4%ED%95%99%EC%8A%B5", destination: "/topics/fine-tuning-optimization", permanent: true }, // 전이학습
