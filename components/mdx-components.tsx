@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { MDXComponents } from "mdx/types";
+import { ModelPriceTable } from "@/components/ModelPriceTable";
 import { headingTextFromNode, slugify } from "@/lib/slugify";
 
 export const mdxComponents: MDXComponents = {
@@ -45,5 +46,8 @@ export const mdxComponents: MDXComponents = {
   thead: (props) => <thead className="bg-panel2 text-ink" {...props} />,
   tr: (props) => <tr className="border-b border-line last:border-b-0" {...props} />,
   th: (props) => <th className="px-4 py-2.5 font-semibold text-ink" {...props} />,
-  td: (props) => <td className="px-4 py-2.5 align-top text-body" {...props} />
+  td: (props) => <td className="px-4 py-2.5 align-top text-body" {...props} />,
+  // 본문에서 쓰는 커스텀 블록. 숫자를 MDX 에 손으로 적는 대신 데이터를 읽어 그린다 —
+  // 손으로 적으면 lib/models.ts 의 갱신 규율과 이중 진실원이 된다(ModelPriceTable 주석 참조).
+  ModelPriceTable
 };
