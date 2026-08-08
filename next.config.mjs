@@ -11,6 +11,13 @@ const nextConfig = {
         destination: "https://agenwiki.online/:path*",
         permanent: true
       },
+      // 2026-07-11 태그 재설계 대응표에서 빠져 있던 한 건 — /topics/RAG.
+      // 당시 주석은 "rag 는 신규 슬러그라 대소문자 무관 라우팅으로 별도 리다이렉트 없이 서빙된다"고
+      // 적었으나 **프로덕션에서 거짓이다**(2026-08-09 실측: /topics/RAG → 404, /topics/rag → 200).
+      // 리다이렉트 매칭은 대소문자 무관이 맞지만 **라우팅은 아니다** — 그래서 규칙도 페이지도 없이 404 다.
+      // 재설계 이전에 "RAG" 태그가 실제로 쓰였으므로(what-is-rag·hallucination·fine-tuning-vs-rag)
+      // 색인·외부 링크가 남아 있을 수 있다.
+      { source: "/topics/RAG", destination: "/topics/rag", permanent: true },
       // 토픽 페이지 폐지(`*-prompts` 6개) — 2026-08-09. 프롬프트 허브가 정본이다.
       // 같은 태그에 대해 /topics/<tag>(카드 그리드 1,444자)와 /prompts/<tag>(전문 16,109자)가
       // 동시에 존재하면 자기잠식이다. 허브가 프롬프트 전문 + 같은 태그 가이드까지 담으므로

@@ -159,6 +159,26 @@ const walk = (dir) => {
 };
 for (const dir of scanDirs) walk(dir);
 
+// **본문(MDX)도 본다.** 2026-08-09 실측: 프롬프트 개별 URL 을 폐기하고 리다이렉트까지 넣었는데
+// content/**/*.mdx 의 마크다운 링크 20개가 옛 주소를 그대로 가리키고 있었다. 그중 4개는
+// 허브가 자기 자신으로 308 하는 링크였다 — 사람이 누르면 아무 일도 안 일어난 것처럼 보인다.
+// .tsx 만 훑던 이 가드는 그걸 구조적으로 못 잡았고, 그 사실을 모른 채 "0건"이라고 커밋했다.
+// 링크는 코드보다 본문에 더 많다. 본문을 안 보는 링크 검사는 반쪽이다.
+const promptSlugs = new Set(
+  readdirSync(join(CONTENT_DIR, "prompts"))
+    .filter((f) => f.endsWith(".mdx"))
+    .map((f) => f.replace(/\.mdx$/, ""))
+);
+for (const type of CONTENT_TYPES) {
+  for (const file of readdirSync(join(CONTENT_DIR, type))) {
+    if (!file.endsWith(".mdx")) continue;
+    const full = join(CONTENT_DIR, type, file);
+    for (const [, slug] of readFileSync(full, "utf8").matchAll(/\]\(\/prompts\/([a-z0-9-]+)\)/g)) {
+      if (promptSlugs.has(slug)) offenders.push(`${full}  → /prompts/${slug} (폐기된 개별 URL)`);
+    }
+  }
+}
+
 if (offenders.length) {
   console.log(`\n❌ 콘텐츠 경로를 하드코딩한 곳 ${offenders.length}개 — lib/meta.ts 의 contentHref 를 쓰세요.`);
   offenders.forEach((f) => console.log(`   ${f}`));
