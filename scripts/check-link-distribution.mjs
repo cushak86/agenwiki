@@ -213,6 +213,38 @@ console.log("✅ 콘텐츠 경로 하드코딩 0건");
   };
   scanHtml(buildDir);
 
+  // FAQPage 정합. 구글은 **화면에 보이지 않는 Q&A** 를 FAQ 구조화 데이터로 선언하는 것을
+  // 정책 위반으로 본다. /rankup 은 손으로 적은 5개를 싣고 있었는데 그중 질문 하나
+  // ("이미 사이트가 있는데 적용 가능한가요?")는 페이지 어디에도 없는 문장이었고,
+  // 답변 5개 중 4개가 화면과 다른 판본이었다(2026-08-09 감사). 두 곳을 각각 손보면 반드시 어긋난다.
+  const rankupPath = join(process.cwd(), "public", "rankup", "index.html");
+  const rankupHtml = readFileSync(rankupPath, "utf8");
+  const flat = (s) => s.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  const visibleFaq = [...rankupHtml.matchAll(/<details[^>]*>\s*<summary[^>]*>(.*?)<\/summary>([\s\S]*?)<\/details>/g)].map(
+    ([, q, a]) => ({ q: flat(q), a: flat(a) })
+  );
+  const faqBlock = [...rankupHtml.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
+    .map(([, body]) => JSON.parse(body))
+    .find((json) => json["@type"] === "FAQPage");
+  const declaredFaq = (faqBlock?.mainEntity ?? []).map((e) => ({ q: e.name, a: e.acceptedAnswer?.text ?? "" }));
+
+  const faqMismatch = [];
+  if (declaredFaq.length !== visibleFaq.length) {
+    faqMismatch.push(`개수 불일치 — 선언 ${declaredFaq.length}개 vs 화면 ${visibleFaq.length}개`);
+  }
+  for (const d of declaredFaq) {
+    const hit = visibleFaq.find((v) => v.q === d.q);
+    if (!hit) faqMismatch.push(`화면에 없는 질문: "${d.q}"`);
+    else if (hit.a !== d.a) faqMismatch.push(`답변 원문 불일치: "${d.q}"`);
+  }
+  if (faqMismatch.length) {
+    console.log(`\n❌ /rankup FAQPage 가 화면과 어긋난다 (구글 정책 위반)`);
+    faqMismatch.slice(0, 6).forEach((m) => console.log(`   ${m}`));
+    console.log("   고치는 법: <details> 원문을 그대로 JSON-LD 로 옮긴다. 요약하거나 다듬지 마라.");
+    process.exit(1);
+  }
+  console.log(`✅ /rankup FAQPage 정합 (Q&A ${visibleFaq.length}개 — 선언과 화면 일치)`);
+
   // 리다이렉트 정합 검사. 2026-08-09 에 /topics/rag 가 자기 자신으로 12홉 무한 308 이 된 채
   // 사이트맵에 실려 있었다. 원인은 내가 넣은 source:"/topics/RAG" 규칙 — Next 의 redirects() 는
   // source 를 대소문자 구분 없이 매칭해서 목적지인 /topics/rag 요청까지 그 규칙이 가로챘다.
