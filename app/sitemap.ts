@@ -1,8 +1,9 @@
 import type { MetadataRoute } from "next";
 import { CHAINS } from "@/lib/chains";
 import { getAll, getAllTags } from "@/lib/content";
+import { promptHubOf } from "@/lib/meta";
 import { absoluteUrl } from "@/lib/seo";
-import type { ContentMeta, ContentType } from "@/lib/types";
+import type { ContentMeta, ContentType, PromptMeta } from "@/lib/types";
 
 const staticRoutes = [
   "/",
@@ -27,7 +28,9 @@ const staticRoutes = [
   "/rankup",
   "/rankup/tools/keyword-vault.html"
 ];
-const contentTypes: ContentType[] = ["guides", "glossary", "prompts", "newsletter"];
+// 프롬프트는 개별 URL 이 없다(2026-08-09 허브로 통합) — 사이트맵에도 허브만 올린다.
+// 여기에 "prompts" 를 다시 넣으면 301 되는 죽은 URL 30개를 구글에 제출하게 된다.
+const contentTypes: ContentType[] = ["guides", "glossary", "newsletter"];
 
 const lastModified = (meta: ContentMeta) =>
   "updatedAt" in meta ? meta.updatedAt : meta.publishedAt;
@@ -46,6 +49,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const allContent = contentTypes.flatMap((type) => getAll(type).map((meta) => ({ type, meta })));
 
+  // 프롬프트 허브 — 소속 프롬프트의 최신 발행일에서 lastModified 를 파생시킨다.
+  const promptMetas = getAll("prompts") as PromptMeta[];
+  const hubDates = new Map<string, string>();
+  for (const meta of promptMetas) {
+    const hub = promptHubOf(meta.tags);
+    const current = hubDates.get(hub);
+    if (!current || meta.publishedAt > current) {
+      hubDates.set(hub, meta.publishedAt);
+    }
+  }
+  const promptHubPages = [...hubDates.entries()].map(([hub, date]) => ({
+    url: absoluteUrl(`/prompts/${hub}`),
+    lastModified: date
+  }));
+
   const contentPages = allContent.map(({ type, meta }) => ({
     url: absoluteUrl(`/${type}/${meta.slug}`),
     lastModified: lastModified(meta)
@@ -59,5 +77,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: newestOf(allContent.filter(({ meta }) => meta.tags.includes(tag)).map(({ meta }) => meta))
   }));
 
-  return [...pages, ...contentPages, ...topicPages];
+  return [...pages, ...contentPages, ...promptHubPages, ...topicPages];
 }

@@ -67,7 +67,7 @@ export function metadataForContent(type: ContentType, meta: ContentMeta): Metada
   return buildMetadata({
     title: getContentTitle(meta),
     description: getContentDescription(meta),
-    pathname: getContentHref(type, meta.slug),
+    pathname: getContentHref(type, meta),
     image,
     ogType: type === "guides" || type === "newsletter" ? "article" : "website"
   });

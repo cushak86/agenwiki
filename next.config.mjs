@@ -11,6 +11,42 @@ const nextConfig = {
         destination: "https://agenwiki.online/:path*",
         permanent: true
       },
+      // 프롬프트 개별 URL 폐지 — 2026-08-09. 태그별 허브의 앵커로 영구 리다이렉트.
+      // 근거: 30편의 **렌더되는** 고유 글자 수가 중앙값 979자(본문 508 + promptText 406 + 메타)이고
+      // 30편 전부 1,500자 미만이었으며, 30편 중 27편의 h2 구조가 글자 하나까지 같았다.
+      // 979자짜리 근친 중복이 사이트맵의 20%를 차지하면 개별 색인의 한계효용이 없어
+      // 「발견됨-미색인」에 쌓이고, 그 덩어리가 사이트 전체 품질 평가까지 끌어내린다.
+      // 허브 7개로 묶으니 각 페이지가 2,000~8,800자가 된다. 판단 근거 전문은 lib/meta.ts 주석.
+      { source: "/prompts/ad-copy-ab-prompt", destination: "/prompts/marketing-prompts#ad-copy-ab-prompt", permanent: true },
+      { source: "/prompts/agent-workflow", destination: "/prompts/prompt-engineering#agent-workflow", permanent: true },
+      { source: "/prompts/code-debugging-refactoring-prompt", destination: "/prompts/prompt-engineering#code-debugging-refactoring-prompt", permanent: true },
+      { source: "/prompts/code-review-prompt", destination: "/prompts/productivity-prompts#code-review-prompt", permanent: true },
+      { source: "/prompts/competitor-analysis-prompt", destination: "/prompts/planning-prompts#competitor-analysis-prompt", permanent: true },
+      { source: "/prompts/concept-comparison-prompt", destination: "/prompts/learning-prompts#concept-comparison-prompt", permanent: true },
+      { source: "/prompts/concept-learning-prompt", destination: "/prompts/productivity-prompts#concept-learning-prompt", permanent: true },
+      { source: "/prompts/customer-persona-prompt", destination: "/prompts/marketing-prompts#customer-persona-prompt", permanent: true },
+      { source: "/prompts/data-interpretation-prompt", destination: "/prompts/data-analysis-prompts#data-interpretation-prompt", permanent: true },
+      { source: "/prompts/email-report-writing-prompt", destination: "/prompts/productivity-prompts#email-report-writing-prompt", permanent: true },
+      { source: "/prompts/error-log-analysis-prompt", destination: "/prompts/developer-prompts#error-log-analysis-prompt", permanent: true },
+      { source: "/prompts/korean-english-translation-prompt", destination: "/prompts/productivity-prompts#korean-english-translation-prompt", permanent: true },
+      { source: "/prompts/long-document-summary-prompt", destination: "/prompts/productivity-prompts#long-document-summary-prompt", permanent: true },
+      { source: "/prompts/meeting-agenda-prompt", destination: "/prompts/productivity-prompts#meeting-agenda-prompt", permanent: true },
+      { source: "/prompts/meeting-notes-prompt", destination: "/prompts/productivity-prompts#meeting-notes-prompt", permanent: true },
+      { source: "/prompts/mistake-note-prompt", destination: "/prompts/learning-prompts#mistake-note-prompt", permanent: true },
+      { source: "/prompts/pr-description-prompt", destination: "/prompts/developer-prompts#pr-description-prompt", permanent: true },
+      { source: "/prompts/prd-draft-prompt", destination: "/prompts/planning-prompts#prd-draft-prompt", permanent: true },
+      { source: "/prompts/presentation-script-prompt", destination: "/prompts/productivity-prompts#presentation-script-prompt", permanent: true },
+      { source: "/prompts/regex-builder-prompt", destination: "/prompts/developer-prompts#regex-builder-prompt", permanent: true },
+      { source: "/prompts/release-notes-prompt", destination: "/prompts/developer-prompts#release-notes-prompt", permanent: true },
+      { source: "/prompts/resume-improvement-prompt", destination: "/prompts/productivity-prompts#resume-improvement-prompt", permanent: true },
+      { source: "/prompts/seo-outline-prompt", destination: "/prompts/marketing-prompts#seo-outline-prompt", permanent: true },
+      { source: "/prompts/social-thread-prompt", destination: "/prompts/marketing-prompts#social-thread-prompt", permanent: true },
+      { source: "/prompts/spreadsheet-formula-prompt", destination: "/prompts/data-analysis-prompts#spreadsheet-formula-prompt", permanent: true },
+      { source: "/prompts/sql-query-writing-prompt", destination: "/prompts/data-analysis-prompts#sql-query-writing-prompt", permanent: true },
+      { source: "/prompts/study-plan-prompt", destination: "/prompts/learning-prompts#study-plan-prompt", permanent: true },
+      { source: "/prompts/survey-design-prompt", destination: "/prompts/planning-prompts#survey-design-prompt", permanent: true },
+      { source: "/prompts/test-case-generation-prompt", destination: "/prompts/developer-prompts#test-case-generation-prompt", permanent: true },
+      { source: "/prompts/user-interview-questions-prompt", destination: "/prompts/planning-prompts#user-interview-questions-prompt", permanent: true },
       // 가이드 통합 — 2026-08-08. chatgpt-vs-claude 와 chatgpt-vs-gemini-vs-claude 가
       // 소제목 7개 중 6개가 글자까지 동일한 near-duplicate 였다("두 서비스 모두…" → "세 서비스 모두…"
       // 치환이 본문 차이의 대부분). 같은 질의에 자기 URL 두 개가 붙으면 구글이 하나만 대표로 고르고

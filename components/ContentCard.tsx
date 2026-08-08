@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getContentDescription, getContentTitle } from "@/lib/meta";
+import { getContentDescription, getContentHref, getContentTitle } from "@/lib/meta";
 import type { ContentMeta, ContentType } from "@/lib/types";
 import { PromptCopyButton } from "@/components/PromptCopyButton";
 import { TagChips } from "@/components/TagChips";
@@ -55,7 +55,8 @@ export function ContentCard({
         <h3 className="text-lg font-bold leading-snug text-ink">
           {/* after 오버레이로 카드 전체를 클릭 타깃으로 만든다 — 태그는 z-10 으로 위에 띄워 따로 클릭된다 */}
           <Link
-            href={`/${type}/${meta.slug}`}
+            // 경로를 여기서 조립하지 마라 — 프롬프트는 개별 URL 이 아니라 허브 앵커다(lib/meta.ts).
+            href={getContentHref(type, meta)}
             className="transition after:absolute after:inset-0 group-hover:text-accentSoft"
           >
             {title}
