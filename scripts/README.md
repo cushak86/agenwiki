@@ -95,3 +95,47 @@ cron equivalent: `0 9 * * * python /path/to/scripts/pipeline/scheduled_fetch.py`
 - `publish.py` supports `--type guides|glossary|prompts|newsletter`. Frontmatter arrays may be inline (`["a","b"]`) or multiline. Use `--skip-build` to batch-publish, then run `npm run build` once.
 - `npm run build` is a syntax/route sanity check; it does not validate factual accuracy or copyright safety.
 - Discord webhook logic is not implemented here; `MULTIAGENT_ROOT` points to the existing shared adapter and defaults to `C:\agents\multi-agent`.
+
+## IndexNow submission (`indexnow-submit.mjs`)
+
+`scripts/indexnow-submit.mjs` pushes every URL in the **live** `sitemap.xml` to IndexNow in
+one request, so participating engines pick up new and changed pages without waiting for a
+crawl.
+
+**Google does not support IndexNow.** This script reaches Bing, Naver, Yandex and Seznam
+only. For Google you still have to request indexing by hand, one URL at a time, in Google
+Search Console → URL Inspection → Request Indexing. Do not treat a successful IndexNow
+submission as evidence that Google was notified.
+
+**Deploy first, then submit.** IndexNow proves ownership by fetching a key file at
+`https://agenwiki.online/<key>.txt`. The script verifies that file itself before submitting
+and aborts with a non-zero exit if it is not HTTP 200 with the key as its exact body. So the
+order is: commit `public/<key>.txt` → deploy to production → run the script. Running it
+before the deploy lands aborts at the key check — that is the intended behaviour, not a bug.
+
+Dry run first — it prints the URL list and the exact JSON payload without submitting:
+
+```bash
+npm run indexnow -- --dry
+```
+
+Then submit for real:
+
+```bash
+npm run indexnow
+```
+
+HTTP 200 (accepted) and 202 (accepted, key verification pending) count as success; anything
+else exits non-zero.
+
+Run this **when content actually changed**, not habitually after every deploy. The script
+submits the whole sitemap each time, and IndexNow asks publishers to send changed or new URLs
+only — repeated full-list submissions can get deprioritised. The script also aborts when the
+sitemap's host differs from `BASE`, which is what a half-finished domain switch looks like.
+
+The site address comes from `process.env.NEXT_PUBLIC_SITE_URL ?? "https://agenwiki.online"`,
+duplicating the fallback in `lib/seo.ts` because a `.mjs` script cannot import the `.ts`
+source of truth. **Change the domain in both places.** The script also aborts if the key file
+request gets redirected, which catches the `agenwiki.vercel.app` → `agenwiki.online` 308 in
+`next.config.mjs` — submitting under an alias host would send a `host`/`keyLocation` pair
+that does not match the canonical site.

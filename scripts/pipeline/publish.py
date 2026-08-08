@@ -185,6 +185,12 @@ def validate_glossary(data, expected_slug, path):
         if not isinstance(alias, str) or not alias.strip():
             fail(f"{path}: aliases must contain only non-empty strings")
     validate_slug_list(data, "related", path)
+    # 선택 필드 guide — 대응 가이드 슬러그. lib/content.ts 의 assertGuideSlug 와 같은 규칙을 유지한다.
+    # 여기서는 형식만 본다(실재 확인은 빌드가 한다 — 발행 시점엔 guides 트리가 없을 수 있다).
+    if "guide" in data:
+        require_string(data, "guide", path)
+        if not SLUG_RE.match(data["guide"]):
+            fail(f"{path}: guide must be a valid slug")
     for key in ["publishedAt", "title", "description", "author"]:
         if key in data:
             fail(f"{path}: glossary frontmatter must not include {key}")

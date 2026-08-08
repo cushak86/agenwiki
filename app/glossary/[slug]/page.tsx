@@ -8,7 +8,17 @@ import { SubscribeForm } from "@/components/SubscribeForm";
 import { TagChips } from "@/components/TagChips";
 import { getAll, getAllSlugs, getBySlug } from "@/lib/content";
 import { buildBreadcrumbJsonLd, definedTermJsonLd, metadataForContent } from "@/lib/seo";
-import type { GlossaryMeta } from "@/lib/types";
+import type { GlossaryMeta, GuideMeta } from "@/lib/types";
+
+// 프론트매터의 guide 슬러그로 대응 가이드를 찾는다. 없는 슬러그를 가리키면 조용히 무시한다
+// (관련 용어와 같은 방식) — 오타 하나로 용어 페이지 전체가 500 나는 것이 더 나쁘다.
+function linkedGuide(meta: GlossaryMeta) {
+  if (!meta.guide || !getAllSlugs("guides").includes(meta.guide)) {
+    return undefined;
+  }
+
+  return getBySlug("guides", meta.guide).meta as GuideMeta;
+}
 
 // 가나다순 이전/다음 용어 — 사전을 넘겨 보듯 연속으로 읽는 순회 경로.
 function siblingTerms(current: GlossaryMeta) {
@@ -48,6 +58,7 @@ export default function GlossaryDetailPage({ params }: { params: { slug: string 
 
   const meta = record.meta as GlossaryMeta;
 
+  const guide = linkedGuide(meta);
   const glossaryTerms = getAllSlugs("glossary");
   const relatedTerms = (meta.related ?? [])
     .filter((slug, index, self) => slug !== meta.slug && glossaryTerms.includes(slug) && self.indexOf(slug) === index)
@@ -74,6 +85,14 @@ export default function GlossaryDetailPage({ params }: { params: { slug: string 
           <TagChips tags={meta.tags} />
         </div>
       </div>
+      {guide ? (
+        <aside className="mt-8 max-w-3xl rounded-lg border border-accent/40 bg-panel p-4 text-sm leading-6 text-muted">
+          이 용어를 자세히 다룬 글{" "}
+          <Link href={`/guides/${guide.slug}`} className="font-medium text-ink hover:text-accent">
+            {guide.title} →
+          </Link>
+        </aside>
+      ) : null}
       <div className="mt-10">
         <Prose>
           <Mdx source={record.body} />

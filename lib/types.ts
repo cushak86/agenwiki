@@ -23,6 +23,10 @@ export type GlossaryMeta = BaseMeta & {
   category: string;
   updatedAt: string;
   related?: string[];
+  // 이 용어를 깊게 다룬 guides 슬러그. 용어 페이지에서 본문 상단 링크로 노출한다.
+  // 짧은 정의(용어)와 두꺼운 해설(가이드)이 같은 검색어를 두고 서로 잠식하지 않도록,
+  // 어느 쪽이 정본인지 방문자와 검색엔진 모두에게 알리는 것이 목적이다. 없어도 된다.
+  guide?: string;
 };
 
 export type PromptMeta = BaseMeta & {

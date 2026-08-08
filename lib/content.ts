@@ -81,6 +81,31 @@ function assertString(data: Record<string, unknown>, key: string, filePath: stri
   return value;
 }
 
+// glossary 의 guide 필드가 가리키는 슬러그가 실재하는지 보기 위한 목록.
+// **파일명만** 읽는다 — parseFile/getAll 을 부르지 않으므로 검증 도중 되불릴 일이 없다.
+// 빌드 1회 동안 디렉터리는 바뀌지 않으니 메모이즈한다(용어 40편마다 readdir 하지 않기 위해).
+let guideSlugSet: Set<string> | null = null;
+
+function assertGuideSlug(slug: string, filePath: string) {
+  if (!guideSlugSet) {
+    const dir = typeDir("guides");
+    guideSlugSet = new Set(
+      fs.existsSync(dir)
+        ? fs
+            .readdirSync(dir)
+            .filter((fileName) => fileName.endsWith(".mdx"))
+            .map((fileName) => fileName.slice(0, -".mdx".length))
+        : []
+    );
+  }
+
+  if (!guideSlugSet.has(slug)) {
+    fail(filePath, `guide "${slug}" 에 해당하는 content/guides/${slug}.mdx 가 없다`);
+  }
+
+  return slug;
+}
+
 function assertDate(data: Record<string, unknown>, key: string, filePath: string) {
   const value = assertString(data, key, filePath);
   const date = new Date(`${value}T00:00:00.000Z`);
@@ -161,7 +186,15 @@ function validateMeta(type: ContentType, data: Record<string, unknown>, fallback
         shortDef: assertString(data, "shortDef", filePath),
         category: assertString(data, "category", filePath),
         updatedAt: assertDate(data, "updatedAt", filePath),
-        related: ensureArray(data.related)
+        related: ensureArray(data.related),
+        // 대응 guide 슬러그(선택). 없으면 undefined.
+        // 실재까지 여기서 본다 — 오타 하나로 링크가 조용히 사라지는 것이 가장 흔한 실패라,
+        // 렌더 시점에 걸러 내면 아무도 모르는 채 배포된다. 빌드를 깨뜨려 즉시 알게 한다.
+        // guideSlugSet 은 파일명만 읽으므로 parseFile 을 되부르지 않는다(순환 없음).
+        guide:
+          data.guide === undefined
+            ? undefined
+            : assertGuideSlug(assertString(data, "guide", filePath), filePath)
       };
     case "prompts":
       return {
