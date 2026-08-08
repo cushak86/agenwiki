@@ -19,6 +19,9 @@ function Chip({ active, label, onClick }: { active: boolean; label: string; onCl
   return (
     <button
       type="button"
+      // 켜짐/꺼짐 신호가 클래스(색)뿐이라 스크린리더에는 아무것도 안 들렸다.
+      // 로드 시점에 이미 켜져 있는 칩이 있어서 더 나빴다 — 무엇이 선택돼 있는지 알 수 없었다.
+      aria-pressed={active}
       onClick={onClick}
       className={`rounded-full border px-4 py-2 text-sm font-medium transition ${
         active ? "border-accent bg-accentDeep text-white" : "border-line bg-panel text-ink hover:border-accent hover:text-accent"
@@ -121,6 +124,7 @@ export function AgentConfigBuilder() {
             type="text"
             value={state.projectName}
             onChange={(event) => setState((prev) => ({ ...prev, projectName: event.target.value }))}
+            aria-label="프로젝트 이름"
             placeholder="프로젝트 이름 (예: my-shop)"
             className={inputClass}
           />
@@ -128,6 +132,7 @@ export function AgentConfigBuilder() {
             type="text"
             value={state.projectDesc}
             onChange={(event) => setState((prev) => ({ ...prev, projectDesc: event.target.value }))}
+            aria-label="프로젝트 한 줄 설명"
             placeholder="한 줄 설명 (예: 반려동물 용품 쇼핑몰)"
             className={inputClass}
           />
@@ -158,6 +163,7 @@ export function AgentConfigBuilder() {
           type="text"
           value={state.stackExtra}
           onChange={(event) => setState((prev) => ({ ...prev, stackExtra: event.target.value }))}
+          aria-label="기타 스택 직접 입력"
           placeholder="기타 스택 직접 입력 (예: Supabase, Tailwind)"
           className={`${inputClass} mt-3`}
         />
@@ -183,6 +189,7 @@ export function AgentConfigBuilder() {
               onChange={(event) =>
                 setState((prev) => ({ ...prev, commands: { ...prev.commands, [key]: event.target.value } }))
               }
+              aria-label={placeholder}
               placeholder={placeholder}
               className={inputClass}
             />
@@ -232,6 +239,7 @@ export function AgentConfigBuilder() {
           rows={2}
           value={state.extraNote}
           onChange={(event) => setState((prev) => ({ ...prev, extraNote: event.target.value }))}
+          aria-label="추가 규칙 (자유 입력)"
           placeholder="예: API 응답은 반드시 zod로 검증한다"
           className={`${inputClass} mt-2`}
         />

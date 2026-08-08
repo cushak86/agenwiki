@@ -11,6 +11,9 @@ function Chip({ active, label, onClick }: { active: boolean; label: string; onCl
   return (
     <button
       type="button"
+      // 켜짐/꺼짐 신호가 클래스(색)뿐이라 스크린리더에는 아무것도 안 들렸다.
+      // 로드 시점에 이미 켜져 있는 칩이 있어서 더 나빴다 — 무엇이 선택돼 있는지 알 수 없었다.
+      aria-pressed={active}
       onClick={onClick}
       className={`rounded-full border px-4 py-2 text-sm font-medium transition ${
         active ? "border-accent bg-accentDeep text-white" : "border-line bg-panel text-ink hover:border-accent hover:text-accent"
@@ -203,6 +206,7 @@ export function PromptBuilder() {
           rows={2}
           value={note}
           onChange={(event) => setNote(event.target.value)}
+          aria-label="추가 요청 (자유 입력)"
           placeholder="예: 300자 이내로, 존댓말로, 영어 병기"
           className="mt-2 w-full rounded-md border border-line bg-panel px-3 py-2 text-sm leading-6 text-ink outline-none transition placeholder:text-muted focus:border-accent"
         />
@@ -219,6 +223,7 @@ export function PromptBuilder() {
           rows={5}
           value={input}
           onChange={(event) => setInput(event.target.value)}
+          aria-label="붙여넣을 원문"
           placeholder={task?.inputPlaceholder ?? "먼저 1단계에서 작업을 선택하세요"}
           className="mt-3 w-full rounded-md border border-line bg-panel px-3 py-2 text-sm leading-6 text-ink outline-none transition placeholder:text-muted focus:border-accent"
         />

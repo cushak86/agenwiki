@@ -227,7 +227,9 @@ export function LlmCostCalculator() {
           <tbody>
             {rows.map(({ model, price, monthlyInput, monthlyOutput, total }) => (
               <tr key={model.id} className={`border-b border-line/60 ${model.id === cheapestId ? "bg-accentDeep/10" : ""}`}>
-                <td className="py-3 pr-3">
+                {/* th scope="row" 라야 표가 제대로 읽힌다. td 로 두면 각 입력칸이 어느 모델 줄인지
+                    보조기술에서 연결이 끊긴다 — 아래 aria-label 과 짝을 이룬다. */}
+                <th scope="row" className="py-3 pr-3 text-left font-normal">
                   <span className="font-semibold text-ink">{model.name}</span>
                   <span className="ml-2 text-xs text-muted">{model.provider}</span>
                   {model.id === cheapestId ? (
@@ -235,12 +237,15 @@ export function LlmCostCalculator() {
                       최저
                     </span>
                   ) : null}
-                </td>
+                </th>
                 <td className="py-3 pr-3">
+                  {/* 입력 26개(13행 × 2)에 이름이 하나도 없었다. 시각적으로는 열 제목으로 구분되지만
+                      보조기술에는 "편집창" 26개가 나란히 들릴 뿐이다(Lighthouse label 감사 실패). */}
                   <input
                     type="number"
                     min={0}
                     step={0.01}
+                    aria-label={`${model.name} 입력 단가 (100만 토큰당 달러)`}
                     value={price.input}
                     onChange={(e) => setPrice(model.id, "input", Number(e.target.value) || 0)}
                     className="w-20 rounded-md border border-line bg-panel px-2 py-1 text-sm tabular-nums text-ink outline-none focus:border-accent"
@@ -251,6 +256,7 @@ export function LlmCostCalculator() {
                     type="number"
                     min={0}
                     step={0.01}
+                    aria-label={`${model.name} 출력 단가 (100만 토큰당 달러)`}
                     value={price.output}
                     onChange={(e) => setPrice(model.id, "output", Number(e.target.value) || 0)}
                     className="w-20 rounded-md border border-line bg-panel px-2 py-1 text-sm tabular-nums text-ink outline-none focus:border-accent"

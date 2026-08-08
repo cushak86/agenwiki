@@ -69,11 +69,16 @@ export function SubscribeForm({
         </a>
       </p>
       <div className="mt-4 flex flex-col gap-3 md:flex-row">
+        {/* placeholder 만 있으면 값을 넣는 순간 이름이 사라진다 — 무엇을 적는 칸인지 다시 확인할 방법이
+            없어진다. aria-invalid/aria-describedby 로 오류 문단과도 연결한다. */}
         <input
           type="email"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           required
+          aria-label="이메일 주소"
+          aria-invalid={status === "error"}
+          aria-describedby="subscribe-message"
           placeholder="email@example.com"
           className="h-11 flex-1 rounded-md border border-line px-3 text-sm outline-none transition focus:border-accent"
         />
@@ -98,14 +103,19 @@ export function SubscribeForm({
           사이트 이용에는 제한이 없습니다.
         </span>
       </label>
-      {status === "success" || status === "error" ? (
-        <p
-          role="status"
-          className={`mt-3 text-sm leading-6 ${status === "success" ? "text-accent" : "text-red-400"}`}
-        >
-          {message}
-        </p>
-      ) : null}
+      {/* 라이브 리전은 **항상 DOM 에 있어야** 한다. 메시지와 동시에 만들어지면 스크린리더가
+          그 삽입을 못 잡아서 아무것도 읽히지 않는다 — 그래서 내용만 비운다.
+          오류는 role="alert"(즉시), 성공은 role="status"(양보)로 나눈다. */}
+      <p
+        id="subscribe-message"
+        role={status === "error" ? "alert" : "status"}
+        aria-live={status === "error" ? "assertive" : "polite"}
+        className={`text-sm leading-6 ${message ? "mt-3" : ""} ${
+          status === "success" ? "text-accent" : "text-red-400"
+        }`}
+      >
+        {status === "success" || status === "error" ? message : ""}
+      </p>
     </form>
   );
 }
