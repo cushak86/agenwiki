@@ -1,3 +1,7 @@
+// 주소 정본은 lib/siteUrl.mjs 하나다. 여기서 문자열을 다시 적으면 도메인을 옮길 때 이 파일이 남아
+// **라이브 트래픽 전체를 죽은 주소로 308** 시킨다. 404 가 아니라 옮기는 날에야 드러난다.
+import { SITE_URL } from "./lib/siteUrl.mjs";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -8,7 +12,7 @@ const nextConfig = {
       {
         source: "/:path*",
         has: [{ type: "host", value: "agenwiki.vercel.app" }],
-        destination: "https://agenwiki.online/:path*",
+        destination: `${SITE_URL}/:path*`,
         permanent: true
       },
       // ⛔ "/topics/RAG" → "/topics/rag" 리다이렉트를 여기에 넣지 마라. 두 번 당했다.

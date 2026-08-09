@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/siteUrl.mjs";
 import type { ContentMeta, ContentType, GlossaryMeta, GuideMeta } from "@/lib/types";
 import { getContentDescription, getContentHref, getContentTitle } from "@/lib/content";
 
 export const siteConfig = {
   name: "agenwiki",
   description: "AI 전반 지식백과와 에이전트 실전 가이드",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://agenwiki.online"
+  url: SITE_URL
 };
 
 // 페이지별 cover가 없을 때 쓰는 사이트 기본 OG 이미지.

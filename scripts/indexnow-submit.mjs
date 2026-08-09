@@ -7,7 +7,9 @@
 
 // 사이트 주소 정본은 lib/seo.ts의 siteConfig.url 이다. .mjs 스크립트에서 .ts를 import할 수 없어
 // 폴백 규칙을 그대로 복제했다 — 도메인 변경 시 lib/seo.ts와 이 파일 두 곳을 함께 고칠 것.
-const BASE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://agenwiki.online";
+import { SITE_URL } from "../lib/siteUrl.mjs";
+
+const BASE = SITE_URL;
 const KEY = "7f701a246cb6b3b350e4ca0e2903fa3e";
 const KEY_LOCATION = `${BASE}/${KEY}.txt`;
 const ENDPOINT = "https://api.indexnow.org/IndexNow";
