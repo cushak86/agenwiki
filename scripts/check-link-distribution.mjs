@@ -18,9 +18,29 @@
 //   node --experimental-strip-types scripts/check-link-distribution.mjs --max-orphans 0
 //
 // 종료 코드: 0 = 임계 이하, 1 = 인바운드 0인 페이지가 임계 초과.
-import { readFileSync, readdirSync } from "node:fs";
+import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { pickRelated } from "../lib/relatedSelection.ts";
+
+/** 여러 디렉터리 아래에서 가장 최근에 수정된 시각(ms). 빌드가 소스보다 낡았는지 판정하는 데 쓴다. */
+function newestMtime(dirs) {
+  let newest = 0;
+  const walk = (d) => {
+    let entries;
+    try {
+      entries = readdirSync(d, { withFileTypes: true });
+    } catch {
+      return;
+    }
+    for (const e of entries) {
+      const full = join(d, e.name);
+      if (e.isDirectory()) walk(full);
+      else newest = Math.max(newest, statSync(full).mtimeMs);
+    }
+  };
+  dirs.forEach(walk);
+  return newest;
+}
 
 const CONTENT_TYPES = ["guides", "glossary", "prompts", "newsletter"];
 const CONTENT_DIR = "content";
@@ -38,7 +58,26 @@ const maxOrphansArg = argv.indexOf("--max-orphans");
 //
 // 이 숫자를 줄이려면 알고리즘이 아니라 **태그**를 손봐야 한다. 꼬리에 남는 글들은 공유 태그
 // 경쟁에서 구조적으로 밀리는 쪽이고, 연결해 줄 태그를 하나 더 다는 것이 유일한 처방이다.
-const MAX_ORPHANS = maxOrphansArg >= 0 ? Number(argv[maxOrphansArg + 1]) : 10;
+/**
+ * ⚠️ **값을 검증한다.** 예전에는 `Number(argv[i+1])` 그대로였다.
+ *    `--max-orphans` 만 쓰고 값을 빼먹으면 임계가 **NaN** 이 되고, `개수 > NaN` 은 항상 false 라
+ *    **고아가 몇 편이든 ✅ 로 통과했다**(2026-08-09 실측: 4편인데 "임계 NaN 이하" 로 통과).
+ *    CI 인자에 오타 하나면 검사 하나가 통째로 꺼지는데 아무도 모른다 — 화면은 초록색이다.
+ *    설정이 잘못된 것은 **콘텐츠 실패와 다른 종료코드(2)** 로 구분해서 즉시 알린다.
+ */
+function parseMaxOrphans() {
+  if (maxOrphansArg < 0) return 10;
+  const raw = argv[maxOrphansArg + 1];
+  const n = Number(raw);
+  if (raw === undefined || raw.startsWith("--") || !Number.isInteger(n) || n < 0) {
+    console.error(`❌ --max-orphans 값이 잘못됐다: ${raw === undefined ? "(없음)" : `"${raw}"`}`);
+    console.error("   0 이상의 정수여야 한다. 예: --max-orphans 0");
+    console.error("   (값을 빼먹으면 임계가 NaN 이 되어 이 검사가 조용히 꺼진다 — 그래서 여기서 멈춘다.)");
+    process.exit(2);
+  }
+  return n;
+}
+const MAX_ORPHANS = parseMaxOrphans();
 
 /** 프론트매터에서 필요한 것만 뽑는다 — tags(배열)와 날짜. YAML 파서를 들이지 않는다. */
 function parseFrontmatter(text) {
@@ -195,23 +234,95 @@ console.log("✅ 콘텐츠 경로 하드코딩 0건");
 {
   const buildDir = ".next/server/app";
   const leaked = [];
+  let scannedHtml = 0;
+  let newestHtml = 0;
   const scanHtml = (dir) => {
     let entries;
     try {
       entries = readdirSync(dir, { withFileTypes: true });
     } catch {
-      return; // 빌드 전이면 조용히 건너뛴다 — 이 검사는 빌드 산출물이 있을 때만 의미가 있다
+      // ⚠️ 예전에는 여기서 **조용히 return** 했다("빌드 전이면 건너뛴다").
+      //    그러면 빌드가 없을 때 이 검사가 아무 일도 안 하고 전체 결과는 ✅ 로 나온다 —
+      //    **"검사했는데 문제가 없다"와 "검사를 안 했다"가 화면에서 똑같아 보인다.**
+      //    오늘 하루에만 이 부류(재는 쪽이 틀림)로 여러 번 헛짚었다. 조용한 건너뜀은 그중 최악이다.
+      //    빈손으로 돌아오되, 아래에서 **큰 소리로 실패**시킨다.
+      return;
     }
     for (const e of entries) {
       const full = join(dir, e.name);
       if (e.isDirectory()) scanHtml(full);
       else if (e.name.endsWith(".html")) {
+        scannedHtml++;
+        newestHtml = Math.max(newestHtml, statSync(full).mtimeMs);
         const body = readFileSync(full, "utf8").replace(/<script[\s\S]*?<\/script>/g, "");
         for (const [, text] of body.matchAll(/\*\*([^*<]{1,60})\*\*/g)) leaked.push(`${full}  → **${text}**`);
       }
     }
   };
   scanHtml(buildDir);
+
+  // ★ 검사가 **실제로 돌았는지** 확인한다. 이 블록이 이 파일에서 유일하게 빌드 산출물을 읽는다.
+  if (scannedHtml === 0) {
+    console.error("\n❌ 마크다운 렌더 검사를 **실행하지 못했다** — 빌드 산출물이 없다.");
+    console.error(`   ${buildDir} 에 .html 이 하나도 없다. \`npm run build\` 후 다시 실행하라.`);
+    console.error("   (예전엔 여기서 조용히 넘어가 전체 결과가 ✅ 로 나왔다. 「검사했더니 문제 없음」과");
+    console.error("    「검사를 안 함」이 화면에서 구분되지 않는 것이 이 검사의 가장 큰 사각지대였다.)");
+    process.exit(2);
+  }
+
+  // 빌드가 소스보다 오래됐으면 **옛날 화면**을 검사하는 것이다 — 통과해도 의미가 없다.
+  const newestSrc = newestMtime(["content", "components", "app", "lib"]);
+  if (newestSrc > newestHtml) {
+    const 분 = Math.round((newestSrc - newestHtml) / 60000);
+    console.error(`\n❌ 빌드 산출물이 소스보다 ${분}분 오래됐다 — 옛 화면을 검사하게 된다.`);
+    console.error("   `npm run build` 후 다시 실행하라.");
+    process.exit(2);
+  }
+  console.log(`   (마크다운 렌더 검사: 빌드 HTML ${scannedHtml}개를 실제로 읽음)`);
+
+  // ── 중복 <title> ─────────────────────────────────────────────────
+  // 같은 제목을 주장하는 두 페이지는 검색 결과에서 서로를 밀어낸다 — 구글이 하나를 고르고 나머지를 버린다.
+  // 2026-08-09 실측: /topics/prompt-engineering 과 /glossary/prompt-engineering 이
+  // 둘 다 "프롬프트 엔지니어링 | agenwiki" 였다. 하나는 목록, 하나는 정의인데 제목이 같았다.
+  //
+  // ⚠️ 404 페이지들은 제외한다. /pro 는 스위치가 꺼져 있어 404 이고(라이브 확인),
+  //    _not-found 와 제목이 같은 것이 당연하다 — 그걸 결함으로 세면 진짜 중복이 묻힌다.
+  {
+    const titles = new Map();
+    const collect = (dir) => {
+      let entries;
+      try { entries = readdirSync(dir, { withFileTypes: true }); } catch { return; }
+      for (const e of entries) {
+        const full = join(dir, e.name);
+        if (e.isDirectory()) { collect(full); continue; }
+        if (!e.name.endsWith(".html")) continue;
+        const html = readFileSync(full, "utf8");
+        // 404 로 나가는 페이지는 색인 대상이 아니다.
+        // /pro 는 런치 스위치가 꺼져 있어 notFound() 를 부른다(라이브 404 확인). _not-found 와
+        // 제목이 같은 것이 당연하므로 세지 않는다 — 그걸 결함으로 세면 진짜 중복이 묻힌다.
+        if (/<meta name="robots"[^>]*noindex/i.test(html)) continue;
+        const url = "/" + full.split(/[\\/]/).slice(3).join("/").replace(/\.html$/, "").replace(/^index$/, "");
+        if (url === "/pro" || url.includes("_not-found")) continue;
+        const t = /<title>([^<]*)<\/title>/.exec(html)?.[1];
+        if (!t) continue;
+        if (!titles.has(t)) titles.set(t, []);
+        titles.get(t).push(url);
+      }
+    };
+    collect(buildDir);
+    const dup = [...titles.entries()].filter(([, v]) => v.length > 1);
+    if (dup.length) {
+      console.log(`\n❌ 같은 <title> 을 쓰는 페이지 ${dup.length}쌍`);
+      for (const [t, v] of dup) {
+        console.log(`   "${t}"`);
+        v.forEach((p) => console.log(`      ${p}`));
+      }
+      console.log("   → 제목이 페이지의 성격을 말하게 하라(목록인지 정의인지).");
+      process.exit(1);
+    } else {
+      console.log(`✅ 중복 <title> 0쌍 (색인 대상 ${[...titles.values()].flat().length}개)`);
+    }
+  }
 
   // FAQPage 정합. 구글은 **화면에 보이지 않는 Q&A** 를 FAQ 구조화 데이터로 선언하는 것을
   // 정책 위반으로 본다. /rankup 은 손으로 적은 5개를 싣고 있었는데 그중 질문 하나

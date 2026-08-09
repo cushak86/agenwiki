@@ -17,7 +17,13 @@ export function generateStaticParams() {
 export function generateMetadata({ params }: { params: { tag: string } }) {
   const tag = decodeURIComponent(params.tag);
   return buildMetadata({
-    title: getTopicName(tag),
+    // ★ 「글 모음」을 붙이는 이유 (2026-08-09 수정): 토픽 페이지는 **목록**이고 용어사전은 **정의**인데
+    //   제목이 똑같았다. /topics/prompt-engineering 과 /glossary/prompt-engineering 이
+    //   둘 다 "프롬프트 엔지니어링 | agenwiki" 였다 — 같은 제목을 주장하는 두 페이지는
+    //   검색 결과에서 서로를 밀어낸다(구글이 하나를 고르고 나머지를 버린다).
+    //   제목이 페이지의 성격을 말해야 클릭하는 쪽도 무엇을 여는지 안다.
+    //   check-link-distribution.mjs 의 「중복 제목」 검사가 이걸 지킨다.
+    title: `${getTopicName(tag)} 글 모음`,
     description: getTopicDescription(tag) ?? `${tag} 태그로 묶인 agenwiki 콘텐츠`,
     pathname: `/topics/${encodeURIComponent(tag)}`
   });
