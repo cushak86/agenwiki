@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "indexnow": "node scripts/indexnow-submit.mjs",
+    "test": "npm run check:links",
     "check:links": "node --experimental-strip-types scripts/check-link-distribution.mjs"
   },
   "dependencies": {
