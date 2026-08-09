@@ -197,7 +197,13 @@ export function assembleAgentConfig(state: AgentConfigState, format: (typeof OUT
       ...styles.map((rule) => `- ${rule.text}`),
       ...forbidden.map((rule) => `- ${rule.text}`),
       ...(commit ? [`- ${commit.text}`] : []),
-      ...(state.extraNote.trim() ? [`- ${state.extraNote.trim()}`] : [])
+      ...(state.extraNote.trim() ? [`- ${state.extraNote.trim()}`] : []),
+      // 2단계에 입력한 명령어가 cursor 출력에서만 통째로 빠져 있었다(2026-08-09 감사).
+      // CLAUDE.md·AGENTS.md 탭은 "## 명령어" 절로 내보내는데 여기만 안 넣었다 —
+      // 사용자는 세 탭이 같은 입력을 쓴다고 보고 있으므로 조용한 누락이다.
+      ...(commandEntries.length > 0
+        ? ["", "## 명령어", ...commandEntries.map((entry) => `- ${entry.label}: \`${entry.value.trim()}\``)]
+        : [])
     ];
     return lines.join("\n").replace(/\n{3,}/g, "\n\n").trim();
   }
