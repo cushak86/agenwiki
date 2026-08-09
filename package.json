@@ -8,8 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "indexnow": "node scripts/indexnow-submit.mjs",
-    "test": "npm run check:links",
-    "check:links": "node --experimental-strip-types scripts/check-link-distribution.mjs"
+    "test": "npm run check:links && npm run check:chunking",
+    "check:links": "node --experimental-strip-types scripts/check-link-distribution.mjs",
+    "check:chunking": "node scripts/check-chunking.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
