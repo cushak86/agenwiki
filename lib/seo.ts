@@ -27,6 +27,23 @@ export function absoluteUrl(pathname: string) {
   return new URL(pathname, siteConfig.url).toString();
 }
 
+/**
+ * ⚠️ 루트의 슬래시 불일치는 **결함이 아니다. 고치지 마라.** (2026-08-09 확인)
+ *
+ * 사이트맵은 `https://agenwiki.online/`(슬래시 있음)을 싣고, 홈 canonical 은
+ * `https://agenwiki.online`(없음)로 렌더된다. absoluteUrl("/") 은 슬래시를 붙이지만
+ * Next 가 alternates.canonical 에서 루트 슬래시를 정규화해 떼기 때문이다.
+ *
+ * 전수 점검(2026-08-09 · 4개 사이트 193개 URL)에서 이 한 건만 "불일치"로 잡혔고
+ * 세 Next 사이트에 똑같이 나타난다. 그런데 두 주소는 **바이트 단위로 같은 응답**이다
+ * (md5 일치, 각 87,152 bytes). RFC 3986 상 빈 경로는 "/" 와 동치라 구글도 같게 취급한다.
+ *
+ * 즉 사용자에게도 크롤러에게도 아무 일이 일어나지 않는다. Next 의 정규화를 거슬러
+ * 맞추려 들면 얻는 것 없이 새 버그만 만든다 — 같은 날 아침 /topics/rag 를
+ * "404 니까 리다이렉트를 넣자"고 고쳤다가 무한 루프를 만든 것이 정확히 그 실수였다.
+ * **기계적 불일치가 곧 결함은 아니다. 사용자에게 무슨 일이 일어나는지를 먼저 재라.**
+ */
+
 export function buildMetadata({
   title,
   description,
