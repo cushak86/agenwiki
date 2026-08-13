@@ -181,6 +181,34 @@ const nextConfig = {
       { source: "/topics/LLM%20%ED%8F%89%EA%B0%80", destination: "/topics", permanent: true }, // LLM 평가
       { source: "/topics/%ED%8F%89%EA%B0%80", destination: "/topics", permanent: true } // 평가
     ];
+  },
+
+  /**
+   * 전송 헤더 (2026-08-13 신설, 18회차 감사).
+   *
+   * 실측: 네 사이트 전부 응답 헤더가 HSTS 하나뿐이었고 **프레임 방어가 0** 이었다.
+   * 이 사이트는 /store 에서 실제로 결제 링크를 내보내고 /rankup 이 판매 랜딩이다 —
+   * 남의 페이지 iframe 안에 담긴 채 투명 레이어를 덮으면 클릭재킹이 성립한다.
+   *
+   * frame-ancestors 'self' 가 현대 브라우저용 정본, X-Frame-Options 는 옛 브라우저용 보조다.
+   * 하나만 두면 한쪽 브라우저에서 방어가 통째로 없다.
+   *
+   * ⚠️ **CSP 전체(script-src 등)는 일부러 넣지 않았다.** 허용 목록을 잘못 잡으면 계측·외부
+   *    스크립트가 조용히 죽는데 화면으로는 티가 안 난다 — 이 저장소가 반복해서 당한 실패 모양이다.
+   *    frame-ancestors 는 스크립트 로딩에 관여하지 않아 그 위험이 없다.
+   */
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          { key: "Content-Security-Policy", value: "frame-ancestors 'self'" }
+        ]
+      }
+    ];
   }
 };
 
