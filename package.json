@@ -8,12 +8,13 @@
     "start": "next start",
     "lint": "next lint",
     "indexnow": "node scripts/indexnow-submit.mjs",
-    "test": "npm run check:links && npm run check:chunking && npm run check:dupe && npm run check:filenames && npm run check:siteurl",
+    "test": "npm run check:links && npm run check:chunking && npm run check:dupe && npm run check:filenames && npm run check:siteurl && npm run check:headers",
     "check:links": "node --experimental-strip-types scripts/check-link-distribution.mjs",
     "check:chunking": "node scripts/check-chunking.mjs",
     "check:dupe": "node scripts/check-duplicate-prose.mjs",
     "check:filenames": "node scripts/check-filenames.mjs",
-    "check:siteurl": "node scripts/check-site-url.mjs"
+    "check:siteurl": "node scripts/check-site-url.mjs",
+    "check:headers": "node scripts/check-headers.mjs"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
