@@ -1,0 +1,63 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE, CATEGORIES } from '../site.config';
+
+const posts = (await getCollection('posts', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf() || a.id.localeCompare(b.id));
+const pillar = posts.find((p) => p.data.pillar);
+const inCat = (slug: string) => posts.filter((p) => p.data.category === slug);
+---
+<BaseLayout title={SITE.title} description={SITE.description} wide>
+  <section class="hero">
+    <p class="eyebrow">정부지원금 · 공공기관 혜택 신청 가이드 위키</p>
+    <h1>받을 수 있는 지원금,<br />자격부터 신청까지 한 번에 확인하세요</h1>
+    <p>
+      흩어져 있는 정부 공고와 기관 안내를 읽기 쉬운 순서로 다시 정리합니다.
+      모든 글은 지원 대상 · 지급액 계산 · 단계별 신청 방법 · 공식 문의처를 담고,
+      글마다 공식 자료를 확인한 날짜를 함께 적습니다.
+    </p>
+  </section>
+
+  {pillar && (
+    <a class="pillar-card" href={`/posts/${pillar.id}/`}>
+      <span class="cat">기준표</span>
+      <strong>{pillar.data.title}</strong>
+      <span class="pillar-desc">대부분의 복지 제도가 쓰는 소득 기준입니다. 내 가구가 몇 %에 해당하는지 먼저 확인하세요.</span>
+    </a>
+  )}
+
+  {CATEGORIES.map((c) => {
+    const list = inCat(c.slug);
+    return list.length > 0 && (
+      <section class="cat-block">
+        <div class="cat-head">
+          <h2><a href={`/category/${c.slug}/`}>{c.label}</a></h2>
+          <a class="more" href={`/category/${c.slug}/`}>전체 {list.length}편 →</a>
+        </div>
+        <p class="cat-desc">{c.desc}</p>
+        <ul class="card-grid">
+          {list.map((p) => (
+            <li>
+              <a href={`/posts/${p.id}/`}>
+                <strong>{p.data.title}</strong>
+                <span>{p.data.summary.target}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    );
+  })}
+
+  <section class="how">
+    <h2>에이전위키 글은 이렇게 만듭니다</h2>
+    <ol>
+      <li><strong>공식 자료부터</strong> — 소관 부처·기관의 공고와 보도자료를 먼저 확인하고, 수치는 그 자료에서만 가져옵니다.</li>
+      <li><strong>신청자 순서대로</strong> — 자격 확인 → 금액 계산 → 신청 → 사후 관리 순서로 정리합니다.</li>
+      <li><strong>기준일 표시</strong> — 글마다 공식 자료를 확인한 날짜와 근거 자료 링크를 남깁니다.</li>
+      <li><strong>정정 반영</strong> — 제도가 바뀌거나 오류 제보가 오면 확인 후 본문과 기준일을 고칩니다.</li>
+    </ol>
+    <p><a href="/about/">편집 원칙 자세히 보기 →</a></p>
+  </section>
+</BaseLayout>

@@ -1,0 +1,101 @@
+---
+import { SITE, CATEGORIES, ADSENSE } from '../site.config';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  ogType?: 'website' | 'article';
+  wide?: boolean;
+  ads?: boolean; // 콘텐츠 없는 화면(404 등)은 false — 정책상 광고 금지
+}
+const { title, description, ogType = 'website', wide = false, ads = true } = Astro.props;
+const path = Astro.url.pathname;
+const canonical = new URL(path, Astro.site).href;
+const fullTitle = title === SITE.title ? `${SITE.title} — ${SITE.tagline}` : `${title} | ${SITE.title}`;
+const wrap = wide ? 'wrap-wide' : 'wrap';
+const orgLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE.title,
+  alternateName: SITE.brand,
+  url: SITE.url,
+  inLanguage: 'ko-KR',
+  description: SITE.description,
+};
+---
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="google-site-verification" content="JQ07wJjhBF42tXyNQitGgdkk03TyUGeHjY3RewluX9U" />
+    <meta name="naver-site-verification" content="c1adb4b8fea62db5e2a41e7d5182fe252236e679" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title={SITE.title} href="/rss.xml" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={SITE.title} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="ko_KR" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+    />
+    {path === '/' && <script type="application/ld+json" is:inline set:html={JSON.stringify(orgLd)} />}
+    {ADSENSE.client && ads && (
+      <script
+        async
+        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE.client}`}
+        crossorigin="anonymous"
+      ></script>
+    )}
+  </head>
+  <body>
+    <header class="site-header">
+      <div class={`${wrap} bar`}>
+        <a href="/" class="brand" aria-label={`${SITE.title} 홈`}>agen<span>wiki</span></a>
+        <nav class="nav" aria-label="카테고리">
+          {CATEGORIES.map((c) => (
+            <a
+              href={`/category/${c.slug}/`}
+              aria-current={path.startsWith(`/category/${c.slug}`) ? 'page' : undefined}
+            >{c.label}</a>
+          ))}
+          <a href="/about/" aria-current={path.startsWith('/about') ? 'page' : undefined}>소개</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class={wrap}>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class={wrap}>
+        <div class="links">
+          <a href="/">홈</a>
+          <a href="/about/">사이트 소개</a>
+          <a href="/contact/">문의하기</a>
+          <a href="/privacy/">개인정보처리방침</a>
+          <a href="/disclaimer/">면책조항</a>
+          <a href="/rss.xml">RSS</a>
+        </div>
+        <p><strong>{SITE.title}({SITE.brand})</strong> — {SITE.tagline}</p>
+        <p class="disclaimer">
+          에이전위키는 정부·공공기관의 공식 사이트가 아니며, 어떤 기관과도 제휴하지 않은 비공식 정보 안내 사이트입니다.
+          모든 글은 작성 시점의 공식 자료를 기준으로 하며, 실제 자격·지급액·신청 일정은 관할 기관의 공고와 심사 결과에 따라 달라질 수 있습니다.
+          신청 전에는 반드시 각 기관의 공식 안내를 확인하시기 바랍니다. 자세한 내용은 <a href="/disclaimer/">면책조항</a>을 참고하세요.
+        </p>
+        <p>© {new Date().getFullYear()} {SITE.brand}. All rights reserved.</p>
+      </div>
+    </footer>
+  </body>
+</html>

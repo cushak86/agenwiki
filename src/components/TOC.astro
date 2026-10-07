@@ -1,0 +1,19 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+// h2만 목차로 쓴다. 본문 h2에 이미 "1." 같은 번호가 있으므로 목록 번호는 붙이지 않는다.
+const items = Astro.props.headings.filter((h) => h.depth === 2);
+---
+{items.length >= 3 && (
+  <nav class="toc" aria-label="목차">
+    <strong>목차</strong>
+    <ul>
+      {items.map((h) => (
+        <li><a href={`#${h.slug}`}>{h.text}</a></li>
+      ))}
+    </ul>
+  </nav>
+)}

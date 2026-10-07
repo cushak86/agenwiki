@@ -1,32 +1,6 @@
-node_modules
-.next
-.npm-cache
-out
-.env*
-!.env.example
-.env*.local
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-
-.vercel
-scripts/queue/
-scripts/staging/
-scripts/state/
-
+node_modules/
+dist/
+.astro/
+.env
+.DS_Store
 __pycache__/
-*.pyc
-
-scripts/pipeline/sources.json
-
-# AI-company 운영 파일 (제품 소스 아님)
-.claude/
-CLAUDE.md
-docs/
-
-# OG 커버 생성용 폰트 캐시 (10MB — 생성 시점에만 필요, 스크립트가 자동 내려받음)
-scripts/design/.fonts/
-
-# tsc --noEmit 부산물
-tsconfig.tsbuildinfo

@@ -1,0 +1,23 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import PostLayout from '../../layouts/PostLayout.astro';
+
+export async function getStaticPaths() {
+  type Post = CollectionEntry<'posts'>;
+  const posts = await getCollection('posts', ({ data }) => !data.draft);
+  const byDate = (a: Post, b: Post) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf() || a.id.localeCompare(b.id);
+  // 같은 카테고리 글 전부(기준표 글이 맨 앞) → 카테고리 안에서는 모든 글이 서로를 링크한다.
+  const relatedFor = (post: Post): Post[] =>
+    posts
+      .filter((p) => p.id !== post.id && p.data.category === post.data.category)
+      .sort((a, b) => Number(b.data.pillar) - Number(a.data.pillar) || byDate(a, b))
+      .slice(0, 6);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post, related: relatedFor(post) } }));
+}
+
+const { post, related } = Astro.props;
+const { Content, headings } = await render(post);
+---
+<PostLayout post={post} headings={headings} related={related}>
+  <Content />
+</PostLayout>

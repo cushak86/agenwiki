@@ -1,0 +1,23 @@
+---
+import { ADSENSE } from '../site.config';
+
+interface Props {
+  slot: string;
+  format?: string;
+}
+const { slot, format = 'auto' } = Astro.props;
+---
+{ADSENSE.client && slot && (
+  <div class="ad">
+    <small>ADVERTISEMENT</small>
+    <ins
+      class="adsbygoogle"
+      style="display:block"
+      data-ad-client={ADSENSE.client}
+      data-ad-slot={slot}
+      data-ad-format={format}
+      data-full-width-responsive="true"
+    ></ins>
+    <script is:inline>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+)}

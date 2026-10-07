@@ -1,0 +1,128 @@
+---
+import type { MarkdownHeading } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from './BaseLayout.astro';
+import AdSense from '../components/AdSense.astro';
+import TOC from '../components/TOC.astro';
+import { ADSENSE, SITE, CATEGORIES } from '../site.config';
+
+interface Props {
+  post: CollectionEntry<'posts'>;
+  headings: MarkdownHeading[];
+  related: CollectionEntry<'posts'>[];
+}
+const { post, headings, related } = Astro.props;
+const { title, description, pubDate, updatedDate, verifiedDate, category, keyword, tags, summary, agency, sources } = post.data;
+
+const cat = CATEGORIES.find((c) => c.slug === category)!;
+const fmt = (d: Date) => d.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'Asia/Seoul' });
+const readMinutes = Math.max(1, Math.round(post.body!.replace(/\s/g, '').length / 600));
+const url = new URL(Astro.url.pathname, Astro.site).href;
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  description,
+  datePublished: pubDate.toISOString(),
+  dateModified: (updatedDate ?? verifiedDate ?? pubDate).toISOString(),
+  inLanguage: 'ko-KR',
+  keywords: [keyword, ...tags].join(', '),
+  author: { '@type': 'Organization', name: SITE.author, url: `${SITE.url}/about/` },
+  publisher: { '@type': 'Organization', name: SITE.title, url: SITE.url },
+  mainEntityOfPage: url,
+  citation: sources.map((s) => s.url),
+};
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: SITE.title, item: SITE.url },
+    { '@type': 'ListItem', position: 2, name: cat.label, item: `${SITE.url}/category/${cat.slug}/` },
+    { '@type': 'ListItem', position: 3, name: title, item: url },
+  ],
+};
+
+// 본문 "5. 자주 묻는 질문" 섹션의 ### Q. 질문 + 답변 문단을 그대로 FAQPage 구조화 데이터로 낸다.
+// (화면에 보이는 내용과 구조화 데이터가 항상 같도록 본문에서 직접 추출)
+const strip = (s: string) =>
+  s.replace(/<!--[\s\S]*?-->/g, '').replace(/\[([^\]]+)\]\([^)]*\)/g, '$1').replace(/[*_`>]/g, '').replace(/\s+/g, ' ').trim();
+const faqSection = post.body!.match(/^## 5\..*$([\s\S]*?)(?=^## 6\.|(?![\s\S]))/m)?.[1] ?? '';
+const faq = [...faqSection.matchAll(/^### (Q[^\n]*)\n([\s\S]*?)(?=^### |(?![\s\S]))/gm)]
+  .map((m) => ({ q: strip(m[1].replace(/^Q\d*\.?\s*/, '')), a: strip(m[2]) }))
+  .filter((f) => f.q && f.a);
+const faqLd = faq.length > 0 && {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map(({ q, a }) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+};
+const host = (u: string) => new URL(u).hostname.replace(/^www\./, '');
+---
+<BaseLayout title={title} description={description} ogType="article">
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbLd)} />
+  {faqLd && <script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />}
+
+  <article>
+    <header class="post-header">
+      <nav class="crumbs" aria-label="현재 위치"><a href="/">홈</a> › <a href={`/category/${cat.slug}/`}>{cat.label}</a></nav>
+      <h1>{title}</h1>
+      <p class="meta">
+        <span>{fmt(pubDate)} 작성</span>
+        <span class="verified">공식 자료 확인 {fmt(verifiedDate)}</span>
+        <span>약 {readMinutes}분</span>
+      </p>
+    </header>
+
+    <aside class="summary" aria-label="한눈에 보기">
+      <strong class="summary-title">한눈에 보기</strong>
+      <dl>
+        <div><dt>지원 대상</dt><dd>{summary.target}</dd></div>
+        <div><dt>지원 내용</dt><dd>{summary.benefit}</dd></div>
+        <div><dt>신청 기간</dt><dd>{summary.period}</dd></div>
+      </dl>
+    </aside>
+
+    <AdSense slot={ADSENSE.slots.top} />
+
+    <TOC headings={headings} />
+
+    <div class="prose">
+      <slot />
+    </div>
+
+    <section class="sources" aria-label="근거 자료">
+      <h2>이 글의 근거 자료</h2>
+      <ul>
+        {sources.map((s) => (
+          <li><a href={s.url} rel="nofollow noopener" target="_blank">{s.name}</a> <span class="host">{host(s.url)}</span></li>
+        ))}
+      </ul>
+      <p class="agency">
+        관할 기관: <strong>{agency.name}</strong>
+        {agency.phone && <> · 문의 <strong>{agency.phone}</strong></>}
+        {' · '}<a href={agency.url} rel="nofollow noopener" target="_blank">공식 사이트</a>
+      </p>
+    </section>
+
+    <p class="post-notice">
+      이 글은 {fmt(verifiedDate)} 기준 공식 자료를 확인해 작성했습니다. 에이전위키는 정부 기관이 아니며,
+      실제 자격 여부와 지급액은 관할 기관의 심사로 결정됩니다. 제도는 공고에 따라 바뀔 수 있으니 신청 직전에
+      관할 기관 안내를 다시 확인하세요. 내용에 오류가 있다면 <a href="/contact/">정정 요청</a>을 보내주세요.
+      (<a href="/disclaimer/">면책조항</a>)
+    </p>
+
+    <AdSense slot={ADSENSE.slots.bottom} />
+
+    {related.length > 0 && (
+      <section class="related">
+        <h2>{cat.label} 다른 글</h2>
+        <ul>
+          {related.map((p) => (
+            <li><a href={`/posts/${p.id}/`}>{p.data.pillar && <strong>기준표 · </strong>}{p.data.title}</a></li>
+          ))}
+        </ul>
+      </section>
+    )}
+  </article>
+</BaseLayout>

@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+# 애드센스 크롤러는 와일드카드(*) 규칙을 따르지 않는 경우가 있어 별도로 허용한다.
+User-agent: Mediapartners-Google
+Allow: /
+
+User-agent: AdsBot-Google
+Allow: /
+
+User-agent: AdsBot-Google-Mobile
+Allow: /
+
+Sitemap: https://agenwiki.online/sitemap-index.xml
