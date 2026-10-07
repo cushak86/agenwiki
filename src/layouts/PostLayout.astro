@@ -1,10 +1,10 @@
 ---
 import type { MarkdownHeading } from 'astro';
-import type { CollectionEntry } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 import BaseLayout from './BaseLayout.astro';
 import AdSense from '../components/AdSense.astro';
-import TOC from '../components/TOC.astro';
-import { ADSENSE, SITE, CATEGORIES } from '../site.config';
+import CatIcon from '../components/CatIcon.astro';
+import { ADSENSE, SITE, CATEGORIES, catOf, catStyle } from '../site.config';
 
 interface Props {
   post: CollectionEntry<'posts'>;
@@ -12,18 +12,30 @@ interface Props {
   related: CollectionEntry<'posts'>[];
 }
 const { post, headings, related } = Astro.props;
-const { title, description, pubDate, updatedDate, verifiedDate, category, keyword, tags, summary, agency, sources } = post.data;
+const { title, description, pubDate, updatedDate, verifiedDate, deadline, deadlineLabel, category, keyword, tags, summary, agency, sources } = post.data;
 
-const cat = CATEGORIES.find((c) => c.slug === category)!;
-const fmt = (d: Date) => d.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'Asia/Seoul' });
-const readMinutes = Math.max(1, Math.round(post.body!.replace(/\s/g, '').length / 600));
+const cat = catOf(category);
+const all = await getCollection('posts', ({ data }) => !data.draft);
+const sideList = (slug: string) =>
+  all
+    .filter((p) => p.data.category === slug)
+    .sort((a, b) => Number(b.data.pillar) - Number(a.data.pillar) || a.data.title.localeCompare(b.data.title, 'ko'));
+const dot = (d: Date) =>
+  `${String(d.getUTCFullYear()).slice(2)}.${String(d.getUTCMonth() + 1).padStart(2, '0')}.${String(d.getUTCDate()).padStart(2, '0')}`;
+const readMinutes = Math.max(1, Math.round(post.body!.replace(/\s/g, '').length / 500));
 const url = new URL(Astro.url.pathname, Astro.site).href;
+const toc = headings.filter((h) => h.depth === 2);
+const img = `/images/posts/${post.id}.webp`;
+const ctaSmall = deadline && deadlineLabel
+  ? `${deadlineLabel} · ${deadline.getUTCMonth() + 1}월 ${deadline.getUTCDate()}일 마감`
+  : '신청과 자격 확인은 공식 창구에서';
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Article',
   headline: title,
   description,
+  image: [`${SITE.url}/images/og/${post.id}.jpg`],
   datePublished: pubDate.toISOString(),
   dateModified: (updatedDate ?? verifiedDate ?? pubDate).toISOString(),
   inLanguage: 'ko-KR',
@@ -42,9 +54,7 @@ const breadcrumbLd = {
     { '@type': 'ListItem', position: 3, name: title, item: url },
   ],
 };
-
-// 본문 "5. 자주 묻는 질문" 섹션의 ### Q. 질문 + 답변 문단을 그대로 FAQPage 구조화 데이터로 낸다.
-// (화면에 보이는 내용과 구조화 데이터가 항상 같도록 본문에서 직접 추출)
+// 본문 "5. 자주 묻는 질문"의 ### Q. 질문 + 답변을 그대로 FAQPage 구조화 데이터로 (화면과 항상 일치)
 const strip = (s: string) =>
   s.replace(/<!--[\s\S]*?-->/g, '').replace(/\[([^\]]+)\]\([^)]*\)/g, '$1').replace(/[*_`>]/g, '').replace(/\s+/g, ' ').trim();
 const faqSection = post.body!.match(/^## 5\..*$([\s\S]*?)(?=^## 6\.|(?![\s\S]))/m)?.[1] ?? '';
@@ -58,71 +68,155 @@ const faqLd = faq.length > 0 && {
 };
 const host = (u: string) => new URL(u).hostname.replace(/^www\./, '');
 ---
-<BaseLayout title={title} description={description} ogType="article">
+<BaseLayout title={title} description={description} ogType="article" image={`/images/og/${post.id}.jpg`}>
   <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
   <script type="application/ld+json" is:inline set:html={JSON.stringify(breadcrumbLd)} />
   {faqLd && <script type="application/ld+json" is:inline set:html={JSON.stringify(faqLd)} />}
 
-  <article>
-    <header class="post-header">
-      <nav class="crumbs" aria-label="현재 위치"><a href="/">홈</a> › <a href={`/category/${cat.slug}/`}>{cat.label}</a></nav>
-      <h1>{title}</h1>
-      <p class="meta">
-        <span>{fmt(pubDate)} 작성</span>
-        <span class="verified">공식 자료 확인 {fmt(verifiedDate)}</span>
-        <span>약 {readMinutes}분</span>
-      </p>
-    </header>
+  <div class="post-band" style={catStyle(category)}>
+    <div class="wrap-wide post-band-inner">
+      <div class="post-band-text">
+        <nav class="crumbs" aria-label="현재 위치">
+          <a href="/" aria-label="홈"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 2.5 11h2.8v9.5h5.2v-6h3v6h5.2V11h2.8Z" /></svg></a>
+          <span aria-hidden="true">›</span>
+          <a href={`/category/${cat.slug}/`}>{cat.label}</a>
+        </nav>
+        <h1>{title}</h1>
+        <p class="post-sub">{description}</p>
+        <p class="post-meta">
+          <span>{dot(pubDate)}</span>
+          <span class="ok">공식 자료 확인 {dot(verifiedDate)}</span>
+          <span>읽는 시간 {readMinutes}분</span>
+        </p>
+      </div>
+      <div class="post-band-art"><img src={img} alt="" width="300" height="300" /></div>
+    </div>
+  </div>
 
-    <aside class="summary" aria-label="한눈에 보기">
-      <strong class="summary-title">한눈에 보기</strong>
-      <dl>
-        <div><dt>지원 대상</dt><dd>{summary.target}</dd></div>
-        <div><dt>지원 내용</dt><dd>{summary.benefit}</dd></div>
-        <div><dt>신청 기간</dt><dd>{summary.period}</dd></div>
-      </dl>
+  <div class="wrap-wide post-layout" style={catStyle(category)}>
+    <aside class="side" aria-label="주제별 글 목록">
+      <div class="side-inner">
+        <p class="side-title">지원금 가이드</p>
+        {CATEGORIES.map((c) => (
+          <details class="side-cat" open={c.slug === category} style={`--c:${c.color}`}>
+            <summary>{c.label}</summary>
+            <ul>
+              {sideList(c.slug).map((p) => (
+                <li><a href={`/posts/${p.id}/`} aria-current={p.id === post.id ? 'page' : undefined}>{p.data.keyword}</a></li>
+              ))}
+            </ul>
+          </details>
+        ))}
+      </div>
     </aside>
 
-    <AdSense slot={ADSENSE.slots.top} />
-
-    <TOC headings={headings} />
-
-    <div class="prose">
-      <slot />
-    </div>
-
-    <section class="sources" aria-label="근거 자료">
-      <h2>이 글의 근거 자료</h2>
-      <ul>
-        {sources.map((s) => (
-          <li><a href={s.url} rel="nofollow noopener" target="_blank">{s.name}</a> <span class="host">{host(s.url)}</span></li>
-        ))}
-      </ul>
-      <p class="agency">
-        관할 기관: <strong>{agency.name}</strong>
-        {agency.phone && <> · 문의 <strong>{agency.phone}</strong></>}
-        {' · '}<a href={agency.url} rel="nofollow noopener" target="_blank">공식 사이트</a>
-      </p>
-    </section>
-
-    <p class="post-notice">
-      이 글은 {fmt(verifiedDate)} 기준 공식 자료를 확인해 작성했습니다. 에이전위키는 정부 기관이 아니며,
-      실제 자격 여부와 지급액은 관할 기관의 심사로 결정됩니다. 제도는 공고에 따라 바뀔 수 있으니 신청 직전에
-      관할 기관 안내를 다시 확인하세요. 내용에 오류가 있다면 <a href="/contact/">정정 요청</a>을 보내주세요.
-      (<a href="/disclaimer/">면책조항</a>)
-    </p>
-
-    <AdSense slot={ADSENSE.slots.bottom} />
-
-    {related.length > 0 && (
-      <section class="related">
-        <h2>{cat.label} 다른 글</h2>
+    <article class="post-main">
+      <section class="sum3" aria-label="3줄 요약">
+        <p class="sum3-title">
+          <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 6a3 3 0 0 1 3-3h18a3 3 0 0 1 3 3v14a3 3 0 0 1-3 3H13l-7 6v-6H7a3 3 0 0 1-3-3Z" fill="var(--c)" /><path d="m10.5 13 3.5 3.5 7.5-7.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          3줄 요약
+        </p>
         <ul>
-          {related.map((p) => (
-            <li><a href={`/posts/${p.id}/`}>{p.data.pillar && <strong>기준표 · </strong>}{p.data.title}</a></li>
-          ))}
+          <li><b>지원 대상</b> {summary.target}</li>
+          <li><b>지원 내용</b> {summary.benefit}</li>
+          <li><b>신청 기간</b> {summary.period}</li>
         </ul>
       </section>
-    )}
-  </article>
+
+      <a class="cta" href={agency.url} rel="nofollow noopener" target="_blank">
+        <span>
+          <small>{ctaSmall}</small>
+          <strong>{agency.name} 공식 사이트 바로가기</strong>
+        </span>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" /></svg>
+      </a>
+
+      <details class="toc" open>
+        <summary>목차</summary>
+        <ol>
+          {toc.map((h) => <li><a href={`#${h.slug}`}>{h.text.replace(/^\d+\.\s*/, '')}</a></li>)}
+        </ol>
+      </details>
+
+      <AdSense slot={ADSENSE.slots.top} />
+
+      <div class="prose">
+        <slot />
+      </div>
+
+      <section class="sources" aria-label="근거 자료">
+        <h2>이 글의 근거 자료</h2>
+        <ul>
+          {sources.map((s) => (
+            <li><a href={s.url} rel="nofollow noopener" target="_blank">{s.name}</a> <span class="host">{host(s.url)}</span></li>
+          ))}
+        </ul>
+        <p class="agency">
+          관할 기관 <strong>{agency.name}</strong>
+          {agency.phone && <> · 문의 <strong>{agency.phone}</strong></>}
+        </p>
+      </section>
+
+      <p class="post-notice">
+        이 글은 {dot(verifiedDate)} 기준 공식 자료를 확인해 작성했습니다. 에이전위키는 정부 기관이 아니며,
+        실제 자격 여부와 지급액은 관할 기관의 심사로 결정됩니다. 제도는 공고에 따라 바뀔 수 있으니 신청 직전에
+        관할 기관 안내를 다시 확인하세요. 오류를 발견하셨다면 <a href="/contact/">정정 요청</a>을 보내주세요.
+        (<a href="/disclaimer/">면책조항</a>)
+      </p>
+
+      <AdSense slot={ADSENSE.slots.bottom} />
+
+      {related.length > 0 && (
+        <section class="related">
+          <h2>{cat.label} 다른 글</h2>
+          <ul class="related-list">
+            {related.map((p) => (
+              <li>
+                <a href={`/posts/${p.id}/`}>
+                  <span class="related-text">
+                    <span class="cat-label"><CatIcon shape={cat.icon} color={cat.color} /> {p.data.pillar ? '기준표' : cat.label}</span>
+                    <strong>{p.data.title}</strong>
+                  </span>
+                  <img src={`/images/posts/${p.id}.webp`} alt="" width="88" height="88" loading="lazy" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </article>
+  </div>
+
+  <div class="fab" role="toolbar" aria-label="읽기 도구">
+    <button type="button" data-fs-btn aria-label="글자 크기 바꾸기"><span class="fs-a">가</span><span class="fs-b">가</span></button>
+    <button type="button" data-share aria-label="공유하기">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3M7 8l5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6" /></svg>
+    </button>
+    <button type="button" data-top aria-label="맨 위로">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7" /></svg>
+    </button>
+  </div>
+  <div class="toast" role="status" aria-live="polite" data-toast></div>
+
+  <script is:inline>
+    (() => {
+      const root = document.documentElement;
+      const toast = document.querySelector('[data-toast]');
+      const say = (m) => { toast.textContent = m; toast.classList.add('on'); setTimeout(() => toast.classList.remove('on'), 1800); };
+      const sizes = ['', 'l', 'xl'];
+      document.querySelector('[data-fs-btn]').addEventListener('click', () => {
+        const next = sizes[(sizes.indexOf(root.dataset.fs || '') + 1) % sizes.length];
+        if (next) root.dataset.fs = next; else delete root.dataset.fs;
+        try { localStorage.setItem('aw-fs', next); } catch (e) {}
+        say(['기본 글자 크기', '큰 글자', '아주 큰 글자'][sizes.indexOf(next)]);
+      });
+      document.querySelector('[data-share]').addEventListener('click', async () => {
+        try {
+          if (navigator.share) await navigator.share({ title: document.title, url: location.href });
+          else { await navigator.clipboard.writeText(location.href); say('링크를 복사했어요'); }
+        } catch (e) {}
+      });
+      document.querySelector('[data-top]').addEventListener('click', () => scrollTo({ top: 0, behavior: 'smooth' }));
+    })();
+  </script>
 </BaseLayout>

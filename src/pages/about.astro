@@ -6,10 +6,13 @@ import { SITE, CATEGORIES } from '../site.config';
   title="사이트 소개"
   description={`${SITE.title}(${SITE.brand})는 정부지원금과 공공기관 혜택의 자격·지급액·신청 절차를 공식 자료 기준으로 정리하는 신청 가이드 위키입니다. 설립 목적과 편집 원칙을 소개합니다.`}
 >
-  <div class="page">
-    <h1>사이트 소개</h1>
-    <p class="lead">{SITE.title}({SITE.brand}, {SITE.url.replace('https://', '')})는 정부지원금·공공기관 혜택 신청 가이드 위키입니다.</p>
-
+  <section class="page-band">
+    <div class="wrap page-band-inner">
+      <h1>사이트 소개</h1>
+      <p class="lead">{SITE.title}({SITE.brand}, {SITE.url.replace('https://', '')})는 정부지원금·공공기관 혜택 신청 가이드 위키입니다.</p>
+    </div>
+  </section>
+  <div class="wrap sec page">
     <div class="prose">
       <h2>왜 만들었나요</h2>
       <p>

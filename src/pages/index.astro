@@ -1,63 +1,206 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { SITE, CATEGORIES } from '../site.config';
+import CatIcon from '../components/CatIcon.astro';
+import { SITE, CATEGORIES, HOME_PICK, catOf, catStyle } from '../site.config';
 
 const posts = (await getCollection('posts', ({ data }) => !data.draft))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf() || a.id.localeCompare(b.id));
+const bySlug = Object.fromEntries(posts.map((p) => [p.id, p]));
+const slides = CATEGORIES.map((c) => ({ c, items: c.featured.map((s) => bySlug[s]).filter(Boolean) }));
+const pick = bySlug[HOME_PICK];
+const more = ['energy-voucher', 'earned-income-tax-credit', 'parental-leave-benefit', 'new-start-fund'].map((s) => bySlug[s]).filter(Boolean);
+const deadlines = posts.filter((p) => p.data.deadline).sort((a, b) => a.data.deadline!.valueOf() - b.data.deadline!.valueOf());
 const pillar = posts.find((p) => p.data.pillar);
-const inCat = (slug: string) => posts.filter((p) => p.data.category === slug);
+const md = (d: Date) => `${d.getUTCMonth() + 1}.${d.getUTCDate()}`;
+const iso = (d: Date) => d.toISOString().slice(0, 10);
+const count = (slug: string) => posts.filter((p) => p.data.category === slug).length;
+const ordered = CATEGORIES.flatMap((c) => posts.filter((p) => p.data.category === c.slug));
 ---
-<BaseLayout title={SITE.title} description={SITE.description} wide>
-  <section class="hero">
-    <p class="eyebrow">정부지원금 · 공공기관 혜택 신청 가이드 위키</p>
-    <h1>받을 수 있는 지원금,<br />자격부터 신청까지 한 번에 확인하세요</h1>
-    <p>
-      흩어져 있는 정부 공고와 기관 안내를 읽기 쉬운 순서로 다시 정리합니다.
-      모든 글은 지원 대상 · 지급액 계산 · 단계별 신청 방법 · 공식 문의처를 담고,
-      글마다 공식 자료를 확인한 날짜를 함께 적습니다.
-    </p>
+<BaseLayout title={SITE.title} description={SITE.description}>
+  <section class="hero-band" data-hero style={`--band:${CATEGORIES[0].art}`}>
+    <div class="wrap-wide">
+      <h1 class="sr-only">에이전위키 — 정부지원금·공공기관 혜택 신청 가이드 위키</h1>
+      <div class="hero-card">
+        <div class="hero-pager" aria-label="추천 주제 넘기기">
+          <button type="button" data-prev aria-label="이전 주제">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m15 5-7 7 7 7"/></svg>
+          </button>
+          <span><b data-cur>1</b> / {slides.length}</span>
+          <button type="button" data-next aria-label="다음 주제">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="m9 5 7 7-7 7"/></svg>
+          </button>
+        </div>
+        {slides.map(({ c, items }, i) => (
+          <div class="slide" data-band={c.art} hidden={i > 0} style={catStyle(c.slug)}>
+            <div class="slide-text">
+              <a class="cat-label" href={`/category/${c.slug}/`}><CatIcon shape={c.icon} color={c.color} size={18} /> {c.label}</a>
+              <h2 class="slide-title">{c.headline}</h2>
+              <ol class="slide-list">
+                {items.map((p, n) => (
+                  <li><a href={`/posts/${p.id}/`}><span class="n">{n + 1}</span><span class="t">{p.data.title}</span></a></li>
+                ))}
+              </ol>
+            </div>
+            <div class="slide-art"><img src={`/images/cat/${c.slug}.webp`} alt="" width="360" height="360" loading={i === 0 ? 'eager' : 'lazy'} /></div>
+          </div>
+        ))}
+      </div>
+    </div>
   </section>
 
-  {pillar && (
-    <a class="pillar-card" href={`/posts/${pillar.id}/`}>
-      <span class="cat">기준표</span>
-      <strong>{pillar.data.title}</strong>
-      <span class="pillar-desc">대부분의 복지 제도가 쓰는 소득 기준입니다. 내 가구가 몇 %에 해당하는지 먼저 확인하세요.</span>
-    </a>
-  )}
-
-  {CATEGORIES.map((c) => {
-    const list = inCat(c.slug);
-    return list.length > 0 && (
-      <section class="cat-block">
-        <div class="cat-head">
-          <h2><a href={`/category/${c.slug}/`}>{c.label}</a></h2>
-          <a class="more" href={`/category/${c.slug}/`}>전체 {list.length}편 →</a>
+  <div class="wrap-wide home-grid">
+    <div class="col">
+      <section class="card">
+        <h2 class="card-title">키워드로 바로 찾기</h2>
+        <div class="chips">
+          {ordered.map((p) => <a class="chip" href={`/posts/${p.id}/`}>{p.data.keyword}</a>)}
         </div>
-        <p class="cat-desc">{c.desc}</p>
-        <ul class="card-grid">
-          {list.map((p) => (
-            <li>
+      </section>
+
+      {pick && (
+        <section class="card" style={catStyle(pick.data.category)}>
+          <h2 class="card-title">지금 챙겨야 할 글</h2>
+          <a class="pick" href={`/posts/${pick.id}/`}>
+            <span class="cat-label"><CatIcon shape={catOf(pick.data.category).icon} color={catOf(pick.data.category).color} /> {catOf(pick.data.category).label}</span>
+            <strong>{pick.data.title}</strong>
+          </a>
+          <ul class="sum-bubble">
+            <li><b>대상</b> {pick.data.summary.target}</li>
+            <li><b>혜택</b> {pick.data.summary.benefit}</li>
+            <li><b>기간</b> {pick.data.summary.period}</li>
+          </ul>
+          <ul class="mini-list">
+            {more.map((p) => (
+              <li style={catStyle(p.data.category)}>
+                <a href={`/posts/${p.id}/`}>
+                  <span class="cat-label"><CatIcon shape={catOf(p.data.category).icon} color={catOf(p.data.category).color} /> {catOf(p.data.category).label}</span>
+                  <strong>{p.data.title}</strong>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </div>
+
+    <div class="col">
+      <section class="card">
+        <h2 class="card-title">마감이 다가오는 지원금</h2>
+        <ol class="rank" data-deadlines>
+          {deadlines.map((p, i) => (
+            <li data-deadline={iso(p.data.deadline!)} style={catStyle(p.data.category)}>
               <a href={`/posts/${p.id}/`}>
-                <strong>{p.data.title}</strong>
-                <span>{p.data.summary.target}</span>
+                <span class="rank-n">{i + 1}</span>
+                <span class="rank-body">
+                  <span class="cat-label"><CatIcon shape={catOf(p.data.category).icon} color={catOf(p.data.category).color} /> {catOf(p.data.category).label}</span>
+                  <strong>{p.data.deadlineLabel ?? p.data.title}</strong>
+                  <span class="due">{md(p.data.deadline!)} 마감 <em class="dday" data-dday></em></span>
+                </span>
+                <img src={`/images/posts/${p.id}.webp`} alt="" width="88" height="88" loading="lazy" />
               </a>
             </li>
           ))}
-        </ul>
+        </ol>
+        <p class="card-note">마감일은 각 기관 공고 기준입니다. 예산이 소진되면 더 일찍 끝날 수 있어요.</p>
       </section>
-    );
-  })}
 
-  <section class="how">
-    <h2>에이전위키 글은 이렇게 만듭니다</h2>
-    <ol>
-      <li><strong>공식 자료부터</strong> — 소관 부처·기관의 공고와 보도자료를 먼저 확인하고, 수치는 그 자료에서만 가져옵니다.</li>
-      <li><strong>신청자 순서대로</strong> — 자격 확인 → 금액 계산 → 신청 → 사후 관리 순서로 정리합니다.</li>
-      <li><strong>기준일 표시</strong> — 글마다 공식 자료를 확인한 날짜와 근거 자료 링크를 남깁니다.</li>
-      <li><strong>정정 반영</strong> — 제도가 바뀌거나 오류 제보가 오면 확인 후 본문과 기준일을 고칩니다.</li>
-    </ol>
-    <p><a href="/about/">편집 원칙 자세히 보기 →</a></p>
+      {pillar && (
+        <section class="card">
+          <h2 class="card-title">꼭 알아야 할 정보</h2>
+          <a class="feature" href={`/posts/${pillar.id}/`} style={catStyle(pillar.data.category)}>
+            <span class="feature-label">기준표</span>
+            <strong>{pillar.data.title}</strong>
+            <span class="feature-desc">대부분의 복지 제도가 쓰는 소득 기준입니다. 우리 집이 몇 %인지 먼저 확인하세요.</span>
+            <img src={`/images/posts/${pillar.id}.webp`} alt="" width="320" height="320" loading="lazy" />
+          </a>
+        </section>
+      )}
+    </div>
+  </div>
+
+  <section class="wrap-wide sec">
+    <h2 class="sec-title">주제별로 찾아보기</h2>
+    <div class="topic-row">
+      {CATEGORIES.map((c) => (
+        <a class="topic" href={`/category/${c.slug}/`} style={catStyle(c.slug)}>
+          <span class="topic-label"><CatIcon shape={c.icon} color="#fff" /> {c.short}</span>
+          <span class="topic-count">총 {count(c.slug)}편</span>
+          <strong>{c.label}</strong>
+          <p>{c.desc}</p>
+          <img src={`/images/cat/${c.slug}.webp`} alt="" width="240" height="240" loading="lazy" />
+        </a>
+      ))}
+    </div>
   </section>
+
+  <section class="wrap-wide sec">
+    <h2 class="sec-title">전체 가이드 <span>{posts.length}편</span></h2>
+    <ul class="grid-cards">
+      {ordered.map((p) => (
+        <li style={catStyle(p.data.category)}>
+          <a href={`/posts/${p.id}/`}>
+            <span class="thumb"><img src={`/images/posts/${p.id}.webp`} alt="" width="320" height="320" loading="lazy" /></span>
+            <span class="cat-label"><CatIcon shape={catOf(p.data.category).icon} color={catOf(p.data.category).color} /> {catOf(p.data.category).label}</span>
+            <strong>{p.data.title}</strong>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="wrap-wide sec">
+    <div class="how">
+      <h2 class="sec-title">에이전위키 글은 이렇게 만듭니다</h2>
+      <ol class="how-steps">
+        <li><b>01</b><strong>공식 자료부터</strong><span>소관 부처·기관의 공고와 보도자료를 먼저 확인하고, 수치는 그 자료에서만 가져옵니다.</span></li>
+        <li><b>02</b><strong>신청자 순서대로</strong><span>자격 확인 → 금액 계산 → 신청 → 주의사항 순서로 정리합니다.</span></li>
+        <li><b>03</b><strong>확인일 표시</strong><span>글마다 공식 자료를 확인한 날짜와 근거 자료 링크를 남깁니다.</span></li>
+        <li><b>04</b><strong>정정 반영</strong><span>제도가 바뀌거나 오류 제보가 오면 확인 후 본문과 확인일을 고칩니다.</span></li>
+      </ol>
+      <a class="more-link" href="/about/">편집 원칙 자세히 보기</a>
+    </div>
+  </section>
+
+  <script is:inline>
+    (() => {
+      // 히어로 슬라이드
+      const hero = document.querySelector('[data-hero]');
+      if (hero) {
+        const slides = [...hero.querySelectorAll('.slide')];
+        const cur = hero.querySelector('[data-cur]');
+        let i = 0, timer;
+        const show = (n) => {
+          i = (n + slides.length) % slides.length;
+          slides.forEach((s, k) => (s.hidden = k !== i));
+          hero.style.setProperty('--band', slides[i].dataset.band);
+          cur.textContent = i + 1;
+        };
+        const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const play = () => { if (!reduce) { clearInterval(timer); timer = setInterval(() => show(i + 1), 6500); } };
+        hero.querySelector('[data-prev]').addEventListener('click', () => { show(i - 1); play(); });
+        hero.querySelector('[data-next]').addEventListener('click', () => { show(i + 1); play(); });
+        hero.addEventListener('mouseenter', () => clearInterval(timer));
+        hero.addEventListener('mouseleave', play);
+        hero.addEventListener('focusin', () => clearInterval(timer));
+        play();
+      }
+      // 마감 D-day (KST 기준), 지난 항목은 숨기고 순번을 다시 매김
+      const list = document.querySelector('[data-deadlines]');
+      if (list) {
+        const now = new Date(Date.now() + 9 * 3600 * 1000);
+        const today = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+        let n = 0;
+        list.querySelectorAll('li').forEach((li) => {
+          const d = Date.parse(li.dataset.deadline + 'T00:00:00Z');
+          const days = Math.round((d - today) / 86400000);
+          if (days < 0) { li.hidden = true; return; }
+          li.querySelector('.rank-n').textContent = ++n;
+          const el = li.querySelector('[data-dday]');
+          el.textContent = days === 0 ? 'D-DAY' : `D-${days}`;
+          if (days <= 7) el.classList.add('soon');
+        });
+      }
+    })();
+  </script>
 </BaseLayout>

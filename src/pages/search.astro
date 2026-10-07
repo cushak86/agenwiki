@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="검색" description="에이전위키의 정부지원금·공공기관 혜택 가이드를 지원금 이름이나 키워드로 검색합니다.">
+  <section class="page-band">
+    <div class="wrap page-band-inner">
+      <h1>무엇을 찾고 계세요?</h1>
+      <form class="search-box" role="search" data-search-form>
+        <input type="search" name="q" placeholder="예: 실업급여, 전세대출, 중위소득" aria-label="검색어" autocomplete="off" data-search-input />
+        <button type="submit">검색</button>
+      </form>
+    </div>
+  </section>
+  <div class="wrap sec">
+    <p class="search-status" data-search-status aria-live="polite"></p>
+    <ul class="list-cards" data-search-results></ul>
+  </div>
+  <script is:inline>
+    (async () => {
+      const input = document.querySelector('[data-search-input]');
+      const out = document.querySelector('[data-search-results]');
+      const status = document.querySelector('[data-search-status]');
+      const q0 = new URLSearchParams(location.search).get('q') || '';
+      input.value = q0;
+      const res = await fetch('/search.json');
+      const items = await res.json();
+      const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+      const render = (q) => {
+        const terms = q.toLowerCase().split(/\s+/).filter(Boolean);
+        const list = terms.length
+          ? items.filter((it) => terms.every((t) => it.text.includes(t)))
+          : items;
+        status.textContent = terms.length ? `'${q}' 검색 결과 ${list.length}건` : `전체 가이드 ${items.length}편`;
+        out.innerHTML = list.map((it) => `
+          <li style="--c:${it.color}">
+            <a href="/posts/${it.slug}/">
+              <span class="list-text">
+                <span class="cat-label">${esc(it.cat)}</span>
+                <strong>${esc(it.title)}</strong>
+                <span class="excerpt">${esc(it.description)}</span>
+              </span>
+              <span class="thumb" style="background:${it.art}"><img src="/images/posts/${it.slug}.webp" alt="" width="140" height="140" loading="lazy"></span>
+            </a>
+          </li>`).join('') || '<li class="empty">검색 결과가 없습니다. 다른 키워드로 찾아보세요.</li>';
+      };
+      render(q0);
+      document.querySelector('[data-search-form]').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const q = input.value.trim();
+        history.replaceState(null, '', q ? `?q=${encodeURIComponent(q)}` : location.pathname);
+        render(q);
+      });
+      input.addEventListener('input', () => render(input.value.trim()));
+    })();
+  </script>
+</BaseLayout>

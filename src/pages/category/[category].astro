@@ -1,7 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { CATEGORIES } from '../../site.config';
+import CatIcon from '../../components/CatIcon.astro';
+import { CATEGORIES, catStyle } from '../../site.config';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts', ({ data }) => !data.draft);
@@ -17,26 +18,55 @@ export async function getStaticPaths() {
 }
 
 const { cat, posts } = Astro.props;
-const fmt = (d: Date) => d.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'Asia/Seoul' });
+const dot = (d: Date) =>
+  `${String(d.getUTCFullYear()).slice(2)}.${String(d.getUTCMonth() + 1).padStart(2, '0')}.${String(d.getUTCDate()).padStart(2, '0')}`;
 const description = `${cat.label} 분야 정부지원금과 공공기관 혜택의 자격 요건, 지급액, 신청 방법 가이드 모음. ${cat.desc}을 공식 자료 기준으로 정리합니다.`;
+const others = CATEGORIES.filter((c) => c.slug !== cat.slug);
 ---
 <BaseLayout title={`${cat.label} 지원금·혜택 가이드`} description={description}>
-  <section class="hero">
-    <h1>{cat.label}</h1>
-    <p>{cat.desc}을 공식 자료 기준으로 정리했습니다.</p>
+  <section class="cat-band" style={catStyle(cat.slug)}>
+    <div class="wrap-wide cat-band-inner">
+      <div>
+        <span class="cat-label"><CatIcon shape={cat.icon} color={cat.color} size={18} /> 주제별 가이드</span>
+        <h1>{cat.label}</h1>
+        <p>{cat.desc}을 공식 자료 기준으로 정리했습니다.</p>
+        <span class="cat-count">총 {posts.length}편</span>
+      </div>
+      <img src={`/images/cat/${cat.slug}.webp`} alt="" width="280" height="280" />
+    </div>
   </section>
 
-  {posts.length === 0 ? (
-    <p class="meta" style="padding:32px 0">아직 등록된 글이 없습니다.</p>
-  ) : (
-    <ul class="post-list">
-      {posts.map((post) => (
-        <li>
-          <h2><a href={`/posts/${post.id}/`}>{post.data.title}</a></h2>
-          <p class="excerpt">{post.data.description}</p>
-          <p class="meta"><span>공식 자료 확인 {fmt(post.data.verifiedDate)}</span><span>{post.data.agency.name}</span></p>
-        </li>
+  <div class="wrap-wide sec" style={catStyle(cat.slug)}>
+    {posts.length === 0 ? (
+      <p class="empty">아직 등록된 글이 없습니다.</p>
+    ) : (
+      <ul class="list-cards">
+        {posts.map((p) => (
+          <li>
+            <a href={`/posts/${p.id}/`}>
+              <span class="list-text">
+                <span class="cat-label"><CatIcon shape={cat.icon} color={cat.color} /> {p.data.pillar ? '기준표' : p.data.keyword}</span>
+                <strong>{p.data.title}</strong>
+                <span class="excerpt">{p.data.description}</span>
+                <span class="meta">공식 자료 확인 {dot(p.data.verifiedDate)} · {p.data.agency.name}</span>
+              </span>
+              <span class="thumb"><img src={`/images/posts/${p.id}.webp`} alt="" width="140" height="140" loading="lazy" /></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+
+    <h2 class="sec-title other-title">다른 주제 둘러보기</h2>
+    <div class="topic-row three">
+      {others.map((c) => (
+        <a class="topic" href={`/category/${c.slug}/`} style={catStyle(c.slug)}>
+          <span class="topic-label"><CatIcon shape={c.icon} color="#fff" /> {c.short}</span>
+          <strong>{c.label}</strong>
+          <p>{c.desc}</p>
+          <img src={`/images/cat/${c.slug}.webp`} alt="" width="200" height="200" loading="lazy" />
+        </a>
       ))}
-    </ul>
-  )}
+    </div>
+  </div>
 </BaseLayout>

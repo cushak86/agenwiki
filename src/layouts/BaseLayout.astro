@@ -1,20 +1,26 @@
 ---
+import { getCollection } from 'astro:content';
 import { SITE, CATEGORIES, ADSENSE } from '../site.config';
+import CatIcon from '../components/CatIcon.astro';
 import '../styles/global.css';
 
 interface Props {
   title: string;
   description: string;
   ogType?: 'website' | 'article';
-  wide?: boolean;
+  image?: string;
   ads?: boolean; // 콘텐츠 없는 화면(404 등)은 false — 정책상 광고 금지
 }
-const { title, description, ogType = 'website', wide = false, ads = true } = Astro.props;
+const { title, description, ogType = 'website', image = SITE.ogImage, ads = true } = Astro.props;
 const path = Astro.url.pathname;
 const canonical = new URL(path, Astro.site).href;
+const ogImage = new URL(image, Astro.site).href;
 const fullTitle = title === SITE.title ? `${SITE.title} — ${SITE.tagline}` : `${title} | ${SITE.title}`;
-const wrap = wide ? 'wrap-wide' : 'wrap';
-const orgLd = {
+const posts = await getCollection('posts', ({ data }) => !data.draft);
+const byCat = (slug: string) => posts.filter((p) => p.data.category === slug).sort((a, b) => Number(b.data.pillar) - Number(a.data.pillar) || a.data.title.localeCompare(b.data.title, 'ko'));
+const currentPost = path.match(/^\/posts\/([^/]+)/)?.[1];
+const currentCat = path.match(/^\/category\/([^/]+)/)?.[1] ?? posts.find((p) => p.id === currentPost)?.data.category;
+const webLd = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: SITE.title,
@@ -22,6 +28,11 @@ const orgLd = {
   url: SITE.url,
   inLanguage: 'ko-KR',
   description: SITE.description,
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: { '@type': 'EntryPoint', urlTemplate: `${SITE.url}/search/?q={search_term_string}` },
+    'query-input': 'required name=search_term_string',
+  },
 };
 ---
 <!doctype html>
@@ -34,6 +45,7 @@ const orgLd = {
     <link rel="canonical" href={canonical} />
     <meta name="google-site-verification" content="JQ07wJjhBF42tXyNQitGgdkk03TyUGeHjY3RewluX9U" />
     <meta name="naver-site-verification" content="c1adb4b8fea62db5e2a41e7d5182fe252236e679" />
+    <meta name="theme-color" content="#ffffff" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="alternate" type="application/rss+xml" title={SITE.title} href="/rss.xml" />
@@ -42,14 +54,21 @@ const orgLd = {
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:locale" content="ko_KR" />
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={ogImage} />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
     />
-    {path === '/' && <script type="application/ld+json" is:inline set:html={JSON.stringify(orgLd)} />}
+    <script is:inline>
+      try { const fs = localStorage.getItem('aw-fs'); if (fs) document.documentElement.dataset.fs = fs; } catch (e) {}
+    </script>
+    {path === '/' && <script type="application/ld+json" is:inline set:html={JSON.stringify(webLd)} />}
     {ADSENSE.client && ads && (
       <script
         async
@@ -59,43 +78,100 @@ const orgLd = {
     )}
   </head>
   <body>
-    <header class="site-header">
-      <div class={`${wrap} bar`}>
-        <a href="/" class="brand" aria-label={`${SITE.title} 홈`}>agen<span>wiki</span></a>
-        <nav class="nav" aria-label="카테고리">
+    <a class="skip" href="#main">본문 바로가기</a>
+    <header class="gnb">
+      <div class="gnb-bar wrap-wide">
+        <a href="/" class="logo" aria-label={`${SITE.title} 홈`}>agen<b>wiki</b><i aria-hidden="true"></i></a>
+        <nav class="gnb-nav" aria-label="주요 메뉴">
+          <a href="/" aria-current={path === '/' ? 'page' : undefined}>홈</a>
           {CATEGORIES.map((c) => (
-            <a
-              href={`/category/${c.slug}/`}
-              aria-current={path.startsWith(`/category/${c.slug}`) ? 'page' : undefined}
-            >{c.label}</a>
+            <a href={`/category/${c.slug}/`} aria-current={currentCat === c.slug ? 'page' : undefined}>{c.short}</a>
           ))}
-          <a href="/about/" aria-current={path.startsWith('/about') ? 'page' : undefined}>소개</a>
+          <a href="/posts/median-income-2027/" aria-current={currentPost === 'median-income-2027' ? 'page' : undefined}>중위소득표</a>
         </nav>
+        <div class="gnb-tools">
+          <a href="/search/" class="icon-btn" aria-label="검색">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          </a>
+          <button type="button" class="icon-btn" aria-label="전체 메뉴 열기" aria-expanded="false" aria-controls="allmenu" data-menu-open>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M10 18h10"/></svg>
+          </button>
+        </div>
       </div>
     </header>
 
-    <main class={wrap}>
+    <div class="allmenu" id="allmenu" hidden>
+      <div class="allmenu-panel" role="dialog" aria-modal="true" aria-label="전체 메뉴">
+        <div class="allmenu-head">
+          <a href="/" class="logo">agen<b>wiki</b><i aria-hidden="true"></i></a>
+          <button type="button" class="icon-btn" aria-label="전체 메뉴 닫기" data-menu-close>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+        <form class="allmenu-search" action="/search/" role="search">
+          <input type="search" name="q" placeholder="지원금 이름이나 키워드로 검색" aria-label="검색어" />
+        </form>
+        <p class="allmenu-label">주제별 지원금 가이드</p>
+        {CATEGORIES.map((c) => (
+          <details class="allmenu-cat" style={`--c:${c.color}`} open={currentCat === c.slug}>
+            <summary><CatIcon shape={c.icon} color={c.color} size={15} /> {c.label} <span>{byCat(c.slug).length}</span></summary>
+            <ul>
+              <li><a href={`/category/${c.slug}/`}>{c.label} 전체 보기</a></li>
+              {byCat(c.slug).map((p) => <li><a href={`/posts/${p.id}/`}>{p.data.keyword}</a></li>)}
+            </ul>
+          </details>
+        ))}
+        <p class="allmenu-label">서비스</p>
+        <ul class="allmenu-links">
+          <li><a href="/about/">사이트 소개</a></li>
+          <li><a href="/contact/">문의하기 · 정정 요청</a></li>
+          <li><a href="/privacy/">개인정보처리방침</a></li>
+          <li><a href="/disclaimer/">면책조항</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <main id="main">
       <slot />
     </main>
 
-    <footer class="site-footer">
-      <div class={wrap}>
-        <div class="links">
-          <a href="/">홈</a>
+    <footer class="footer">
+      <div class="wrap-wide">
+        <div class="footer-top">
+          <div>
+            <a href="/" class="logo">agen<b>wiki</b><i aria-hidden="true"></i></a>
+            <p class="footer-tag">{SITE.tagline}</p>
+          </div>
+          <nav class="footer-cats" aria-label="카테고리">
+            {CATEGORIES.map((c) => <a href={`/category/${c.slug}/`}>{c.label}</a>)}
+          </nav>
+        </div>
+        <div class="footer-links">
           <a href="/about/">사이트 소개</a>
           <a href="/contact/">문의하기</a>
-          <a href="/privacy/">개인정보처리방침</a>
+          <a href="/privacy/"><strong>개인정보처리방침</strong></a>
           <a href="/disclaimer/">면책조항</a>
           <a href="/rss.xml">RSS</a>
         </div>
-        <p><strong>{SITE.title}({SITE.brand})</strong> — {SITE.tagline}</p>
-        <p class="disclaimer">
+        <p class="footer-note">
           에이전위키는 정부·공공기관의 공식 사이트가 아니며, 어떤 기관과도 제휴하지 않은 비공식 정보 안내 사이트입니다.
           모든 글은 작성 시점의 공식 자료를 기준으로 하며, 실제 자격·지급액·신청 일정은 관할 기관의 공고와 심사 결과에 따라 달라질 수 있습니다.
-          신청 전에는 반드시 각 기관의 공식 안내를 확인하시기 바랍니다. 자세한 내용은 <a href="/disclaimer/">면책조항</a>을 참고하세요.
+          신청 전에는 반드시 각 기관의 공식 안내를 확인하시기 바랍니다.
         </p>
-        <p>© {new Date().getFullYear()} {SITE.brand}. All rights reserved.</p>
+        <p class="footer-copy">© {new Date().getFullYear()} {SITE.brand}. All rights reserved. · 문의 {SITE.email}</p>
       </div>
     </footer>
+
+    <script is:inline>
+      (() => {
+        const menu = document.getElementById('allmenu');
+        const openBtn = document.querySelector('[data-menu-open]');
+        const close = () => { menu.hidden = true; document.body.classList.remove('lock'); openBtn.setAttribute('aria-expanded', 'false'); openBtn.focus(); };
+        openBtn.addEventListener('click', () => { menu.hidden = false; document.body.classList.add('lock'); openBtn.setAttribute('aria-expanded', 'true'); menu.querySelector('[data-menu-close]').focus(); });
+        menu.querySelector('[data-menu-close]').addEventListener('click', close);
+        menu.addEventListener('click', (e) => { if (e.target === menu) close(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu.hidden) close(); });
+      })();
+    </script>
   </body>
 </html>
