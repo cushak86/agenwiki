@@ -5,7 +5,7 @@ import { SITE } from './src/site.config.ts';
 
 export default defineConfig({
   site: SITE.url,
-  integrations: [sitemap()],
+  integrations: [sitemap({ filter: (page) => !page.includes('/search/') })],
   markdown: {
     shikiConfig: { theme: 'github-dark', wrap: true },
   },

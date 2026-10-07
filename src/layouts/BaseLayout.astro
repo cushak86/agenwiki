@@ -11,7 +11,7 @@ interface Props {
   image?: string;
   ads?: boolean; // 콘텐츠 없는 화면(404 등)은 false — 정책상 광고 금지
 }
-const { title, description, ogType = 'website', image = SITE.ogImage, ads = true } = Astro.props;
+const { title, description, ogType = 'website', image = SITE.ogImage, ads = true, noindex = false } = Astro.props;
 const path = Astro.url.pathname;
 const canonical = new URL(path, Astro.site).href;
 const ogImage = new URL(image, Astro.site).href;
@@ -43,6 +43,7 @@ const webLd = {
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
     <meta name="google-site-verification" content="JQ07wJjhBF42tXyNQitGgdkk03TyUGeHjY3RewluX9U" />
     <meta name="naver-site-verification" content="c1adb4b8fea62db5e2a41e7d5182fe252236e679" />
     <meta name="theme-color" content="#ffffff" />
