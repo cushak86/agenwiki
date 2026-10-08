@@ -15,7 +15,9 @@ const pillar = posts.find((p) => p.data.pillar);
 const md = (d: Date) => `${d.getUTCMonth() + 1}.${d.getUTCDate()}`;
 const iso = (d: Date) => d.toISOString().slice(0, 10);
 const count = (slug: string) => posts.filter((p) => p.data.category === slug).length;
-const ordered = CATEGORIES.flatMap((c) => posts.filter((p) => p.data.category === c.slug));
+// 매일 글이 늘어나므로 홈에는 최신 글만: 키워드 칩 24개, 새 글 그리드 12개
+const chips = posts.slice(0, 24);
+const latest = posts.slice(0, 12);
 ---
 <BaseLayout title={SITE.title} description={SITE.description}>
   <section class="hero-band" data-hero style={`--band:${CATEGORIES[0].art}`}>
@@ -54,7 +56,7 @@ const ordered = CATEGORIES.flatMap((c) => posts.filter((p) => p.data.category ==
       <section class="card">
         <h2 class="card-title">키워드로 바로 찾기</h2>
         <div class="chips">
-          {ordered.map((p) => <a class="chip" href={`/posts/${p.id}/`}>{p.data.keyword}</a>)}
+          {chips.map((p) => <a class="chip" href={`/posts/${p.id}/`}>{p.data.keyword}</a>)}
         </div>
       </section>
 
@@ -135,9 +137,9 @@ const ordered = CATEGORIES.flatMap((c) => posts.filter((p) => p.data.category ==
   </section>
 
   <section class="wrap-wide sec">
-    <h2 class="sec-title">전체 가이드 <span>{posts.length}편</span></h2>
+    <h2 class="sec-title">새로 올라온 가이드 <span>전체 {posts.length}편</span></h2>
     <ul class="grid-cards">
-      {ordered.map((p) => (
+      {latest.map((p) => (
         <li style={catStyle(p.data.category)}>
           <a href={`/posts/${p.id}/`}>
             <span class="thumb"><img src={`/images/posts/${p.id}.webp`} alt="" width="320" height="320" loading="lazy" /></span>
@@ -147,6 +149,9 @@ const ordered = CATEGORIES.flatMap((c) => posts.filter((p) => p.data.category ==
         </li>
       ))}
     </ul>
+    <p class="cat-links">
+      {CATEGORIES.map((c) => <a href={`/category/${c.slug}/`} style={catStyle(c.slug)}>{c.label} 전체 보기</a>)}
+    </p>
   </section>
 
   <section class="wrap-wide sec">
