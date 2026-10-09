@@ -8,8 +8,8 @@
 
 | 상태 | slug | 카테고리 | 메인 키워드 | 메모 |
 |---|---|---|---|---|
-| [ ] | emergency-welfare-support | welfare | 긴급복지지원 신청 | 위기 사유·생계/의료/주거 지원액, 동절기 |
-| [ ] | national-scholarship | finance | 국가장학금 신청기간 | 2027-1학기 1차 신청 일정·소득구간별 지원액 |
+| [x] (2026-10-09) | emergency-welfare-support | welfare | 긴급복지지원 신청 | 위기 사유·생계/의료/주거 지원액, 동절기 |
+| [x] (2026-10-09) | national-scholarship | finance | 국가장학금 신청기간 | 2027-1학기 1차 신청 일정·소득구간별 지원액 |
 | [ ] | maternity-leave-benefit | income | 출산전후휴가급여 | 2026 상한액, 우선지원대상기업 구분 |
 | [ ] | business-registration | business | 사업자등록 신청방법 | 홈택스 신청, 간이·일반 선택, 서류 |
 | [ ] | housing-benefit | welfare | 주거급여 자격 | 2027 기준 중위소득 48%, 기준임대료 |
