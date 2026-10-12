@@ -14,8 +14,8 @@
 | [x] (2026-10-11) | business-registration | business | 사업자등록 신청방법 | 홈택스 신청, 간이·일반 선택, 서류 |
 | [x] (2026-10-10) | housing-benefit | welfare | 주거급여 자격 | 2027 기준 중위소득 48%, 기준임대료 |
 | [x] (2026-10-11) | dormant-financial-assets | finance | 숨은 금융자산 찾기 | 파인·휴면예금·내보험찾아줌 |
-| [ ] | wage-arrears-substitute-payment | income | 대지급금 신청 | 임금체불 시 간이·도산 대지급금 |
-| [ ] | simplified-vat-taxpayer | business | 간이과세자 기준 | 2026 기준금액·부가세 납부면제 |
+| [x] (2026-10-12) | wage-arrears-substitute-payment | income | 대지급금 신청 | 임금체불 시 간이·도산 대지급금 |
+| [x] (2026-10-12) | simplified-vat-taxpayer | business | 간이과세자 기준 | 2026 기준금액·부가세 납부면제 |
 | [ ] | parent-allowance | welfare | 부모급여 신청 | 0세·1세 월 지급액, 어린이집 이용 시 |
 | [ ] | student-loan | finance | 학자금대출 신청 | 취업후상환·일반상환, 금리 |
 | [ ] | childcare-reduced-hours | income | 육아기 근로시간 단축 급여 | 2026 상한액·계산 |
