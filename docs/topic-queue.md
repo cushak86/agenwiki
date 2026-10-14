@@ -18,8 +18,8 @@
 | [x] (2026-10-12) | simplified-vat-taxpayer | business | 간이과세자 기준 | 2026 기준금액·부가세 납부면제 |
 | [x] (2026-10-13) | parent-allowance | welfare | 부모급여 신청 | 0세·1세 월 지급액, 어린이집 이용 시 |
 | [x] (2026-10-13) | student-loan | finance | 학자금대출 신청 | 취업후상환·일반상환, 금리 |
-| [ ] | childcare-reduced-hours | income | 육아기 근로시간 단축 급여 | 2026 상한액·계산 |
-| [ ] | pre-startup-package | business | 예비창업패키지 | 2027 모집 일정·지원금 |
+| [x] (2026-10-14) | childcare-reduced-hours | income | 육아기 근로시간 단축 급여 | 2026 상한액·계산 |
+| [x] (2026-10-14) | pre-startup-package | business | 예비창업패키지 | 2027 모집 일정·지원금 |
 | [ ] | child-allowance | welfare | 아동수당 신청 | 지급 연령(2026 확대 여부) |
 | [ ] | worker-livelihood-loan | finance | 근로자 생활안정자금 융자 | 근로복지공단, 의료비·혼례비 등 |
 | [ ] | early-reemployment-allowance | income | 조기재취업수당 | 지급 요건·금액 |
