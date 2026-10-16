@@ -22,8 +22,8 @@
 | [x] (2026-10-14) | pre-startup-package | business | 예비창업패키지 | 2027 모집 일정·지원금 |
 | [x] (2026-10-15) | child-allowance | welfare | 아동수당 신청 | 지급 연령(2026 확대 여부) |
 | [x] (2026-10-15) | worker-livelihood-loan | finance | 근로자 생활안정자금 융자 | 근로복지공단, 의료비·혼례비 등 |
-| [ ] | early-reemployment-allowance | income | 조기재취업수당 | 지급 요건·금액 |
-| [ ] | self-employed-employment-insurance | business | 자영업자 고용보험 | 가입·보험료 지원·실업급여 |
+| [x] (2026-10-16) | early-reemployment-allowance | income | 조기재취업수당 | 지급 요건·금액 |
+| [x] (2026-10-16) | self-employed-employment-insurance | business | 자영업자 고용보험 | 가입·보험료 지원·실업급여 |
 | [ ] | first-meeting-voucher | welfare | 첫만남이용권 | 첫째·둘째 이상 금액, 사용처 |
 | [ ] | new-hope-seed-loan | finance | 새희망홀씨 대출 | 자격·한도·은행별 |
 | [ ] | youth-job-leap-incentive | income | 청년일자리도약장려금 | 기업·청년 지원금, 2026 유형 |
