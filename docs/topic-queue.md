@@ -24,8 +24,8 @@
 | [x] (2026-10-15) | worker-livelihood-loan | finance | 근로자 생활안정자금 융자 | 근로복지공단, 의료비·혼례비 등 |
 | [x] (2026-10-16) | early-reemployment-allowance | income | 조기재취업수당 | 지급 요건·금액 |
 | [x] (2026-10-16) | self-employed-employment-insurance | business | 자영업자 고용보험 | 가입·보험료 지원·실업급여 |
-| [ ] | first-meeting-voucher | welfare | 첫만남이용권 | 첫째·둘째 이상 금액, 사용처 |
-| [ ] | new-hope-seed-loan | finance | 새희망홀씨 대출 | 자격·한도·은행별 |
+| [x] (2026-10-17) | first-meeting-voucher | welfare | 첫만남이용권 | 첫째·둘째 이상 금액, 사용처 |
+| [x] (2026-10-17) | new-hope-seed-loan | finance | 새희망홀씨 대출 | 자격·한도·은행별 |
 | [ ] | youth-job-leap-incentive | income | 청년일자리도약장려금 | 기업·청년 지원금, 2026 유형 |
 | [ ] | regional-credit-guarantee | business | 지역신용보증재단 보증 | 보증한도·보증료·신청 |
 | [ ] | livelihood-benefit | welfare | 생계급여 자격 | 2027 선정기준(32%)·지급액 |
