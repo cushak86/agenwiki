@@ -26,8 +26,8 @@
 | [x] (2026-10-16) | self-employed-employment-insurance | business | 자영업자 고용보험 | 가입·보험료 지원·실업급여 |
 | [x] (2026-10-17) | first-meeting-voucher | welfare | 첫만남이용권 | 첫째·둘째 이상 금액, 사용처 |
 | [x] (2026-10-17) | new-hope-seed-loan | finance | 새희망홀씨 대출 | 자격·한도·은행별 |
-| [ ] | youth-job-leap-incentive | income | 청년일자리도약장려금 | 기업·청년 지원금, 2026 유형 |
-| [ ] | regional-credit-guarantee | business | 지역신용보증재단 보증 | 보증한도·보증료·신청 |
+| [x] (2026-10-18) | youth-job-leap-incentive | income | 청년일자리도약장려금 | 기업·청년 지원금, 2026 유형 |
+| [x] (2026-10-18) | regional-credit-guarantee | business | 지역신용보증재단 보증 | 보증한도·보증료·신청 |
 | [ ] | livelihood-benefit | welfare | 생계급여 자격 | 2027 선정기준(32%)·지급액 |
 | [ ] | miso-microfinance | finance | 미소금융 대출 | 창업·운영자금, 자격 |
 | [ ] | senior-jobs | income | 노인일자리 신청 | 유형별 활동비, 모집 시기 |
