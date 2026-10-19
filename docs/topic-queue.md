@@ -28,8 +28,8 @@
 | [x] (2026-10-17) | new-hope-seed-loan | finance | 새희망홀씨 대출 | 자격·한도·은행별 |
 | [x] (2026-10-18) | youth-job-leap-incentive | income | 청년일자리도약장려금 | 기업·청년 지원금, 2026 유형 |
 | [x] (2026-10-18) | regional-credit-guarantee | business | 지역신용보증재단 보증 | 보증한도·보증료·신청 |
-| [ ] | livelihood-benefit | welfare | 생계급여 자격 | 2027 선정기준(32%)·지급액 |
-| [ ] | miso-microfinance | finance | 미소금융 대출 | 창업·운영자금, 자격 |
+| [x] (2026-10-19) | livelihood-benefit | welfare | 생계급여 자격 | 2027 선정기준(32%)·지급액 |
+| [x] (2026-10-19) | miso-microfinance | finance | 미소금융 대출 | 창업·운영자금, 자격 |
 | [ ] | senior-jobs | income | 노인일자리 신청 | 유형별 활동비, 모집 시기 |
 | [ ] | smart-store-support | business | 스마트상점 기술보급 | 지원 비율·신청 |
 | [ ] | medical-cost-cap-refund | welfare | 본인부담상한제 환급 | 소득분위별 상한액·환급 신청 |
