@@ -32,8 +32,8 @@
 | [x] (2026-10-19) | miso-microfinance | finance | 미소금융 대출 | 창업·운영자금, 자격 |
 | [x] (2026-10-20) | senior-jobs | income | 노인일자리 신청 | 유형별 활동비, 모집 시기 |
 | [x] (2026-10-20) | smart-store-support | business | 스마트상점 기술보급 | 지원 비율·신청 |
-| [ ] | medical-cost-cap-refund | welfare | 본인부담상한제 환급 | 소득분위별 상한액·환급 신청 |
-| [ ] | personal-rehabilitation | finance | 개인회생 신청 자격 | 법원 절차·변제기간·비용 |
+| [x] (2026-10-21) | medical-cost-cap-refund | welfare | 본인부담상한제 환급 | 소득분위별 상한액·환급 신청 |
+| [x] (2026-10-21) | personal-rehabilitation | finance | 개인회생 신청 자격 | 법원 절차·변제기간·비용 |
 | [ ] | paternity-leave-benefit | income | 배우자 출산휴가급여 | 기간·급여·분할 사용 |
 | [ ] | youth-startup-academy | business | 청년창업사관학교 | 모집·지원금 |
 | [ ] | catastrophic-medical-expense | welfare | 재난적의료비 지원 | 소득기준·지원액·신청 |
