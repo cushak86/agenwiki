@@ -34,8 +34,8 @@
 | [x] (2026-10-20) | smart-store-support | business | 스마트상점 기술보급 | 지원 비율·신청 |
 | [x] (2026-10-21) | medical-cost-cap-refund | welfare | 본인부담상한제 환급 | 소득분위별 상한액·환급 신청 |
 | [x] (2026-10-21) | personal-rehabilitation | finance | 개인회생 신청 자격 | 법원 절차·변제기간·비용 |
-| [ ] | paternity-leave-benefit | income | 배우자 출산휴가급여 | 기간·급여·분할 사용 |
-| [ ] | youth-startup-academy | business | 청년창업사관학교 | 모집·지원금 |
+| [x] (2026-10-22) | paternity-leave-benefit | income | 배우자 출산휴가급여 | 기간·급여·분할 사용 |
+| [x] (2026-10-22) | youth-startup-academy | business | 청년창업사관학교 | 모집·지원금 |
 | [ ] | catastrophic-medical-expense | welfare | 재난적의료비 지원 | 소득기준·지원액·신청 |
 | [ ] | youth-housing-dream-account | finance | 청년주택드림청약통장 | 금리·소득공제·대출 연계 |
 | [ ] | industrial-accident-benefit | income | 산재 휴업급여 | 평균임금 70%, 신청 |
