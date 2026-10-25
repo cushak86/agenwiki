@@ -40,8 +40,8 @@
 | [x] (2026-10-23) | youth-housing-dream-account | finance | 청년주택드림청약통장 | 금리·소득공제·대출 연계 |
 | [x] (2026-10-24) | industrial-accident-benefit | income | 산재 휴업급여 | 평균임금 70%, 신청 |
 | [x] (2026-10-24) | business-closure-report | business | 폐업 신고 방법 | 홈택스 폐업, 부가세·4대보험 정리 |
-| [ ] | didimdol-mortgage | welfare | 디딤돌대출 자격 | 금리·한도·LTV |
-| [ ] | youth-leap-account-maturity | finance | 청년도약계좌 만기·중도해지 | 기존 가입자 유지·해지 |
+| [x] (2026-10-25) | didimdol-mortgage | welfare | 디딤돌대출 자격 | 금리·한도·LTV |
+| [x] (2026-10-25) | youth-leap-account-maturity | finance | 청년도약계좌 만기·중도해지 | 기존 가입자 유지·해지 |
 | [ ] | uninsured-maternity-benefit | income | 고용보험 미적용자 출산급여 | 특고·프리랜서 대상 |
 | [ ] | commercial-lease-protection | business | 상가임대차 계약갱신요구권 | 10년 보장, 환산보증금 |
 | [ ] | newborn-special-loan | welfare | 신생아 특례대출 | 소득·자산 기준, 금리 |
