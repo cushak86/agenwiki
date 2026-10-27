@@ -44,8 +44,8 @@
 | [x] (2026-10-25) | youth-leap-account-maturity | finance | 청년도약계좌 만기·중도해지 | 기존 가입자 유지·해지 |
 | [x] (2026-10-26) | uninsured-maternity-benefit | income | 고용보험 미적용자 출산급여 | 특고·프리랜서 대상 |
 | [x] (2026-10-26) | commercial-lease-protection | business | 상가임대차 계약갱신요구권 | 10년 보장, 환산보증금 |
-| [ ] | newborn-special-loan | welfare | 신생아 특례대출 | 소득·자산 기준, 금리 |
-| [ ] | voice-phishing-refund | finance | 보이스피싱 피해금 환급 | 지급정지·환급 절차 |
+| [x] (2026-10-27) | newborn-special-loan | welfare | 신생아 특례대출 | 소득·자산 기준, 금리 |
+| [x] (2026-10-27) | voice-phishing-refund | finance | 보이스피싱 피해금 환급 | 지급정지·환급 절차 |
 | [ ] | severance-pay | income | 퇴직금 계산 | 평균임금·지급기한·미지급 시 |
 | [ ] | small-business-confirmation | business | 소상공인확인서 발급 | 중소기업현황정보시스템 |
 | [ ] | culture-nuri-card | welfare | 문화누리카드 | 2027 지원액·발급 기간 |
