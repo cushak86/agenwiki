@@ -46,8 +46,8 @@
 | [x] (2026-10-26) | commercial-lease-protection | business | 상가임대차 계약갱신요구권 | 10년 보장, 환산보증금 |
 | [x] (2026-10-27) | newborn-special-loan | welfare | 신생아 특례대출 | 소득·자산 기준, 금리 |
 | [x] (2026-10-27) | voice-phishing-refund | finance | 보이스피싱 피해금 환급 | 지급정지·환급 절차 |
-| [ ] | severance-pay | income | 퇴직금 계산 | 평균임금·지급기한·미지급 시 |
-| [ ] | small-business-confirmation | business | 소상공인확인서 발급 | 중소기업현황정보시스템 |
+| [x] (2026-10-28) | severance-pay | income | 퇴직금 계산 | 평균임금·지급기한·미지급 시 |
+| [x] (2026-10-28) | small-business-confirmation | business | 소상공인확인서 발급 | 중소기업현황정보시스템 |
 | [ ] | culture-nuri-card | welfare | 문화누리카드 | 2027 지원액·발급 기간 |
 | [ ] | national-pension-voluntary | finance | 국민연금 추납·임의가입 | 추납 계산, 연금액 효과 |
 | [ ] | youth-challenge-support | income | 청년도전지원사업 | 구직단념청년 참여수당 |
