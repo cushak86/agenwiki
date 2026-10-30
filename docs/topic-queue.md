@@ -50,8 +50,8 @@
 | [x] (2026-10-28) | small-business-confirmation | business | 소상공인확인서 발급 | 중소기업현황정보시스템 |
 | [x] (2026-10-29) | culture-nuri-card | welfare | 문화누리카드 | 2026 지원액·발급 기간 |
 | [x] (2026-10-29) | national-pension-voluntary | finance | 국민연금 추납·임의가입 | 추납 계산, 연금액 효과 |
-| [ ] | youth-challenge-support | income | 청년도전지원사업 | 구직단념청년 참여수당 |
-| [ ] | startup-tax-reduction | business | 창업중소기업 세액감면 | 청년 100%·지역별 감면율 |
+| [x] (2026-10-30) | youth-challenge-support | income | 청년도전지원사업 | 구직단념청년 참여수당 |
+| [x] (2026-10-30) | startup-tax-reduction | business | 창업중소기업 세액감면 | 청년 100%·지역별 감면율 |
 | [ ] | single-parent-support | welfare | 한부모가족 지원 | 아동양육비·소득기준 |
 | [ ] | personal-bankruptcy | finance | 개인파산 면책 | 절차·면책 불허가 사유 |
 | [ ] | freelancer-tax-refund | income | 프리랜서 3.3% 환급 | 종합소득세 신고·환급 |
