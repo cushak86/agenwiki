@@ -54,8 +54,8 @@
 | [x] (2026-10-30) | startup-tax-reduction | business | 창업중소기업 세액감면 | 청년 100%·지역별 감면율 |
 | [x] (2026-10-31) | single-parent-support | welfare | 한부모가족 지원 | 아동양육비·소득기준 |
 | [x] (2026-10-31) | personal-bankruptcy | finance | 개인파산 면책 | 절차·면책 불허가 사유 |
-| [ ] | freelancer-tax-refund | income | 프리랜서 3.3% 환급 | 종합소득세 신고·환급 |
-| [ ] | employment-increase-tax-credit | business | 통합고용세액공제 | 청년·일반 공제액 |
+| [x] (2026-11-07) | freelancer-tax-refund | income | 프리랜서 3.3% 환급 | 종합소득세 신고·환급 |
+| [x] (2026-11-07) | employment-increase-tax-credit | business | 통합고용세액공제 | 청년·일반 공제액 |
 | [ ] | disability-pension | welfare | 장애인연금 | 기초급여·부가급여 |
 | [ ] | isa-low-income | finance | 서민형 ISA | 비과세 한도·가입 조건 |
 | [ ] | minimum-wage-2027 | income | 2027 최저임금 | 시급·월급 환산·주휴수당 |
