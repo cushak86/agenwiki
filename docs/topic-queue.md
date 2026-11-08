@@ -56,8 +56,8 @@
 | [x] (2026-10-31) | personal-bankruptcy | finance | 개인파산 면책 | 절차·면책 불허가 사유 |
 | [x] (2026-11-07) | freelancer-tax-refund | income | 프리랜서 3.3% 환급 | 종합소득세 신고·환급 |
 | [x] (2026-11-07) | employment-increase-tax-credit | business | 통합고용세액공제 | 청년·일반 공제액 |
-| [ ] | disability-pension | welfare | 장애인연금 | 기초급여·부가급여 |
-| [ ] | isa-low-income | finance | 서민형 ISA | 비과세 한도·가입 조건 |
+| [x] (2026-11-08) | disability-pension | welfare | 장애인연금 | 기초급여·부가급여 |
+| [x] (2026-11-08) | isa-low-income | finance | 서민형 ISA | 비과세 한도·가입 조건 |
 | [ ] | minimum-wage-2027 | income | 2027 최저임금 | 시급·월급 환산·주휴수당 |
 | [ ] | good-landlord-tax-credit | business | 착한임대인 세액공제 | 적용기한·공제율 |
 | [ ] | long-term-care-grade | welfare | 장기요양등급 신청 | 등급별 혜택·본인부담 |
