@@ -68,3 +68,13 @@
 | [ ] | housing-subscription-deduction | finance | 청약통장 소득공제 | 무주택 세대주 공제 한도 |
 | [ ] | middle-aged-career-support | income | 중장년 경력지원제 | 참여수당·대상 |
 | [ ] | small-business-management-voucher | business | 소상공인 경영안정 바우처 | 2026 시행 여부 확인 후 작성 |
+| [ ] | disabled-activity-support | welfare | 장애인 활동지원 급여 | 활동지원사 시간·급여·신청 |
+| [ ] | credit-card-tax-deduction | finance | 신용카드 소득공제 | 연말정산 카드 사용액 공제 |
+| [ ] | injury-sick-leave-pilot | income | 상병수당 시범사업 | 아플 때 소득보전 급여 |
+| [ ] | small-merchant-card-fee | business | 영세가맹점 카드수수료 우대 | 우대수수료율·등록 |
+| [ ] | elderly-care-voucher | welfare | 노인돌봄서비스 | 독거·취약 노인 돌봄 |
+| [ ] | education-expense-deduction | finance | 교육비 세액공제 | 자녀·본인 교육비 |
+| [ ] | disability-employment-subsidy | income | 장애인 고용장려금 | 사업주 고용촉진 장려금 |
+| [ ] | franchise-dispute-resolution | business | 가맹사업 분쟁조정 | 공정위·한국공정거래조정원 |
+| [ ] | child-health-checkup | welfare | 영유아 건강검진 | 무료 건강검진 시기·항목 |
+| [ ] | mortgage-interest-deduction | finance | 주택담보대출 이자 소득공제 | 장기주택저당차입금 |
