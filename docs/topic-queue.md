@@ -60,8 +60,8 @@
 | [x] (2026-11-08) | isa-low-income | finance | 서민형 ISA | 비과세 한도·가입 조건 |
 | [x] (2026-11-09) | minimum-wage-2027 | income | 2027 최저임금 | 시급·월급 환산·주휴수당 |
 | [x] (2026-11-09) | good-landlord-tax-credit | business | 착한임대인 세액공제 | 적용기한·공제율 |
-| [ ] | long-term-care-grade | welfare | 장기요양등급 신청 | 등급별 혜택·본인부담 |
-| [ ] | bank-account-limit-release | finance | 한도제한계좌 해제 | 해제 서류·은행별 |
+| [x] (2026-11-10) | long-term-care-grade | welfare | 장기요양등급 신청 | 등급별 혜택·본인부담 |
+| [x] (2026-11-10) | bank-account-limit-release | finance | 한도제한계좌 해제 | 해제 서류·은행별 |
 | [ ] | year-end-tax-settlement | income | 연말정산 간소화 | 2026 귀속 달라지는 공제 (12~1월에 쓰기) |
 | [ ] | vat-return-guide | business | 부가세 신고 방법 | 1월 확정신고 (12~1월에 쓰기) |
 | [ ] | telecom-fee-discount | welfare | 통신요금 감면 | 대상별 감면액·신청 |
