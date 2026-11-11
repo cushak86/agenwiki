@@ -64,8 +64,8 @@
 | [x] (2026-11-10) | bank-account-limit-release | finance | 한도제한계좌 해제 | 해제 서류·은행별 |
 | [ ] | year-end-tax-settlement | income | 연말정산 간소화 | 2026 귀속 달라지는 공제 (12~1월에 쓰기) |
 | [ ] | vat-return-guide | business | 부가세 신고 방법 | 1월 확정신고 (12~1월에 쓰기) |
-| [ ] | telecom-fee-discount | welfare | 통신요금 감면 | 대상별 감면액·신청 |
-| [ ] | housing-subscription-deduction | finance | 청약통장 소득공제 | 무주택 세대주 공제 한도 |
+| [x] (2026-11-11) | telecom-fee-discount | welfare | 통신요금 감면 | 대상별 감면액·신청 |
+| [x] (2026-11-11) | housing-subscription-deduction | finance | 청약통장 소득공제 | 무주택 세대주 공제 한도 |
 | [ ] | middle-aged-career-support | income | 중장년 경력지원제 | 참여수당·대상 |
 | [ ] | small-business-management-voucher | business | 소상공인 경영안정 바우처 | 2026 시행 여부 확인 후 작성 |
 | [ ] | disabled-activity-support | welfare | 장애인 활동지원 급여 | 활동지원사 시간·급여·신청 |
