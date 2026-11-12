@@ -66,9 +66,9 @@
 | [ ] | vat-return-guide | business | 부가세 신고 방법 | 1월 확정신고 (12~1월에 쓰기) |
 | [x] (2026-11-11) | telecom-fee-discount | welfare | 통신요금 감면 | 대상별 감면액·신청 |
 | [x] (2026-11-11) | housing-subscription-deduction | finance | 청약통장 소득공제 | 무주택 세대주 공제 한도 |
-| [ ] | middle-aged-career-support | income | 중장년 경력지원제 | 참여수당·대상 |
+| [x] (2026-11-12) | middle-aged-career-support | income | 중장년 경력지원제 | 참여수당·대상 |
 | [ ] | small-business-management-voucher | business | 소상공인 경영안정 바우처 | 2026 시행 여부 확인 후 작성 |
-| [ ] | disabled-activity-support | welfare | 장애인 활동지원 급여 | 활동지원사 시간·급여·신청 |
+| [x] (2026-11-12) | disabled-activity-support | welfare | 장애인 활동지원 급여 | 활동지원사 시간·급여·신청 |
 | [ ] | credit-card-tax-deduction | finance | 신용카드 소득공제 | 연말정산 카드 사용액 공제 |
 | [ ] | injury-sick-leave-pilot | income | 상병수당 시범사업 | 아플 때 소득보전 급여 |
 | [ ] | small-merchant-card-fee | business | 영세가맹점 카드수수료 우대 | 우대수수료율·등록 |
