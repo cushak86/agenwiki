@@ -67,12 +67,12 @@
 | [x] (2026-11-11) | telecom-fee-discount | welfare | 통신요금 감면 | 대상별 감면액·신청 |
 | [x] (2026-11-11) | housing-subscription-deduction | finance | 청약통장 소득공제 | 무주택 세대주 공제 한도 |
 | [x] (2026-11-12) | middle-aged-career-support | income | 중장년 경력지원제 | 참여수당·대상 |
-| [ ] | small-business-management-voucher | business | 소상공인 경영안정 바우처 | 2026 시행 여부 확인 후 작성 |
+| [x] (2026-11-14) | small-business-management-voucher | business | 소상공인 경영안정 바우처 | 2026 시행 여부 확인 후 작성 |
 | [x] (2026-11-12) | disabled-activity-support | welfare | 장애인 활동지원 급여 | 활동지원사 시간·급여·신청 |
 | [x] (2026-11-13) | credit-card-tax-deduction | finance | 신용카드 소득공제 | 연말정산 카드 사용액 공제 |
 | [x] (2026-11-13) | injury-sick-leave-pilot | income | 상병수당 시범사업 | 아플 때 소득보전 급여 |
 | [ ] | small-merchant-card-fee | business | 영세가맹점 카드수수료 우대 | 우대수수료율·등록 |
-| [ ] | elderly-care-voucher | welfare | 노인돌봄서비스 | 독거·취약 노인 돌봄 |
+| [x] (2026-11-14) | elderly-care-voucher | welfare | 노인돌봄서비스 | 독거·취약 노인 돌봄 |
 | [ ] | education-expense-deduction | finance | 교육비 세액공제 | 자녀·본인 교육비 |
 | [ ] | disability-employment-subsidy | income | 장애인 고용장려금 | 사업주 고용촉진 장려금 |
 | [ ] | franchise-dispute-resolution | business | 가맹사업 분쟁조정 | 공정위·한국공정거래조정원 |
