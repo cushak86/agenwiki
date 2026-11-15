@@ -71,9 +71,9 @@
 | [x] (2026-11-12) | disabled-activity-support | welfare | 장애인 활동지원 급여 | 활동지원사 시간·급여·신청 |
 | [x] (2026-11-13) | credit-card-tax-deduction | finance | 신용카드 소득공제 | 연말정산 카드 사용액 공제 |
 | [x] (2026-11-13) | injury-sick-leave-pilot | income | 상병수당 시범사업 | 아플 때 소득보전 급여 |
-| [ ] | small-merchant-card-fee | business | 영세가맹점 카드수수료 우대 | 우대수수료율·등록 |
+| [x] (2026-11-15) | small-merchant-card-fee | business | 영세가맹점 카드수수료 우대 | 우대수수료율·등록 |
 | [x] (2026-11-14) | elderly-care-voucher | welfare | 노인돌봄서비스 | 독거·취약 노인 돌봄 |
-| [ ] | education-expense-deduction | finance | 교육비 세액공제 | 자녀·본인 교육비 |
+| [x] (2026-11-15) | education-expense-deduction | finance | 교육비 세액공제 | 자녀·본인 교육비 |
 | [ ] | disability-employment-subsidy | income | 장애인 고용장려금 | 사업주 고용촉진 장려금 |
 | [ ] | franchise-dispute-resolution | business | 가맹사업 분쟁조정 | 공정위·한국공정거래조정원 |
 | [ ] | child-health-checkup | welfare | 영유아 건강검진 | 무료 건강검진 시기·항목 |
@@ -81,7 +81,7 @@
 | [ ] | workplace-daycare-support | welfare | 직장어린이집 설치·지원 | 사업주 의무·설치비 지원 |
 | [ ] | veteran-benefits-overview | income | 보훈급여 종류·신청 | 보훈보상대상자 급여 총정리 |
 | [ ] | youth-tomorrow-fill-plan | finance | 청년내일채움공제 만기·환급 | 가입자 유지·중도해지 |
-| [ ] | small-biz-card-fee-support | business | 영세가맹점 카드수수료 우대 | 우대수수료율·등록 |
+| [-] (small-merchant-card-fee와 중복) | small-biz-card-fee-support | business | 영세가맹점 카드수수료 우대 | 우대수수료율·등록 |
 | [ ] | elderly-job-program | income | 노인 사회활동 지원사업 | 공익활동·사회서비스 활동비 |
 | [ ] | small-biz-work-environment-fund | business | 소규모사업장 작업환경개선 지원 | 산업안전보건공단 지원금 |
 | [ ] | welfare-membership-guide | welfare | 복지멤버십 신청 방법 | 복지로 맞춤형급여 안내 |
