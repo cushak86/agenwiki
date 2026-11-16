@@ -74,8 +74,8 @@
 | [x] (2026-11-15) | small-merchant-card-fee | business | 영세가맹점 카드수수료 우대 | 우대수수료율·등록 |
 | [x] (2026-11-14) | elderly-care-voucher | welfare | 노인돌봄서비스 | 독거·취약 노인 돌봄 |
 | [x] (2026-11-15) | education-expense-deduction | finance | 교육비 세액공제 | 자녀·본인 교육비 |
-| [ ] | disability-employment-subsidy | income | 장애인 고용장려금 | 사업주 고용촉진 장려금 |
-| [ ] | franchise-dispute-resolution | business | 가맹사업 분쟁조정 | 공정위·한국공정거래조정원 |
+| [x] (2026-11-16) | disability-employment-subsidy | income | 장애인 고용장려금 | 사업주 고용촉진 장려금 |
+| [x] (2026-11-16) | franchise-dispute-resolution | business | 가맹사업 분쟁조정 | 공정위·한국공정거래조정원 |
 | [ ] | child-health-checkup | welfare | 영유아 건강검진 | 무료 건강검진 시기·항목 |
 | [ ] | mortgage-interest-deduction | finance | 주택담보대출 이자 소득공제 | 장기주택저당차입금 |
 | [ ] | workplace-daycare-support | welfare | 직장어린이집 설치·지원 | 사업주 의무·설치비 지원 |
