@@ -76,8 +76,8 @@
 | [x] (2026-11-15) | education-expense-deduction | finance | 교육비 세액공제 | 자녀·본인 교육비 |
 | [x] (2026-11-16) | disability-employment-subsidy | income | 장애인 고용장려금 | 사업주 고용촉진 장려금 |
 | [x] (2026-11-16) | franchise-dispute-resolution | business | 가맹사업 분쟁조정 | 공정위·한국공정거래조정원 |
-| [ ] | child-health-checkup | welfare | 영유아 건강검진 | 무료 건강검진 시기·항목 |
-| [ ] | mortgage-interest-deduction | finance | 주택담보대출 이자 소득공제 | 장기주택저당차입금 |
+| [x] (2026-11-17) | child-health-checkup | welfare | 영유아 건강검진 | 무료 건강검진 시기·항목 |
+| [x] (2026-11-17) | mortgage-interest-deduction | finance | 주택담보대출 이자 소득공제 | 장기주택저당차입금 |
 | [ ] | workplace-daycare-support | welfare | 직장어린이집 설치·지원 | 사업주 의무·설치비 지원 |
 | [ ] | veteran-benefits-overview | income | 보훈급여 종류·신청 | 보훈보상대상자 급여 총정리 |
 | [ ] | youth-tomorrow-fill-plan | finance | 청년내일채움공제 만기·환급 | 가입자 유지·중도해지 |
