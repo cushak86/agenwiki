@@ -88,3 +88,13 @@
 | [ ] | earned-income-supplement | income | 근로장려금 반기지급 | 2026 반기지급 신청·금액 |
 | [ ] | online-biz-tax-basics | business | 온라인 사업자 세금 기초 | 스마트스토어·쓰로용·SNS 판매 세무 |
 | [ ] | disaster-basic-income | welfare | 재난지원금 신청 | 자연재해·사회재난 지원금 |
+| [ ] | military-pension-credit | income | 군 복무 국민연금 크레딧 | 병역 복무기간 연금 인정 신청 |
+| [ ] | home-energy-loan | finance | 주택에너지효율화 대출 | 단열개선·저이율 대출 |
+| [ ] | social-enterprise-support | business | 사회적기업 인증·지원 | 인건비·사업개발비 지원 |
+| [ ] | childcare-fee-subsidy | welfare | 보육료 지원 어린이집 무상보육 | 연령별 보육료 지원단가 |
+| [ ] | worker-housing-loan | finance | 근로자 주택구입·전세자금 대출 | 근로복지공단 주거안정 |
+| [ ] | small-biz-energy-subsidy | business | 소상공인 전기요금 지원 | 전기요금 특별지원 |
+| [ ] | elderly-transportation-card | welfare | 노인 교통비 지원 | 65세 이상 교통비 감면·무료 |
+| [ ] | workplace-harassment-relief | income | 직장내 괴롭힘 신고·구제 | 근로기준법 괴롭힘 신고 절차 |
+| [ ] | multicultural-family-support | welfare | 다문화가족 지원 | 통번역·언어교육·생활지원 |
+| [ ] | cooperative-startup-support | business | 협동조합 창업 지원 | 사회적협동조합 설립·운영지원 |
