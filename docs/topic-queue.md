@@ -80,10 +80,10 @@
 | [x] (2026-11-17) | mortgage-interest-deduction | finance | 주택담보대출 이자 소득공제 | 장기주택저당차입금 |
 | [x] (2026-11-18) | workplace-daycare-support | welfare | 직장어린이집 설치·지원 | 사업주 의무·설치비 지원 |
 | [x] (2026-11-18) | veteran-benefits-overview | income | 보훈급여 종류·신청 | 보훈보상대상자 급여 총정리 |
-| [ ] | youth-tomorrow-fill-plan | finance | 청년내일채움공제 만기·환급 | 가입자 유지·중도해지 |
+| [x] (2026-11-20) | youth-tomorrow-fill-plan | finance | 청년내일채움공제 만기·환급 | 가입자 유지·중도해지 |
 | [-] (small-merchant-card-fee와 중복) | small-biz-card-fee-support | business | 영세가맹점 카드수수료 우대 | 우대수수료율·등록 |
-| [ ] | elderly-job-program | income | 노인 사회활동 지원사업 | 공익활동·사회서비스 활동비 |
-| [ ] | small-biz-work-environment-fund | business | 소규모사업장 작업환경개선 지원 | 산업안전보건공단 지원금 |
+| [-] (senior-jobs와 중복) | elderly-job-program | income | 노인 사회활동 지원사업 | 공익활동·사회서비스 활동비 |
+| [x] (2026-11-20) | small-biz-work-environment-fund | business | 소규모사업장 작업환경개선 지원 | 산업안전보건공단 지원금 |
 | [ ] | welfare-membership-guide | welfare | 복지멤버십 신청 방법 | 복지로 맞춤형급여 안내 |
 | [ ] | earned-income-supplement | income | 근로장려금 반기지급 | 2026 반기지급 신청·금액 |
 | [ ] | online-biz-tax-basics | business | 온라인 사업자 세금 기초 | 스마트스토어·쓰로용·SNS 판매 세무 |
