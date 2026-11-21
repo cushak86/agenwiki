@@ -84,9 +84,9 @@
 | [-] (small-merchant-card-fee와 중복) | small-biz-card-fee-support | business | 영세가맹점 카드수수료 우대 | 우대수수료율·등록 |
 | [-] (senior-jobs와 중복) | elderly-job-program | income | 노인 사회활동 지원사업 | 공익활동·사회서비스 활동비 |
 | [x] (2026-11-20) | small-biz-work-environment-fund | business | 소규모사업장 작업환경개선 지원 | 산업안전보건공단 지원금 |
-| [ ] | welfare-membership-guide | welfare | 복지멤버십 신청 방법 | 복지로 맞춤형급여 안내 |
-| [ ] | earned-income-supplement | income | 근로장려금 반기지급 | 2026 반기지급 신청·금액 |
-| [ ] | online-biz-tax-basics | business | 온라인 사업자 세금 기초 | 스마트스토어·쓰로용·SNS 판매 세무 |
+| [x] (2026-11-21) | welfare-membership-guide | welfare | 복지멤버십 신청 방법 | 복지로 맞춤형급여 안내 |
+| [-] (earned-income-tax-credit와 중복) | earned-income-supplement | income | 근로장려금 반기지급 | 2026 반기지급 신청·금액 |
+| [x] (2026-11-21) | online-biz-tax-basics | business | 온라인 사업자 세금 기초 | 스마트스토어·쓰로용·SNS 판매 세무 |
 | [ ] | disaster-basic-income | welfare | 재난지원금 신청 | 자연재해·사회재난 지원금 |
 | [ ] | military-pension-credit | income | 군 복무 국민연금 크레딧 | 병역 복무기간 연금 인정 신청 |
 | [ ] | home-energy-loan | finance | 주택에너지효율화 대출 | 단열개선·저이율 대출 |
